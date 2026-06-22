@@ -40,9 +40,9 @@ Analyze the conversation and code changes to extract:
 ### Suggested Skill Updates
 
 If patterns are significant, suggest updates to:
-- `skills/coding-standards/SKILL.md`
-- `skills/[domain]/SKILL.md`
-- `rules/[category].md`
+- `instructions/INSTRUCTIONS.md` (global rules)
+- `.opencode/skills/coding-standards/SKILL.md`
+- `.opencode/skills/[domain]/SKILL.md`
 
 ## Instinct Format (for continuous-learning-v2)
 

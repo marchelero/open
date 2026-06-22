@@ -194,6 +194,12 @@ When creating PRs:
 
 ### Feature Implementation Workflow
 
+0. **Research & Reuse** _(mandatory before any new implementation)_
+   - **GitHub code search first**: `gh search repos` and `gh search code` for existing patterns
+   - **Library docs second**: Context7 or primary vendor docs to confirm API behavior
+   - **Check package registries**: npm, PyPI, crates.io before writing utilities
+   - Prefer adopting/porting a proven approach over net-new code
+
 1. **Plan First**
    - Use **planner** agent to create implementation plan
    - Identify dependencies and risks
@@ -211,9 +217,66 @@ When creating PRs:
    - Address CRITICAL and HIGH issues
    - Fix MEDIUM issues when possible
 
-4. **Commit & Push**
+4. **Pre-Review Checks** (before requesting review)
+   - All automated checks (CI/CD) passing
+   - Merge conflicts resolved
+   - Branch up to date with target branch
+
+5. **Commit & Push** (only after user explicit ask)
    - Detailed commit messages
    - Follow conventional commits format
+   - Never force-push, reset --hard, or push without consent
+
+---
+
+## Code Review Standards
+
+### When to Review (MANDATORY triggers)
+
+- After writing or modifying code
+- Before any commit to shared branches
+- When security-sensitive code is changed (auth, payments, user data)
+- When architectural changes are made
+- Before merging pull requests
+
+### Review Checklist
+
+Before marking code complete:
+- [ ] Code is readable and well-named
+- [ ] Functions are focused (<50 lines)
+- [ ] Files are cohesive (<800 lines)
+- [ ] No deep nesting (>4 levels)
+- [ ] Errors are handled explicitly
+- [ ] No hardcoded secrets or credentials
+- [ ] No console.log or debug statements
+- [ ] Tests exist for new functionality
+- [ ] Test coverage meets 80% minimum
+
+### Security Review Triggers
+
+STOP and use **security-reviewer** agent when:
+- Authentication or authorization code
+- User input handling
+- Database queries
+- File system operations
+- External API calls
+- Cryptographic operations
+- Payment or financial code
+
+### Severity Levels
+
+| Level | Meaning | Action |
+|-------|---------|--------|
+| CRITICAL | Security vulnerability or data loss risk | **BLOCK** - must fix before merge |
+| HIGH | Bug or significant quality issue | **WARN** - should fix before merge |
+| MEDIUM | Maintainability concern | **INFO** - consider fixing |
+| LOW | Style or minor suggestion | **NOTE** - optional |
+
+### Approval Criteria
+
+- **Approve**: No CRITICAL or HIGH issues
+- **Warning**: Only HIGH issues (merge with caution)
+- **Block**: CRITICAL issues found
 
 ---
 
@@ -243,6 +306,32 @@ No user prompt needed:
 2. Code just written/modified - Use **code-reviewer** agent
 3. Bug fix or new feature - Use **tdd-guide** agent
 4. Architectural decision - Use **architect** agent
+
+### Parallel Task Execution
+
+ALWAYS use parallel Task execution for independent operations:
+
+```markdown
+# GOOD: Parallel execution
+Launch 3 agents in parallel:
+1. Agent 1: Security analysis of auth module
+2. Agent 2: Performance review of cache system
+3. Agent 3: Type checking of utilities
+
+# BAD: Sequential when unnecessary
+First agent 1, then agent 2, then agent 3
+```
+
+### Multi-Perspective Analysis
+
+For complex problems, dispatch split-role sub-agents:
+- Factual reviewer
+- Senior engineer
+- Security expert
+- Consistency reviewer
+- Redundancy checker
+
+Each sub-agent runs in its own context. The primary agent synthesizes their outputs.
 
 ---
 
@@ -283,6 +372,14 @@ If build fails:
 ---
 
 ## Common Patterns
+
+### Skeleton Projects
+
+When implementing new functionality:
+1. Search for battle-tested skeleton projects
+2. Use parallel agents to evaluate options (security, extensibility, relevance)
+3. Clone best match as foundation
+4. Iterate within proven structure
 
 ### API Response Format
 
