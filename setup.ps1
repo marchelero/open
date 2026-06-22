@@ -113,14 +113,20 @@ if (-not $Force) {
     }
 }
 
-# Execute
+# Execute. Skip node_modules in any copied tree (Bun auto-installs plugins on first run).
 $count = 0
 foreach ($i in $items) {
     $src = Join-Path $ScriptDir $i.Name
     $dst = Join-Path $Target $i.Name
     if (Test-Path -LiteralPath $src) {
         if (Test-Path -LiteralPath $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
-        Copy-Item -LiteralPath $src -Destination $dst -Recurse -Force
+        if ($i.Name -eq ".opencode") {
+            # Selective copy: skip node_modules, package*.json, bun.lock
+            robocopy $src $dst /E /XD node_modules /XF package.json package-lock.json bun.lock > $null 2>&1
+            if ($LASTEXITCODE -ge 8) { throw "robocopy failed: $LASTEXITCODE" }
+        } else {
+            Copy-Item -LiteralPath $src -Destination $dst -Recurse -Force
+        }
         Write-Host "  + $($i.Name)" -ForegroundColor Green
         $count++
     } else {

@@ -105,14 +105,31 @@ if [ "$FORCE" = false ]; then
     fi
 fi
 
-# Execute. Use cp -a to preserve junctions and attributes
+# Execute. Use cp -a to preserve junctions and attributes.
+# For .opencode, skip node_modules + plugin lock files (Bun auto-installs plugins on first run).
 count=0
 for i in "${ITEMS[@]}"; do
     src="$SCRIPT_DIR/$i"
     dst="$TARGET/$i"
     if [ -e "$src" ]; then
         rm -rf "$dst" 2>/dev/null || true
-        cp -a "$src" "$dst"
+        if [ "$i" = ".opencode" ]; then
+            # Selective copy: rsync if available, otherwise tar+exclude fallback
+            if command -v rsync >/dev/null 2>&1; then
+                rsync -a --exclude='node_modules' --exclude='package.json' --exclude='package-lock.json' --exclude='bun.lock' "$src/" "$dst/"
+            else
+                # tar pipe: include only the files we want
+                mkdir -p "$dst"
+                tar -cf - -C "$src" \
+                    --exclude='node_modules' \
+                    --exclude='package.json' \
+                    --exclude='package-lock.json' \
+                    --exclude='bun.lock' \
+                    . | tar -xf - -C "$dst"
+            fi
+        else
+            cp -a "$src" "$dst"
+        fi
         echo "  + $i"
         count=$((count + 1))
     else
