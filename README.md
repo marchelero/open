@@ -80,6 +80,62 @@ Flutter `/flutter-*`, React `/react-*`, Go `/go-*`, Rust `/rust-*`, Python `/pyt
 **Instincts / loops** (requieren setup de continuous-learning):
 `/instinct-status`, `/instinct-import`, `/instinct-export`, `/evolve`, `/promote`, `/projects`, `/loop-start`, `/loop-status`, `/skill-create`.
 
+## Diferencia entre comando, skill y agente
+
+Los tres ejecutan prompts, pero en momentos y contextos distintos.
+
+| | Comando | Skill | Agente |
+| --- | --- | --- | --- |
+| Como se invoca | `/nombre` (lo escribis vos) | Automatico segun el contexto | `@nombre` (lo escribis vos o lo invoca otro agente) |
+| Quien corre el prompt | El agente activo (vos hablando con opencode) | El agente activo (amplia sus reglas) | Un sub-proceso nuevo con su propio system prompt |
+| Modelo | El del agente activo | El del agente activo | El suyo (si esta definido), si no el del agente que lo invoco |
+| Permisos | Los del agente activo | Los del agente activo | Los suyos (pueden ser mas restrictivos) |
+| Caso de uso | "Ejecuta este prompt recurrente" | "Cuando el contexto sea X, aplica estas reglas" | "Quiero que un especialista resuelva esto en paralelo" |
+| Persiste entre sesiones | Si, vive en el config | Si, se carga on-demand | Si, vive como archivo |
+| Como se define | `command` en JSON o `.opencode/command/*.md` | `.opencode/skill/<nombre>/SKILL.md` | `.opencode/agent/<nombre>.md` o `agent` en JSON |
+
+### Ejemplo 1: revisar cambios antes de un commit
+
+```bash
+# Slash command: corre un prompt pre-armado en el agente activo
+/code-review
+
+# Skill: si la skill git-workflow esta cargada, el agente ya sabe
+#        las convenciones de commits y las aplica solo
+
+# Agente: lanza un sub-proceso que solo lee y devuelve feedback
+@code-reviewer revisa los cambios de src/api/users.ts
+```
+
+`/code-review` es rapido y simple. `@code-reviewer` es mas profundo porque es un sub-proceso con prompt especializado. La skill ni la invocas — se carga sola cuando el contexto lo amerita.
+
+### Ejemplo 2: agregar un endpoint nuevo
+
+```bash
+# 1. Slash command: corre el agente planner con un prompt pre-armado
+/plan "agregar endpoint GET /users/:id que devuelve el perfil"
+
+# 2. Agente: despues de implementar, invoca al especialista en paralelo
+@code-reviewer revisa lo nuevo en src/api/users/
+
+# 3. Agente: audita seguridad
+@security-reviewer audita src/api/users/
+
+# 4. Skill: si estas editando archivos .ts, las skills error-handling
+#    y verification-loop se cargan solas para que sigas las convenciones
+
+# 5. Slash command: crea el commit con conventional commits
+/commit
+```
+
+El comando arranca el flujo. Los agentes hacen el trabajo pesado en paralelo. Las skills aparecen solas y mejoran lo que el agente activo hace. Otro comando cierra el ciclo.
+
+### Cuando usar cada uno
+
+- **Comando**: tareas recurrentes que queres estandarizar (`/plan`, `/commit`, `/code-review`).
+- **Skill**: conocimiento especializado que aplica a una situacion (`api-design` cuando hay endpoints, `tdd-workflow` cuando hay tests, `security-review` cuando hay cambios sensibles).
+- **Agente**: tareas que queres delegar a un especialista o correr en paralelo sin contaminar el contexto principal.
+
 ## Como personalizar
 
 **Agregar un comando**: en `opencode.json > command`, agregá un objeto con `description` y `template`. O crea `.opencode/command/<nombre>.md` con frontmatter.
