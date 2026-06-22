@@ -1,195 +1,109 @@
-# opencode starter kit
+# open
 
-Kit portable para opencode. Copialo a cualquier proyecto y anda.
+Kit portable de opencode: agentes, skills, comandos e instrucciones. Copialo a cualquier proyecto y anda.
 
-## Contenido
+## Que tiene
 
 ```
 open/
-├── opencode.json                 # Config: 47 slash commands
-├── README.md                     # Este archivo
+├── opencode.json              47 slash commands
 ├── instructions/
-│   └── INSTRUCTIONS.md           # Reglas consolidadas (de ECC)
+│   └── INSTRUCTIONS.md        Reglas globales que se cargan en cada sesion
+├── README.md                  Este archivo
 └── .opencode/
-    ├── agent/   (64 archivos)    # Subagentes especializados (.md)
-    └── skill/   (10 skills)     # Skills portables (SKILL.md)
+    ├── agent/                 64 subagentes (.md)
+    └── skill/                 10 skills portables (SKILL.md)
 ```
 
-**Total**: 77 archivos, ~620 KB. Sin dependencias npm, sin plugins, sin build step.
+77 archivos, sin dependencias npm, sin plugins, sin build step.
 
-## Como usarlo
-
-Copia todo a tu proyecto:
+## Como se usa
 
 ```bash
-cp -r D:/dev/2026/open/.opencode /path/a/tu/proyecto/
-cp D:/dev/2026/open/opencode.json /path/a/tu/proyecto/
-```
-
-Despues:
-
-```bash
+cp -r D:/dev/2026/open/.opencode      /path/a/tu/proyecto/
+cp    D:/dev/2026/open/opencode.json  /path/a/tu/proyecto/
+cp -r D:/dev/2026/open/instructions   /path/a/tu/proyecto/
 cd /path/a/tu/proyecto
 opencode .
 ```
 
-## Que hay dentro
+Reinicia opencode con `Ctrl+C` + `opencode` despues de cualquier cambio.
 
-### Commands (47)
+## Que es cada cosa
 
-Definidos en `opencode.json > command`. Se invocan con `/nombre`.
+### `opencode.json`
 
-**Transversales (aplican a cualquier proyecto)**:
-- `/plan` — crea plan con fases, dependencias, riesgos
-- `/build-fix` — arregla errores de build incrementalmente
-- `/code-review` — revisa cambios locales o PR de GitHub
-- `/security` / `/security-scan` — busca secrets, inyecciones, misconfigs
-- `/refactor-clean` — remueve codigo muerto y duplicados
-- `/quality-gate` — corre lint, typecheck, tests, coverage, security
-- `/checkpoint` — guarda estado de verificacion
-- `/verify` — corre verification loop
-- `/eval` — corre evaluacion contra criterios
-- `/test-coverage` — analiza y mejora cobertura (objetivo 80%+)
-- `/tdd` — enforce TDD workflow
-- `/e2e` — genera y corre tests E2E con Playwright
-- `/orchestrate` — orquesta multiples agentes
-- `/learn` — extrae patrones de la sesion
-- `/model-route` — recomienda tier de modelo segun complejidad
-- `/setup-pm` — configura package manager preferido
-- `/update-codemaps` — actualiza mapas del codebase
-- `/update-docs` — actualiza docs por cambios recientes
-- `/harness-audit` — audita configuracion del harness
-- `/loop-start` / `/loop-status` — loops autonomos
-- `/skill-create` — genera skills desde git history
-- `/aside` — pregunta rapida sin cambiar contexto
-- `/instinct-status` / `/instinct-import` / `/instinct-export` — gestion de instincts
-- `/evolve` — agrupa instincts en skills
-- `/promote` — promueve instincts de proyecto a global
-- `/projects` — lista proyectos conocidos
+El config principal. Define:
+- `model` y `small_model` (provider/model-id)
+- 47 slash commands bajo `command`
+- `instructions` que apuntan a archivos `.md` que se inyectan en el system prompt
+
+### `instructions/INSTRUCTIONS.md`
+
+Reglas globales que opencode inyecta automaticamente al system prompt de **cada sesion**. Son cosas que aplican a todo: seguridad, estilo, git, testing, etc. Aca vivian en ECC y se traen como un solo archivo consolidado.
+
+Si queres que aplique a todos los proyectos, copialo a tu repo y agregalo al array `instructions` del `opencode.json` (ya viene asi por default).
+
+### `.opencode/agent/`
+
+64 subagentes especializados (`.md`). Cada uno tiene un nombre, descripcion, prompt largo y permisos. Se invocan con `@nombre` desde la TUI o via Task tool.
+
+Ejemplos: `@code-reviewer`, `@security-reviewer`, `@python-reviewer`, `@architect`, `@planner`, `@build-error-resolver`.
+
+### `.opencode/skill/`
+
+10 skills portables. Son instrucciones on-demand que opencode carga segun el contexto. No tienen modelo ni permisos propios, **amplian** al agente activo.
+
+| Skill | Cuando se dispara |
+| --- | --- |
+| `api-design` | Disenar / revisar API REST |
+| `coding-standards` | Convenciones de codigo |
+| `documentation-lookup` | Buscar o generar docs |
+| `error-handling` | Estrategia de manejo de errores |
+| `git-workflow` | Branches, commits, PRs |
+| `intent-driven-development` | Desarrollo guiado por intencion |
+| `mcp-server-patterns` | Crear servers MCP |
+| `security-review` | Review de seguridad |
+| `tdd-workflow` | TDD: red, green, refactor |
+| `verification-loop` | Verificacion post-cambio |
+
+### Slash commands (47)
+
+Se invocan con `/nombre`. Algunos destacados:
+
+**Generales**:
+`/plan`, `/build-fix`, `/code-review`, `/security`, `/refactor-clean`, `/quality-gate`, `/tdd`, `/e2e`, `/verify`, `/eval`, `/test-coverage`, `/checkpoint`, `/learn`, `/model-route`, `/update-codemaps`, `/update-docs`, `/setup-pm`, `/harness-audit`, `/aside`, `/orchestrate`.
 
 **Por stack**:
-- Flutter: `/flutter-review`, `/flutter-build`, `/flutter-test`
-- React: `/react-review`, `/react-build`, `/react-test`
-- Go: `/go-review`, `/go-build`, `/go-test`
-- Rust: `/rust-review`, `/rust-build`, `/rust-test`
-- Python: `/python-review`
-- C++: `/cpp-review`, `/cpp-build`, `/cpp-test`
-- Kotlin: `/kotlin-review`, `/kotlin-build`, `/kotlin-test`
+Flutter `/flutter-*`, React `/react-*`, Go `/go-*`, Rust `/rust-*`, Python `/python-review`, C++ `/cpp-*`, Kotlin `/kotlin-*`.
 
-### Agentes (64)
+**Instincts / loops** (requieren setup de continuous-learning):
+`/instinct-status`, `/instinct-import`, `/instinct-export`, `/evolve`, `/promote`, `/projects`, `/loop-start`, `/loop-status`, `/skill-create`.
 
-Definidos como `.md` en `.opencode/agent/`. Se invocan con `@nombre` desde la TUI o via Task tool.
+## Como personalizar
 
-Algunos destacados:
-- `@architect` — diseno de sistemas, escalabilidad
-- `@code-architect` — arquitectura de codigo
-- `@security-reviewer` — auditoria de seguridad
-- `@performance-optimizer` — optimizacion
-- `@refactor-cleaner` — refactoring seguro
-- `@tdd-guide` — TDD puro
-- `@planner` — planificacion
-- `@silent-failure-hunter` — busca catches silenciosos
-- `@build-error-resolver` — resuelve errores de build
-- `@typescript-reviewer`, `@python-reviewer`, `@react-reviewer`, `@rust-reviewer`, `@go-reviewer`, `@swift-reviewer`, `@php-reviewer` — revisores por lenguaje
-- `@react-build-resolver`, `@rust-build-resolver`, `@pytorch-build-resolver`, `@swift-build-resolver` — resolvers de build por stack
-- `marketing-agent`, `seo-specialist`, `network-architect`, `network-troubleshooter`, etc
+**Agregar un comando**: en `opencode.json > command`, agregá un objeto con `description` y `template`. O crea `.opencode/command/<nombre>.md` con frontmatter.
 
-Lista completa: `ls .opencode/agent/`.
+**Agregar un agente**: crea `.opencode/agent/<nombre>.md` con frontmatter `name`, `description`, y opcional `permission`.
 
-### Skills (10)
+**Agregar una skill**: crea `.opencode/skill/<nombre>/SKILL.md` con frontmatter `name` y `description` (1-1024 chars, third person, "Use when...").
 
-Definidas como `SKILL.md` en `.opencode/skill/<nombre>/`. Se cargan on-demand segun el contexto.
+**Cambiar el modelo**: edita `model` y `small_model` en `opencode.json`.
 
-| Skill                       | Cuando se dispara                                                |
-| --------------------------- | ---------------------------------------------------------------- |
-| `api-design`                | Disenar / revisar API REST.                                      |
-| `error-handling`            | Implementar manejo de errores, decidir estrategias.              |
-| `tdd-workflow`              | TDD: red, green, refactor.                                       |
-| `security-review`           | Review de seguridad, threat modeling.                            |
-| `git-workflow`              | Branches, commits, PRs, conflictos.                              |
-| `coding-standards`          | Convenciones de codigo del equipo.                               |
-| `verification-loop`         | Verificacion post-cambio.                                        |
-| `intent-driven-development` | Desarrollo guiado por intencion del usuario.                     |
-| `documentation-lookup`      | Buscar / generar documentacion.                                  |
-| `mcp-server-patterns`       | Crear / mantener servers MCP.                                    |
+**Cambiar las instrucciones**: edita `instructions/INSTRUCTIONS.md` o modifica el array `instructions` del config.
 
-## Instrucciones globales
+## Reiniciar
 
-`instructions/INSTRUCTIONS.md` se carga automaticamente en cada sesion via el array `instructions` del config. Contiene reglas consolidadas de seguridad, estilo, git workflow, y testing, tomadas de ECC y adaptadas.
-
-## Por que la carpeta `ia` no andaba con opencode
-
-`D:\dev\2026\ia` es un proyecto de otro sistema ("ECC") que no es opencode puro:
-
-1. **Carpetas que opencode no entiende**: `.opencode/tools/` y `.opencode/instructions/` no existen en opencode — opencode auto-descubre `agent/`, `skill/`, `plugins/`, `commands/` pero no esas.
-2. **Plugins con dependencias npm**: el `ecc-hooks.js` requiere `cd .opencode && npm install` previo. Si no se hace, el plugin falla al cargar y opencode puede fallar silencioso.
-3. **Modelos de provider inexistentes**: varios agentes referencian `opencode-go/qwen3.7-max` y similares. Esos providers no existen en tu build (`opencode-go/minimax-m3`), asi que el agente no arranca.
-
-Este kit (`open/`) resuelve los tres puntos:
-- Sin `tools/` ni `instructions/` ni `plugins/` problematicos.
-- Sin dependencias npm — todo es contenido estatico.
-- Sin referencias a modelos externos.
-
-## Lo que se aprovecho del proyecto ECC
-
-`D:\dev\2026\ECC/.opencode/` es una adaptacion del proyecto ECC a opencode, pero **no funciona** porque:
-
-1. **Config en lugar incorrecto**: `opencode.json` esta en `.opencode/opencode.json` (no en la raiz), asi que opencode **lo ignora completamente**.
-2. **`plugin: ["./plugins"]`**: no es formato valido. opencode espera paths a archivos `.ts`/`.js` o specs npm, no una carpeta.
-3. **Modelos `anthropic/claude-*`**: no coinciden con tu provider (`opencode-go/*`).
-4. **`tools: { ... }`**: deprecado desde v1.1.1. Va en `permission:`. Ademas incluia `changed-files` que es un tool del plugin no nativo.
-5. **Commands con `agent: everything-claude-code:*`**: ese namespace es de Claude Code, no de opencode.
-6. **Plugin con `ecc-universal` como dep npm**: requiere `npm install` + `npm run build:opencode`. No portable.
-
-### Lo que SI se migro de ECC
-
-- **35 commands** en `.opencode/commands/*.md`, despues de limpiar el `agent: everything-claude-code:*` del frontmatter (queda `agent: planner`, etc).
-- **`instructions/INSTRUCTIONS.md`** con las reglas consolidadas.
-
-### Lo que NO se migro
-
-- El `opencode.json` de ECC (no se podia usar).
-- El plugin (`.opencode/plugins/ecc-hooks.ts`) — requiere npm install + build.
-- Los 25 prompts de agentes (`.opencode/prompts/agents/*.txt`) — duplicarian el contenido de los agentes `.md` que ya tenemos.
-- El directorio `tools/` — sin archivos utiles.
-
-## Notas sobre los agentes
-
-Los agentes vienen de `ia` y fueron limpiados en una segunda pasada:
-
-- `tools: { Read: true, Grep: true, ... }` (formato viejo con mayusculas) → convertido a `permission: { read: allow, grep: allow, ... }` con nombres lowercase y permisos estandar de opencode.
-- `model: opencode-go/...` (cualquier valor) → eliminado. El modelo lo selecciona el usuario, no va hardcoded en cada agente.
-- `color: info`/`accent`/etc → preservado, opencode lo soporta.
-
-### Mapeo de tools
-
-| Campo viejo (ia) | Campo nuevo (opencode) |
-| ---------------- | ---------------------- |
-| `Read: true`     | `read: allow`          |
-| `Write: true`    | `edit: allow`          |
-| `Edit: true`     | `edit: allow` (deduped)|
-| `Grep: true`     | `grep: allow`          |
-| `Glob: true`     | `glob: allow`          |
-| `Bash: true`     | `bash: allow`          |
-| `WebSearch: true`| `websearch: allow`     |
-| `WebFetch: true` | `webfetch: allow`      |
-
-`Write` y `Edit` colapsan en `edit: allow` (opencode los trata igual). Si queres permisos mas granulares por agente, editale el frontmatter a mano.
-
-## Reiniciar opencode
-
-Despues de cualquier cambio en config, agents, skills o commands:
+opencode carga la config una sola vez al arrancar. Despues de cualquier cambio:
 
 ```
-Ctrl+C   # salir de la TUI
-opencode .   # volver a entrar
+Ctrl+C          # salir
+opencode .      # volver
 ```
 
-opencode carga todo una sola vez al arrancar.
+## Referencia
 
-## Esquema de referencia
-
-- Config schema: <https://opencode.ai/config.json>
+- Schema del config: <https://opencode.ai/config.json>
 - Docs: <https://opencode.ai/docs>
 - Agents: <https://opencode.ai/docs/agents/>
 - Skills: <https://opencode.ai/docs/skills/>
