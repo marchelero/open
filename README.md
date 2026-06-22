@@ -136,6 +136,98 @@ El comando arranca el flujo. Los agentes hacen el trabajo pesado en paralelo. La
 - **Skill**: conocimiento especializado que aplica a una situacion (`api-design` cuando hay endpoints, `tdd-workflow` cuando hay tests, `security-review` cuando hay cambios sensibles).
 - **Agente**: tareas que queres delegar a un especialista o correr en paralelo sin contaminar el contexto principal.
 
+## Como trabajan en conjunto
+
+Los tres se combinan en tiempo real. El mecanismo que los conecta es el tool `task` (para agentes) y el tool `skill` (para skills).
+
+### Quien invoca a quien
+
+```
+vos
+ └─> agente primary (build / plan / general)
+      ├─> tool: task { subagent_type: "code-reviewer" }  -> sub-agente
+      ├─> tool: task { subagent_type: "security-reviewer" } -> sub-agente
+      ├─> tool: skill { name: "api-design" }              -> skill on-demand
+      └─> (skills automaticas via <available_skills> en el system prompt)
+
+vos
+ └─> @nombre  -> invoca un sub-agente directo
+```
+
+Un sub-agente tambien puede invocar a otros sub-agentes (si su `permission.task` lo permite).
+
+### Permission `task`: control de a quien puede invocar
+
+En el frontmatter de un agente podes restringir a que otros agentes puede invocar:
+
+```yaml
+---
+description: Orquestador de tareas complejas
+mode: primary
+permission:
+  task:
+    "*": "deny"
+    "code-reviewer": "ask"
+    "security-reviewer": "ask"
+    "test-runner": "allow"
+---
+```
+
+Esto es un patron comun: un agente **orquestador** que solo puede delegar a un set cerrado de especialistas.
+
+### Skills: automaticas vs on-demand
+
+Hay dos formas en que una skill se carga:
+
+1. **Automatica** — opencode anuncia `<available_skills>` en el system prompt con nombre y descripcion de cada skill. El agente las carga cuando el contexto lo amerita. Tu no haces nada.
+2. **On-demand** — el agente (o vos) invoca `skill({ name: "api-design" })` explicitamente cuando sabe que la necesita.
+
+En ambos casos, el contenido de la skill se inyecta al contexto del agente activo.
+
+### Commands con `agent:` — el comando corre en un sub-agente
+
+Cuando un command tiene `agent: nombre` en su frontmatter (o en el JSON), el comando se ejecuta en un sub-agente en vez del agente activo:
+
+```json
+{
+  "command": {
+    "code-review": {
+      "description": "Review local changes",
+      "template": "...",
+      "agent": "code-reviewer",
+      "subtask": true
+    }
+  }
+}
+```
+
+Esto aisla el contexto: el agente `build` no se ensucia con el output del review, y el sub-agente `code-reviewer` corre con sus propios permisos (típicamente `edit: deny` para que no modifique nada).
+
+### Ejemplo completo de orquestacion
+
+```
+vos:  "agrega un endpoint GET /users/:id que devuelva el perfil"
+                                                                          
+build (primary)                                                           
+ ├─ ve <available_skills> con api-design, error-handling                  
+ ├─ carga skill api-design automaticamente (contexto: REST endpoint)       
+ ├─ implementa src/api/users/[id].ts                                     
+ │                                                                       
+ ├─ invoca task { subagent_type: "code-reviewer" }   --> corre en paralelo
+ │   └─ code-reviewer (read-only) revisa y devuelve feedback             
+ │                                                                       
+ ├─ invoca task { subagent_type: "security-reviewer" }  --> en paralelo   
+ │   └─ security-reviewer audita y devuelve findings                     
+ │                                                                       
+ └─ te devuelve un resumen consolidado                                   
+                                                                          
+vos:  /commit                                                            
+ └─ build usa skill git-workflow (cargada automaticamente)                
+ └─ corre git add, git commit con conventional commits                    
+```
+
+Todo esto pasa en una sola sesion, sin que tengas que cambiar de ventana.
+
 ## Como personalizar
 
 **Agregar un comando**: en `opencode.json > command`, agregá un objeto con `description` y `template`. O crea `.opencode/command/<nombre>.md` con frontmatter.
