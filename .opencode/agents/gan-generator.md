@@ -1,7 +1,7 @@
 ---
 description: "GAN Harness — Generator agent. Implements features according to the spec, reads evaluator feedback, and iterates until quality threshold is met."
 color: success
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

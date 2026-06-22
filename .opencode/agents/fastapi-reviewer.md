@@ -1,6 +1,6 @@
 ---
 description: Reviews FastAPI applications for async correctness, dependency injection, Pydantic schemas, security, OpenAPI quality, testing, and production readiness.
-mode: subagent
+mode: all
 permission:
   bash: allow
   glob: allow

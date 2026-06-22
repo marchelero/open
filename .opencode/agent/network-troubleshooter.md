@@ -1,6 +1,6 @@
 ---
 description: Diagnoses network connectivity, routing, DNS, interface, and policy symptoms with a read-only OSI-layer workflow and evidence-backed root cause summary.
-mode: subagent
+mode: all
 permission:
   bash: allow
   grep: allow

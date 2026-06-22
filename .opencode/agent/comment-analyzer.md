@@ -1,6 +1,6 @@
 ---
 description: Analyze code comments for accuracy, completeness, maintainability, and comment rot risk.
-mode: subagent
+mode: all
 permission:
   glob: allow
   grep: allow

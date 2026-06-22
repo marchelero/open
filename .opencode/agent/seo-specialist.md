@@ -1,6 +1,6 @@
 ---
 description: SEO specialist for technical SEO audits, on-page optimization, structured data, Core Web Vitals, and content/keyword mapping. Use for site audits, meta tag reviews, schema markup, sitemap and robots issues, and SEO remediation plans.
-mode: subagent
+mode: all
 permission:
   glob: allow
   grep: allow

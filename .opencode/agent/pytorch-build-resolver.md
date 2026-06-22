@@ -1,6 +1,6 @@
 ---
 description: PyTorch runtime, CUDA, and training error resolution specialist. Fixes tensor shape mismatches, device errors, gradient issues, DataLoader problems, and mixed precision failures with minimal changes. Use when PyTorch training or inference crashes.
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

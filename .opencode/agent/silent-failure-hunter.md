@@ -1,6 +1,6 @@
 ---
 description: Review code for silent failures, swallowed errors, bad fallbacks, and missing error propagation.
-mode: subagent
+mode: all
 permission:
   bash: allow
   glob: allow

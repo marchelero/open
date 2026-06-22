@@ -1,7 +1,7 @@
 ---
 description: "GAN Harness — Evaluator agent. Tests the live running application via Playwright, scores against rubric, and provides actionable feedback to the Generator."
 color: error
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

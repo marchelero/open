@@ -1,6 +1,6 @@
 ---
 description: Kotlin and Android/KMP code reviewer. Reviews Kotlin code for idiomatic patterns, coroutine safety, Compose best practices, clean architecture violations, and common Android pitfalls.
-mode: subagent
+mode: all
 permission:
   bash: allow
   glob: allow

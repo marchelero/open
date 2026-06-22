@@ -1,6 +1,6 @@
 ---
 description: Rust build, compilation, and dependency error resolution specialist. Fixes cargo build errors, borrow checker issues, and Cargo.toml problems with minimal changes. Use when Rust builds fail.
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

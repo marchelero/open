@@ -1,6 +1,6 @@
 ---
 description: Production machine-learning engineering reviewer for data contracts, feature pipelines, training reproducibility, offline/online evaluation, model serving, monitoring, and rollback. Use when ML, MLOps, model training, inference, feature store, or evaluation code changes.
-mode: subagent
+mode: all
 permission:
   bash: allow
   glob: allow

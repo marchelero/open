@@ -1,6 +1,6 @@
 ---
 description: Reviews router and switch configurations for security, correctness, stale references, risky change-window commands, and missing operational guardrails.
-mode: subagent
+mode: all
 permission:
   grep: allow
   read: allow

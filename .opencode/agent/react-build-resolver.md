@@ -1,6 +1,6 @@
 ---
 description: Diagnose and fix React build failures across Vite, webpack, Next.js, CRA, Parcel, esbuild, and Bun. Handles JSX/TSX compile errors, hydration mismatches, server/client component boundary failures, missing types, and bundler-specific configuration issues with minimal, surgical changes. MUST BE USED when a React build fails.
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

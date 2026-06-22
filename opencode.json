@@ -1,7 +1,5 @@
 {
     "$schema": "https://opencode.ai/config.json",
-    "model": "opencode-go/minimax-m3",
-    "small_model": "opencode-go/deepseek-v4-flash",
     "default_agent": "build",
     "share": "manual",
     "autoupdate": "notify",
@@ -253,5 +251,32 @@
             "template": "\n# Verify Command\n\nRun verification loop to validate the implementation: $ARGUMENTS\n\n## Your Task\n\nExecute comprehensive verification:\n\n1. **Type Check**: `npx tsc --noEmit`\n2. **Lint**: `npm run lint`\n3. **Unit Tests**: `npm test`\n4. **Integration Tests**: `npm run test:integration` (if available)\n5. **Build**: `npm run build`\n6. **Coverage Check**: Verify 80%+ coverage\n\n## Verification Checklist\n\n### Code Quality\n- [ ] No TypeScript errors\n- [ ] No lint warnings\n- [ ] No console.log statements\n- [ ] Functions < 50 lines\n- [ ] Files < 800 lines\n\n### Tests\n- [ ] All tests passing\n- [ ] Coverage >= 80%\n- [ ] Edge cases covered\n- [ ] Error conditions tested\n\n### Security\n- [ ] No hardcoded secrets\n- [ ] Input validation present\n- [ ] No SQL injection risks\n- [ ] No XSS vulnerabilities\n\n### Build\n- [ ] Build succeeds\n- [ ] No warnings\n- [ ] Bundle size acceptable\n\n## Verification Report\n\n### Summary\n- Status: PASS: PASS / FAIL: FAIL\n- Score: X/Y checks passed\n\n### Details\n| Check | Status | Notes |\n|-------|--------|-------|\n| TypeScript | PASS:/FAIL: | [details] |\n| Lint | PASS:/FAIL: | [details] |\n| Tests | PASS:/FAIL: | [details] |\n| Coverage | PASS:/FAIL: | XX% (target: 80%) |\n| Build | PASS:/FAIL: | [details] |\n\n### Action Items\n[If FAIL, list what needs to be fixed]\n\n---\n\n**NOTE**: Verification loop should be run before every commit and PR.",
             "agent": "build"
         }
-    }
+    },
+    "permission": {
+        "skill": "allow"
+    },
+    "mcp": {
+        "context7": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@upstash/context7-mcp"
+            ]
+        },
+        "playwright": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@playwright/mcp"
+            ]
+        }
+    },
+    "plugin": [
+        "opencode-dynamic-context-pruning",
+        "opencode-skillful",
+        "opencode-vibeguard",
+        "opencode-pty"
+    ]
 }

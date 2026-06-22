@@ -1,6 +1,6 @@
 ---
 description: Kotlin/Gradle build, compilation, and dependency error resolution specialist. Fixes build errors, Kotlin compiler errors, and Gradle issues with minimal changes. Use when Kotlin builds fail.
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

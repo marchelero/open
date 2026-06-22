@@ -1,7 +1,7 @@
 ---
 description: Analyze and improve the local agent harness configuration for reliability, cost, and throughput.
 color: info
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow

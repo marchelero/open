@@ -1,6 +1,6 @@
 ---
 description: Reviews healthcare application code for clinical safety, CDSS accuracy, PHI compliance, and medical data integrity. Specialized for EMR/EHR, clinical decision support, and health information systems.
-mode: subagent
+mode: all
 permission:
   glob: allow
   grep: allow

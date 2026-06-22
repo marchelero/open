@@ -1,7 +1,7 @@
 ---
 description: Operate autonomous agent loops, monitor progress, and intervene safely when loops stall.
 color: warning
-mode: subagent
+mode: all
 permission:
   bash: allow
   edit: allow
