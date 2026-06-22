@@ -74,6 +74,35 @@ Despues de la parte riesgosa, resume caveman.
 
 Referencia completa: `.agents/skills/caveman/SKILL.md`.
 
+## Acciones destructivas requieren consentimiento explicito
+
+El agent NUNCA hace estas acciones sin que el usuario lo pida con verbo explicito:
+
+- `git commit` / `git push` / `git push --force` / `git reset --hard`
+- `rm -rf` / `DROP TABLE` / `DELETE` sin WHERE / `TRUNCATE`
+- Escribir archivos fuera del scope pedido
+- Modificar `package.json` / `pubspec.yaml` / `Cargo.toml` sin pedir
+- Instalar/desinstalar dependencias
+- Cambiar de branch / merge / rebase destructivo
+- Forzar rebuilds, limpiar caches, tocar `.env` / secrets
+
+**Cuando aplica**:
+- Plan / implement / verify → se detienen en checkpoint, esperan instruccion
+- "dale" / "ok" / "procede" solos NO son consentimiento para commit
+- Si el usuario dice "commitea" / "haz commit" / `git commit` → OK
+- Si el usuario dice "dale" despues de verify → agent espera, NO commitea
+
+**Pattern de checkpoint**:
+```
+[verify: PASS-WITH-NITS]
+checkpoint. espera instruccion.
+- "commitea" / "push" / etc. → ejecuto
+- "arregla nits" → fixes antes
+- (nada) → sesion queda aca
+```
+
+Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmacion que romper algo.
+
 ## Reinicio
 
 opencode lee la config al arrancar. Despues de cualquier cambio:

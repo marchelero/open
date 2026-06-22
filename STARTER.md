@@ -297,13 +297,28 @@ auto-fix:
 - QuizState.copyWith: switch exhaustivo
 ```
 
-### Paso 9: commit
+### Paso 9: checkpoint — vos decidis que sigue
 
-vos: "dale, commitea"
+despues de /verify, build (primary) **se detiene**. no commitea solo.
 
-build usa skill `git-workflow` (auto-activada por contexto de commit):
+```
+[verify result: PASS-WITH-NITS, 3 auto-fixes aplicados]
+
+checkpoint. espera instruccion.
+- "commitea"          → git commit con conventional
+- "mostrame diff"     → sin cambios, solo review
+- "arregla nits primero" → fixes antes de commit
+- (callate)           → sesion queda aca, sin commit
+```
+
+**Regla**: el agent NUNCA hace commit, push, force-push, rm -rf, DROP TABLE, etc. sin que vos lo pidas explicito. "dale" sin verbo destructivo = no destructivo.
+
+vos: "commitea, sin push"
+
+build usa skill `git-workflow` (auto por contexto commit):
 - git add lib/ test/ pubspec.yaml
 - commit: `feat(quiz): implement flutter quiz app with riverpod + go_router`
+- NO push (vos no lo pediste)
 
 ---
 
