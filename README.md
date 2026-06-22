@@ -6,14 +6,16 @@ Kit portable para opencode. Copialo a cualquier proyecto y anda.
 
 ```
 open/
-├── opencode.json                 # Config: 33 slash commands
+├── opencode.json                 # Config: 47 slash commands
 ├── README.md                     # Este archivo
+├── instructions/
+│   └── INSTRUCTIONS.md           # Reglas consolidadas (de ECC)
 └── .opencode/
     ├── agent/   (64 archivos)    # Subagentes especializados (.md)
     └── skill/   (10 skills)     # Skills portables (SKILL.md)
 ```
 
-**Total**: 75 archivos, ~600 KB. Sin dependencias npm, sin plugins, sin build step.
+**Total**: 77 archivos, ~620 KB. Sin dependencias npm, sin plugins, sin build step.
 
 ## Como usarlo
 
@@ -33,7 +35,7 @@ opencode .
 
 ## Que hay dentro
 
-### Commands (33)
+### Commands (47)
 
 Definidos en `opencode.json > command`. Se invocan con `/nombre`.
 
@@ -41,17 +43,29 @@ Definidos en `opencode.json > command`. Se invocan con `/nombre`.
 - `/plan` — crea plan con fases, dependencias, riesgos
 - `/build-fix` — arregla errores de build incrementalmente
 - `/code-review` — revisa cambios locales o PR de GitHub
-- `/security-scan` — busca secrets, inyecciones, misconfigs
+- `/security` / `/security-scan` — busca secrets, inyecciones, misconfigs
 - `/refactor-clean` — remueve codigo muerto y duplicados
 - `/quality-gate` — corre lint, typecheck, tests, coverage, security
 - `/checkpoint` — guarda estado de verificacion
+- `/verify` — corre verification loop
+- `/eval` — corre evaluacion contra criterios
 - `/test-coverage` — analiza y mejora cobertura (objetivo 80%+)
+- `/tdd` — enforce TDD workflow
+- `/e2e` — genera y corre tests E2E con Playwright
+- `/orchestrate` — orquesta multiples agentes
 - `/learn` — extrae patrones de la sesion
 - `/model-route` — recomienda tier de modelo segun complejidad
 - `/setup-pm` — configura package manager preferido
 - `/update-codemaps` — actualiza mapas del codebase
 - `/update-docs` — actualiza docs por cambios recientes
+- `/harness-audit` — audita configuracion del harness
+- `/loop-start` / `/loop-status` — loops autonomos
+- `/skill-create` — genera skills desde git history
 - `/aside` — pregunta rapida sin cambiar contexto
+- `/instinct-status` / `/instinct-import` / `/instinct-export` — gestion de instincts
+- `/evolve` — agrupa instincts en skills
+- `/promote` — promueve instincts de proyecto a global
+- `/projects` — lista proyectos conocidos
 
 **Por stack**:
 - Flutter: `/flutter-review`, `/flutter-build`, `/flutter-test`
@@ -99,6 +113,10 @@ Definidas como `SKILL.md` en `.opencode/skill/<nombre>/`. Se cargan on-demand se
 | `documentation-lookup`      | Buscar / generar documentacion.                                  |
 | `mcp-server-patterns`       | Crear / mantener servers MCP.                                    |
 
+## Instrucciones globales
+
+`instructions/INSTRUCTIONS.md` se carga automaticamente en cada sesion via el array `instructions` del config. Contiene reglas consolidadas de seguridad, estilo, git workflow, y testing, tomadas de ECC y adaptadas.
+
 ## Por que la carpeta `ia` no andaba con opencode
 
 `D:\dev\2026\ia` es un proyecto de otro sistema ("ECC") que no es opencode puro:
@@ -111,6 +129,29 @@ Este kit (`open/`) resuelve los tres puntos:
 - Sin `tools/` ni `instructions/` ni `plugins/` problematicos.
 - Sin dependencias npm — todo es contenido estatico.
 - Sin referencias a modelos externos.
+
+## Lo que se aprovecho del proyecto ECC
+
+`D:\dev\2026\ECC/.opencode/` es una adaptacion del proyecto ECC a opencode, pero **no funciona** porque:
+
+1. **Config en lugar incorrecto**: `opencode.json` esta en `.opencode/opencode.json` (no en la raiz), asi que opencode **lo ignora completamente**.
+2. **`plugin: ["./plugins"]`**: no es formato valido. opencode espera paths a archivos `.ts`/`.js` o specs npm, no una carpeta.
+3. **Modelos `anthropic/claude-*`**: no coinciden con tu provider (`opencode-go/*`).
+4. **`tools: { ... }`**: deprecado desde v1.1.1. Va en `permission:`. Ademas incluia `changed-files` que es un tool del plugin no nativo.
+5. **Commands con `agent: everything-claude-code:*`**: ese namespace es de Claude Code, no de opencode.
+6. **Plugin con `ecc-universal` como dep npm**: requiere `npm install` + `npm run build:opencode`. No portable.
+
+### Lo que SI se migro de ECC
+
+- **35 commands** en `.opencode/commands/*.md`, despues de limpiar el `agent: everything-claude-code:*` del frontmatter (queda `agent: planner`, etc).
+- **`instructions/INSTRUCTIONS.md`** con las reglas consolidadas.
+
+### Lo que NO se migro
+
+- El `opencode.json` de ECC (no se podia usar).
+- El plugin (`.opencode/plugins/ecc-hooks.ts`) — requiere npm install + build.
+- Los 25 prompts de agentes (`.opencode/prompts/agents/*.txt`) — duplicarian el contenido de los agentes `.md` que ya tenemos.
+- El directorio `tools/` — sin archivos utiles.
 
 ## Notas sobre los agentes
 
