@@ -5,27 +5,22 @@ agent: build
 
 # Instinct Import Command
 
-Import instincts from a file or URL: $ARGUMENTS
+Import instincts via opencode-native CLI: $ARGUMENTS
 
 ## Your Task
 
-Import instincts into the continuous-learning-v2 system.
-
-## Import Sources
-
-### File Import
-```
-/instinct-import path/to/instincts.json
+```bash
+node .opencode/bin/instinct.js import $ARGUMENTS
 ```
 
-### URL Import
-```
-/instinct-import https://example.com/instincts.json
-```
+## Usage
 
-### Team Share Import
-```
-/instinct-import @teammate/instincts
+```bash
+# File import
+node .opencode/bin/instinct.js import path/to/instincts.json
+
+# To project scope (default: global)
+node .opencode/bin/instinct.js import ./instincts.json --scope project
 ```
 
 ## Import Format
@@ -54,34 +49,10 @@ Expected JSON structure:
 ## Import Process
 
 1. **Validate format** - Check JSON structure
-2. **Deduplicate** - Skip existing instincts
+2. **Deduplicate** - Skip existing instincts (by ID)
 3. **Adjust confidence** - Reduce confidence for imports (×0.8)
-4. **Merge** - Add to local instinct store
+4. **Merge** - Add to target scope
 5. **Report** - Show import summary
-
-## Import Report
-
-```
-Import Summary
-==============
-Source: [path or URL]
-Total in file: X
-Imported: Y
-Skipped (duplicates): Z
-Errors: W
-
-Imported Instincts:
-- [trigger] (confidence: 0.XX)
-- [trigger] (confidence: 0.XX)
-...
-```
-
-## Conflict Resolution
-
-When importing duplicates:
-- Keep higher confidence version
-- Merge application counts
-- Update timestamp
 
 ---
 

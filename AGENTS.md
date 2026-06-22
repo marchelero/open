@@ -4,7 +4,7 @@ Reglas del proyecto para opencode cuando trabaja en este repo.
 
 ## Que es esto
 
-Starter pack portable de opencode. El "producto" son los 47 comandos, 64 agentes y 11 skills en `.opencode/`. No es codigo de aplicacion — es config + prompts.
+Starter pack portable de opencode. El "producto" son los 47 comandos, 64 agentes y 11 skills en `.opencode/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
 
 ## Estructura
 

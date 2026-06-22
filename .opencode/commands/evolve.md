@@ -5,32 +5,23 @@ agent: build
 
 # Evolve Command
 
-Analyze and evolve instincts in continuous-learning-v2: $ARGUMENTS
+Analyze and evolve instincts via opencode-native CLI: $ARGUMENTS
 
 ## Your Task
 
-Run:
-
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" evolve $ARGUMENTS
+node .opencode/bin/instinct.js evolve $ARGUMENTS
 ```
 
-If `CLAUDE_PLUGIN_ROOT` is unavailable, use:
-
-```bash
-python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve $ARGUMENTS
-```
-
-## Supported Args (v2.1)
+## Supported Args
 
 - no args: analysis only
-- `--generate`: also generate files under `evolved/{skills,commands,agents}`
+- `--domain <name>`: filter by category
+- `--generate`: also write candidates to `.opencode/instincts/evolved/candidates.json`
 
 ## Behavior Notes
 
 - Uses project + global instincts for analysis.
 - Shows skill/command/agent candidates from trigger and domain clustering.
-- Shows project -> global promotion candidates.
-- With `--generate`, output path is:
-  - project context: `~/.claude/homunculus/projects/<project-id>/evolved/`
-  - global fallback: `~/.claude/homunculus/evolved/`
+- Shows project → global promotion candidates.
+- Output path: `.opencode/instincts/evolved/candidates.json` (with `--generate`)

@@ -5,32 +5,37 @@ agent: build
 
 # Instinct Export Command
 
-Export instincts for sharing with others: $ARGUMENTS
+Export instincts via opencode-native CLI: $ARGUMENTS
 
 ## Your Task
 
-Export instincts from the continuous-learning-v2 system.
+```bash
+node .opencode/bin/instinct.js export $ARGUMENTS
+```
 
 ## Export Options
 
-### Export All
-```
-/instinct-export
-```
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--output FILE` | `./instincts-export.json` | Output file path |
+| `--min-confidence N` | `0` | Filter by minimum confidence |
+| `--category X` | (all) | Filter by category |
+| `--scope X` | `all` | `project`, `global`, or `all` |
 
-### Export High Confidence Only
-```
-/instinct-export --min-confidence 0.8
-```
+## Examples
 
-### Export by Category
-```
-/instinct-export --category coding
-```
+```bash
+# Export all
+node .opencode/bin/instinct.js export
 
-### Export to Specific Path
-```
-/instinct-export --output ./my-instincts.json
+# High confidence only
+node .opencode/bin/instinct.js export --min-confidence 0.8
+
+# By category
+node .opencode/bin/instinct.js export --category coding
+
+# To specific path
+node .opencode/bin/instinct.js export --output ./my-instincts.json
 ```
 
 ## Export Format
@@ -54,39 +59,10 @@ Export instincts from the continuous-learning-v2 system.
     "exported": "2025-01-15T10:00:00Z",
     "author": "username",
     "total": 25,
-    "filter": "confidence >= 0.8"
+    "filter": { "min_confidence": 0.8, "category": null, "scope": "all" }
   }
 }
 ```
-
-## Export Report
-
-```
-Export Summary
-==============
-Output: ./instincts-export.json
-Total instincts: X
-Filtered: Y
-Exported: Z
-
-Categories:
-- coding: N
-- testing: N
-- security: N
-- git: N
-
-Top Instincts (by confidence):
-1. [trigger] (0.XX)
-2. [trigger] (0.XX)
-3. [trigger] (0.XX)
-```
-
-## Sharing
-
-After export:
-- Share JSON file directly
-- Upload to team repository
-- Publish to instinct registry
 
 ---
 

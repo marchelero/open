@@ -5,18 +5,13 @@ agent: build
 
 # Promote Command
 
-Promote instincts in continuous-learning-v2: $ARGUMENTS
+Promote instincts in opencode-native system: $ARGUMENTS
 
 ## Your Task
 
-Run:
-
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" promote $ARGUMENTS
+node .opencode/bin/instinct.js promote $ARGUMENTS
 ```
 
-If `CLAUDE_PLUGIN_ROOT` is unavailable, use:
-
-```bash
-python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote $ARGUMENTS
-```
+Usage:
+- `node .opencode/bin/instinct.js promote <instinct-id>` — move project → global

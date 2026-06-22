@@ -6,21 +6,26 @@ Kit portable de opencode: agentes, skills, comandos e instrucciones. Copialo a c
 
 ```
 open/
-├── opencode.json              47 slash commands
+├── opencode.json              Config principal (mcp, plugin, instructions)
 ├── instructions/
 │   └── INSTRUCTIONS.md        Reglas globales que se cargan en cada sesion
 ├── AGENTS.md                  Reglas para agentes (caveman mode, etc)
 ├── STARTER.md                 Este archivo (rename: cada proyecto tiene su README)
+├── README.md                  GitHub landing (este repo)
 └── .opencode/
     ├── agents/                64 subagentes (.md, mode: all)
-    └── skills/                11 skills portables (SKILL.md)
+    ├── skills/                11 skills portables (SKILL.md)
+    ├── commands/              47 slash commands (.md, frontmatter)
+    ├── bin/                   CLI nativo (instinct.js, sin deps)
+    └── instincts/             Instincts project-scope (json)
 ```
 
 Mas:
 - **MCP servers (2)**: `context7` (docs search), `playwright` (browser automation)
-- **Plugins (5)**: wakatime, dynamic-context-pruning, skillful, vibeguard, pty
+- **Plugins (4)**: dynamic-context-pruning, skillful, vibeguard, pty
 - **Permission global**: `skill: allow` (todos los agentes pueden cargar skills)
 - **Caveman mode**: default ON en AGENTS.md (respuestas tersas, ~75% menos tokens)
+- **Instincts CLI**: `.opencode/bin/instinct.js` — gestion nativa (reemplaza ECC continuous-learning-v2)
 
 Sin dependencias npm en el root. Plugins usan Bun internamente (instala solo si esta).
 
