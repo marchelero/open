@@ -1,0 +1,151 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode-go/minimax-m3",
+  "small_model": "opencode-go/deepseek-v4-flash",
+  "default_agent": "build",
+  "share": "manual",
+  "autoupdate": "notify",
+  "snapshot": true,
+  "command": {
+    "plan": {
+      "description": "Create implementation plan with phases and risks",
+      "template": "The user wants a plan for: $ARGUMENTS.
+
+Search the codebase for patterns. Break into phases with dependencies, risks, and complexity. Present the plan and WAIT for confirmation. Do NOT write code."
+    },
+    "build-fix": {
+      "description": "Fix build and type errors incrementally",
+      "template": "Fix build errors in this project. Detect the build system, run the build, parse errors, fix one at a time with minimal changes, re-run after each fix, and report results. Fix one error at a time."
+    },
+    "code-review": {
+      "description": "Review local changes or GitHub PR",
+      "template": "Code review for: $ARGUMENTS.
+
+If blank or text: review local uncommitted changes. Run git diff --name-only HEAD, read each file, check for CRITICAL (secrets, injections), HIGH (code quality), MEDIUM (best practices) issues. Block on CRITICAL/HIGH.
+
+If a PR number or URL: fetch with gh CLI, read files, review across 7 categories (correctness, type safety, security, performance, completeness, maintainability, patterns), run validation, publish review."
+    },
+    "security-scan": {
+      "description": "Run AgentShield security scan",
+      "template": "Run security scan on this project. Check for hardcoded secrets, prompt injection risks, misconfigurations. Report findings by severity."
+    },
+    "refactor-clean": {
+      "description": "Remove dead code and consolidate duplicates",
+      "template": "Find and remove dead code in this project. Look for unused exports, duplicate code, orphaned files. Consolidate where possible. Verify tests still pass."
+    },
+    "quality-gate": {
+      "description": "Run the ECC quality pipeline",
+      "template": "Run the quality pipeline: lint, typecheck, tests, coverage check, security scan. Report results and block if any check fails."
+    },
+    "checkpoint": {
+      "description": "Save verification state checkpoint",
+      "template": "Save current state as a checkpoint. Record: changed files, test status, lint status, build status."
+    },
+    "test-coverage": {
+      "description": "Analyze and improve test coverage",
+      "template": "Check test coverage in this project. Find uncovered files. Suggest what to test. Target 80%+ coverage."
+    },
+    "flutter-review": {
+      "description": "Review Flutter/Dart code",
+      "template": "Review Flutter/Dart changes. Find changed .dart files with git diff. Check for: widget perf, missing const, oversized builds, state management issues, null safety, a11y. Run dart analyze. Report findings."
+    },
+    "flutter-build": {
+      "description": "Fix Flutter build errors",
+      "template": "Fix Flutter build errors. Run flutter build, parse errors, fix one at a time, re-run. Run flutter analyze after fixes."
+    },
+    "flutter-test": {
+      "description": "Run Flutter tests",
+      "template": "Run flutter test. Report failures. If failures found, fix one at a time and re-run. Run with --coverage and report percentage."
+    },
+    "react-review": {
+      "description": "Review React/JSX code",
+      "template": "React/JSX review. Find changed .tsx/.jsx files. Check: hooks rules, RSC boundaries, a11y, render performance, security. Run eslint with react-hooks plugin. Report findings."
+    },
+    "react-build": {
+      "description": "Fix React build errors",
+      "template": "Fix React build errors. Detect bundler (Vite/webpack/Next.js), run build, parse errors, fix one at a time."
+    },
+    "react-test": {
+      "description": "Run React tests",
+      "template": "Run React tests. Detect framework (Vitest/Jest), run tests with coverage. Fix failures incrementally."
+    },
+    "go-review": {
+      "description": "Review Go code",
+      "template": "Go code review. Find changed .go files. Run go vet, staticcheck if available. Check concurrency, error handling, idiomatic Go. Report findings."
+    },
+    "go-build": {
+      "description": "Fix Go build errors",
+      "template": "Fix Go build errors. Run go build ./..., parse errors, fix one at a time."
+    },
+    "go-test": {
+      "description": "Run Go tests",
+      "template": "Run go test ./... with -cover. Report failures and coverage. Fix incrementally."
+    },
+    "rust-review": {
+      "description": "Review Rust code",
+      "template": "Rust code review. Find changed .rs files. Run cargo clippy. Check ownership, error handling, unsafe usage. Report findings."
+    },
+    "rust-build": {
+      "description": "Fix Rust build errors",
+      "template": "Fix Rust build errors. Run cargo build, parse errors, fix one at a time (borrow checker, types, deps)."
+    },
+    "rust-test": {
+      "description": "Run Rust tests",
+      "template": "Run cargo test with --nocapture. Report failures and fix incrementally."
+    },
+    "python-review": {
+      "description": "Review Python code",
+      "template": "Python code review. Find changed .py files. Check: PEP 8, type hints, error handling, security. Run ruff or pylint if available. Report findings."
+    },
+    "cpp-review": {
+      "description": "Review C++ code",
+      "template": "C++ code review. Find changed .cpp/.h files. Check: memory safety, modern C++ idioms, concurrency, UB. Report findings."
+    },
+    "cpp-build": {
+      "description": "Fix C++ build errors",
+      "template": "Fix C++ build errors. Detect CMake/Make, run build, parse errors, fix one at a time."
+    },
+    "cpp-test": {
+      "description": "Run C++ tests",
+      "template": "Run C++ tests with CTest or framework binary. Report failures and fix incrementally."
+    },
+    "kotlin-review": {
+      "description": "Review Kotlin code",
+      "template": "Kotlin code review. Find changed .kt files. Check: idiomatic Kotlin, coroutine safety, null safety, clean architecture. Report findings."
+    },
+    "kotlin-build": {
+      "description": "Fix Kotlin/Gradle build errors",
+      "template": "Fix Kotlin/Gradle build errors. Run ./gradlew build, parse errors, fix one at a time."
+    },
+    "kotlin-test": {
+      "description": "Run Kotlin tests",
+      "template": "Run Kotlin tests with ./gradlew test. Report failures and coverage."
+    },
+    "learn": {
+      "description": "Extract patterns from current session",
+      "template": "Extract patterns and learnings from this session. Identify: recurring patterns, decisions made, useful commands. Save to memory."
+    },
+    "model-route": {
+      "description": "Recommend best model for task complexity",
+      "template": "Analyze the current task and recommend the best model tier (small/cheap vs large/powerful) based on complexity. Consider: file count, cross-cutting concerns, design ambiguity."
+    },
+    "setup-pm": {
+      "description": "Configure package manager preference",
+      "template": "Detect available package managers (npm, pnpm, yarn, bun) and configure the preferred one for this project."
+    },
+    "update-codemaps": {
+      "description": "Update codemaps for codebase navigation",
+      "template": "Scan the codebase and update codemaps. Document: entry points, key files, architecture layers, data flow. Write to docs/CODEMAPS/."
+    },
+    "update-docs": {
+      "description": "Update documentation for recent changes",
+      "template": "Review recent git changes and update relevant documentation files. Focus on: new features, changed APIs, updated dependencies."
+    },
+    "aside": {
+      "description": "Quick question without changing context",
+      "template": "Quick question: $ARGUMENTS.
+
+Answer concisely. Do not change any files. Do not switch context."
+    }
+  }
+}
