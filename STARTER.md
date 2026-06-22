@@ -149,132 +149,197 @@ Se invocan con `/nombre`. Listado completo:
 
 ---
 
-## Caso real: 3+ agentes trabajando en conjunto
+## Caso real: app Flutter de quiz desde 0
 
-**Pedido**: "agregar endpoint `GET /api/users/:id` que devuelva el perfil con auth JWT"
+**Pedido**: "app de Flutter con 10 preguntas multiple choice, scoring, animaciones, dark mode"
 
-### Paso 1: vos arrancas con 1 comando
+### Paso 1: vos arrancas con UN comando
+
+```bash
+/orchestrate "app Flutter de quiz: 10 preguntas multiple choice, scoring, animaciones, dark mode"
+```
+
+Que pasa:
+1. opencode lee `.opencode/commands/orchestrate.md`
+2. Frontmatter `agent: planner` → planner toma el control como primary
+3. Body del .md (tabla agentes, patrones orquestacion) → inyectado como prompt a planner
+4. Tambien inyecta `AGENTS.md` (caveman mode) y 10 skills auto-disponibles
+
+### Paso 2: planner responde en CAVEMAN (~75% menos tokens)
 
 ```
-/orchestrate "agregar endpoint GET /api/users/:id con auth JWT que devuelva el perfil"
+plan: app flutter quiz
+- arch: riverpod 2.x + go_router, 4 screens (home/quiz/result/settings)
+- state: Question, QuizState, ScoreState (sealed)
+- ui: AnimatedContainer transiciones, ThemeData light/dark
+- test: widget tests + 1 integration_test
+- folder: lib/{models,providers,screens,widgets,theme}
+- 5 .dart + 2 test files
+- risks: anim cost (no Rive), dark mode persist
+- wait: ok para arrancar?
 ```
 
-El comando `/orchestrate` arranca el agent `planner` como primary slot.
+(sin caveman hubiera sido ~600 tokens con tablas markdown)
 
-### Paso 2: planner activa skills automaticamente
+### Paso 3: vos aprobas y agregas detalle
 
-El system prompt ya anuncio `<available_skills>`. Planner lee el contexto y carga:
-- `api-design` (contexto: REST endpoint)
-- `error-handling` (contexto: codigo nuevo, manejo errores)
-- `tdd-workflow` (va a haber tests)
-- `verification-loop` (validar al final)
+vos: "dale, package name com.mi.qa.quiz, sin librerias raras"
 
-### Paso 3: planner invoca 4 sub-agentes en PARALELO via task tool
+### Paso 4: planner dispatch paralelo via task tool
 
 ```
 planner
-├─ task(@planner-research)        -> busca patrones existentes en el repo
-├─ task(@code-reviewer)           -> revisa diseno del endpoint
-├─ task(@security-reviewer)        -> audita JWT handling, auth bypass
-└─ task(@typescript-reviewer)     -> valida tipos de la API
+├─ task(@architect)                  → arch final (deps, folder layout)
+├─ task(@flutter-reviewer)           → checklist flutter (a11y, const, build context)
+├─ task(@tdd-guide)                  → estrategia tests (red→green)
+└─ task(@intent-driven-development)  → 5 acceptance criteria
 ```
 
-Cada sub-agente corre con su propio system prompt y permisos. Planner NO espera a uno antes de empezar el otro (paralelo).
+Todos en paralelo. Planner no espera a uno antes del otro. **Todos los sub-agents tambien escriben en caveman** (AGENTS.md inyectado via opencode.json > instructions).
 
-### Paso 4: sub-agentes ejecutan en paralelo
+### Paso 5: sub-agents responden (caveman, paralelo, ~10s total)
 
 ```
-@planner-research        (background, 2-5 seg)
-  -> "encontrar controllers similares, ver como manejan auth"
+@architect (8s):
+deps: flutter_riverpod ^2.5.0, go_router ^14.0.0
+lib/
+  main.dart               entry + ProviderScope
+  app.dart                MaterialApp.router
+  router.dart             GoRouter config
+  models/question.dart    data class
+  models/quiz_state.dart  sealed states
+  providers/quiz_provider.dart  StateNotifier
+  screens/{home,quiz,result}_screen.dart
+  theme/app_theme.dart    light/dark
+  widgets/answer_button.dart
+test/
+  widget_test.dart        smoke
+  quiz_provider_test.dart logic
 
-@code-reviewer          (background, paralelo)
-  -> review del codigo propuesto, sugiere mejoras
+@flutter-reviewer (6s):
+checklist:
+- const constructors en widgets
+- BuildContext async guarded (mounted check)
+- a11y: semantic labels en buttons
+- dark: Theme.of(context), no hardcoded colors
+- dispose: providers notificado
 
-@security-reviewer       (background, paralelo)
-  -> valida JWT verification, no log de tokens, rate limiting
+@tdd-guide (5s):
+1. test/models/question_test.dart        (data)
+2. test/providers/quiz_provider_test.dart (states)
+3. test/widget_test.dart                 (smoke)
+red→green→refactor per file
+coverage target 80%+
 
-@typescript-reviewer    (background, paralelo)
-  -> valida tipos de request/response
+@intent-driven-development (4s):
+AC-001: tap "Start" → quiz screen con pregunta 1
+AC-002: tap respuesta correcta → score++, anim fade
+AC-003: 10 respondidas → result screen con score
+AC-004: tap "retry" → quiz screen reinicia
+AC-005: toggle dark mode → theme cambia sin rebuild
+verifiable: integration_test + screenshot
 ```
 
-### Paso 5: planner resume y sintetiza
+### Paso 6: planner sintetiza y arranca impl
 
-Planner recibe los 4 outputs, los prioriza, y te devuelve:
-
-```markdown
-## Resumen del diseno
-
-### Validacion
-- planner-research: hay 3 endpoints similares, seguir patron de /api/posts/:id
-- code-reviewer: usar DTOs separados para input/output, no exponer password_hash
-- security-reviewer: agregar rate limit + helmet, validar JWT con middleware existente
-- typescript-reviewer: usar zod para runtime validation, evitar `any`
-
-### Implementacion sugerida
-1. Crear `src/api/users/[id].ts` con handler
-2. Middleware JWT existente en `src/middleware/auth.ts`
-3. DTOs en `src/api/users/dto.ts`
-4. Test en `src/api/users/[id].test.ts`
-5. Validar con /verify al final
-
-### Riesgos
-- Si el rate limit no existe, agregarlo antes de mergear
-- Si el repo no tiene helmet, instalarlo
+planner:
+```
+listo. arranco:
+1. flutter create com.mi.qa.quiz (15s, background)
+2. pubspec: riverpod, go_router
+3. models + tests (red)
+4. provider (green)
+5. screens + widgets
+6. theme + dark mode
+7. integration_test
+8. /verify
 ```
 
-### Paso 6: vos implementas (con skills cargadas)
+Skills auto-activadas por contexto Flutter: `coding-standards`, `tdd-workflow`, `verification-loop`.
 
-vos: "dale, implementa"
+### Paso 7: implementacion (con sub-agents automaticos)
 
-build (primary):
-1. Carga `error-handling` para el handler
-2. Carga `api-design` para los DTOs
-3. Carga `tdd-workflow` para los tests
-4. Escribe codigo
-5. Ejecuta tests
-6. `/verify` para validar
+vos: "dale"
 
-### Paso 7: verificacion con 2 sub-agentes MAS
+build (primary, caveman):
+- flutter create com.mi.qa.quiz
+- pubspec.yaml: flutter_riverpod ^2.5.0, go_router ^14.0.0
+- escribe models/, providers/, screens/, theme/
+
+mientras escribe, dispara paralelo:
+- task(@flutter-reviewer) → revisa cada widget
+- task(@tdd-guide)         → valida tests antes que impl
+
+### Paso 8: /verify (validacion completa)
 
 vos: "/verify"
 
-verify command (build agent):
-├─ task(@code-reviewer)    -> revisa el diff completo
-├─ task(@security-reviewer) -> audita cambios de seguridad
-└─ task(@typescript-reviewer) -> valida tipos
+verify (build agent) en paralelo:
+- task(@code-reviewer)     → diff completo
+- task(@security-reviewer)  → secrets, deps vulnerables, permisos
+- task(@flutter-reviewer)   → perf, a11y, const, build context
+- flutter analyze + flutter test + coverage
 
-Resultado: PASS/FAIL con findings especificos.
+resultado:
+```
+verify
+======
+analyze: PASS (0 issues)
+test: PASS (12/12)
+coverage: 87%
+flutter-review: 2 minor (const missing)
+code-review: 1 med (QuizState.copyWith no exhaustivo)
+security: 0 issues
+overall: PASS-WITH-NITS
 
-### Paso 8: commit con convenciones
+auto-fix:
+- const widgets: 2 cambios
+- QuizState.copyWith: switch exhaustivo
+```
 
-vos: "/commit"
+### Paso 9: commit
 
-git-workflow skill auto-activada:
-- diff muestra cambios en src/api/users/
-- commit message: `feat(api): add GET /users/:id endpoint with JWT auth`
-- incluye referencia a issues si hay
+vos: "dale, commitea"
+
+build usa skill `git-workflow` (auto-activada por contexto de commit):
+- git add lib/ test/ pubspec.yaml
+- commit: `feat(quiz): implement flutter quiz app with riverpod + go_router`
 
 ---
 
 ## Resumen del flujo
 
-| Paso | Quien hace | Que usa | Output |
-| --- | --- | --- | --- |
+| Paso | Quien | Que usa | Output |
+|------|-------|---------|--------|
 | 1 | vos | `/orchestrate` | arranca planner |
-| 2 | planner | skills auto | contexto cargado |
-| 3-4 | planner + 4 sub-agents | task tool en paralelo | 4 reviews |
-| 5 | planner | sintetiza | resumen consolidado |
-| 6 | vos | build + skills | implementacion |
-| 7 | build | `/verify` + 3 sub-agents | PASS/FAIL |
-| 8 | vos | `/commit` | commit con conventional |
+| 2 | planner | caveman + 10 skills | plan terso |
+| 3 | vos | "dale + detalle" | dispatch paralelo |
+| 4-5 | planner + 4 sub-agents | task tool paralelo | planes por area |
+| 6 | planner | skills auto | lista archivos |
+| 7 | build | skills + 2 tasks | codigo + tests |
+| 8 | vos | `/verify` | 3 sub-agents + report |
+| 9 | vos | skill git-workflow | commit conventional |
 
-**Total agentes involucrados**: 7+ (`planner`, `planner-research`, `code-reviewer`, `security-reviewer`, `typescript-reviewer`, `tdd-guide`, `build` + 64 disponibles)
+**Agentes involucrados**: 7+ (planner, architect, flutter-reviewer, tdd-guide, intent-driven-development, code-reviewer, security-reviewer, build)
+**Skills auto-activadas**: 4-5 segun contexto Flutter
+**Comandos**: 2 (`/orchestrate`, `/verify`)
+**Context preservado**: ves resumenes, no los 11 outputs raw. Cada sub-agent corre en su propio context.
 
-**Skills activadas automaticamente**: 4-5 segun contexto
+## Lo que NO tuviste que pedir
 
-**Comandos usados**: 4 (`/orchestrate`, `/verify`, `/commit`, posiblemente `/tdd` o `/build-fix`)
+| Cosa | Quien lo hizo | Cuando |
+|------|---------------|--------|
+| Tests | tdd-guide | auto en cada archivo nuevo |
+| Security review | security-reviewer | auto en /verify |
+| Best practices (coding-standards) | skill auto | en cada sesion |
+| TDD red→green | tdd-guide | enforced |
+| Accesibilidad (a11y) | flutter-reviewer | en /verify |
+| Performance (const, build context) | flutter-reviewer | por archivo |
+| Conventional commits | git-workflow skill | en commit |
+| Acceptance criteria | intent-driven-development | en plan |
+| Dark mode + theme sync | architect + flutter-reviewer | en plan + verify |
 
-**Context preservado**: tu ventana principal solo ve resumenes, no los 4 outputs raw. Cada sub-agente corre en su propio context.
+**Regla**: cada agente/skill tiene su especialidad. Si lo necesita, lo invoca. **Vos pedis la intencion** ("app de quiz"), el sistema se encarga del como.
 
 ## Diferencia entre comando, skill y agente
 
