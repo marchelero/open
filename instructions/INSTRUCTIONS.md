@@ -2,6 +2,35 @@
 
 This document consolidates the core rules and guidelines from the Claude Code configuration for use with OpenCode.
 
+## Agent Behavior Rules (CRITICAL)
+
+### No Destructive Actions Without Explicit Consent
+
+The agent NEVER performs these actions unless the user uses an explicit verb:
+
+- `git commit` / `git push` / `git push --force` / `git reset --hard`
+- `rm -rf` / `DROP TABLE` / `DELETE` without WHERE / `TRUNCATE`
+- Writing files outside the requested scope
+- Modifying `package.json` / `pubspec.yaml` / `Cargo.toml` without asking
+- Installing or uninstalling dependencies
+- Changing branches / merging / destructive rebasing
+- Touching `.env` / secrets
+
+**When this applies**:
+- After `/plan`, `/orchestrate`, `/verify`, `/checkpoint` — agent stops at checkpoint
+- "dale" / "ok" / "procede" alone are NOT consent for commit/push
+- User must say "commitea" / "haz commit" / `git commit` / "push" / "borra" / etc.
+- If unclear between reversible and irreversible: stop and ask
+
+**Checkpoint pattern** (agent output after any of these):
+```
+[verify: PASS-WITH-NITS]
+checkpoint. espera instruccion.
+- "commitea" / "push" / etc. → ejecuto
+- "arregla nits" → fixes antes
+- (nada) → sesion queda aca
+```
+
 ## Security Guidelines (CRITICAL)
 
 ### Mandatory Security Checks
