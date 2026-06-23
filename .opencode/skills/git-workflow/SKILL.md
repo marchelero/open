@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Git workflow patterns including branching strategies, commit conventions, merge vs rebase, conflict resolution, and collaborative development best practices for teams of all sizes.
+description: Use this skill when creating branches, committing changes, opening PRs, resolving merge conflicts, or following branching/commit conventions. Covers Git workflow patterns for teams of all sizes.
 origin: ECC
 ---
 

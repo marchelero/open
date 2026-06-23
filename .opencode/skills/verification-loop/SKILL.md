@@ -1,6 +1,6 @@
 ---
 name: verification-loop
-description: "A comprehensive verification system for Claude Code sessions."
+description: Use this skill when running post-change verification of implementations, builds, tests, and reviews. Provides a comprehensive verification system for sessions.
 origin: ECC
 ---
 
