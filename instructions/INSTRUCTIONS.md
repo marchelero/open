@@ -31,6 +31,8 @@ checkpoint. espera instruccion.
 - (nada) → sesion queda aca
 ```
 
+**Per-turn consent rule**: permission to commit/push from a PREVIOUS turn does NOT carry over. If the user said "commitea" last turn, that does NOT mean you can commit this turn. Each commit/push requires its own explicit verb in the current turn ("commitea" / "push" / "dale, commitea" / etc). If unsure, show the diff and ask: "commiteo? (s/n)".
+
 ## Security Guidelines (CRITICAL)
 
 ### Mandatory Security Checks
@@ -70,9 +72,33 @@ If security issue found:
 
 ---
 
-## Coding Style
+## Tool Result Truncation (CRITICAL for token efficiency)
 
-### Immutability (CRITICAL)
+When using shell tools, ALWAYS cap output to prevent context explosion. A single `grep -r` without a cap can return 5000 lines = ~30K tokens wasted.
+
+| Tool | Always use | Never use |
+|------|-------------|-----------|
+| `grep` | `grep -m 50 ...` or `\| head -n 100` | `grep -r` alone on big trees |
+| `find` | `find ... \| head -n 50` | `find /` (entire filesystem) |
+| `cat` | Read tool with line limits, or `head -n 100` | `cat file` on big files |
+| `git log` | `git log --oneline \| head -n 20` | `git log` alone (infinite) |
+| `ls` | `ls \| head -n 30` | `ls` on directories with 1000+ entries |
+| `npm/yarn/pnpm` | `2>&1 \| tail -n 30` | full install output (verbose) |
+| `git status` | OK as-is (small) | — |
+| `git diff` | OK as-is for small diffs, `\| head` for large | `git diff` on 10K-line PRs |
+
+**Hard rules**:
+- If a tool result is > 200 lines, the agent MUST truncate or use a more targeted query.
+- If `grep` returns 0 matches with `-m 50`, increase to `-m 200` before giving up.
+- For "show me the file", prefer the **Read tool** (which returns line-bounded content) over `cat`.
+- For "list files matching X", use `find ... -name X | head` not `find ... -name X`.
+- For build/test output, only the last 30 lines usually matter — use `tail -n 30`.
+
+**Sub-agent discipline**: when delegating to a sub-agent via the task tool, pass file PATHS not file contents. The sub-agent should read what it needs with targeted queries, not receive bulk context from the primary.
+
+---
+
+## Coding Style
 
 ALWAYS create new objects, NEVER mutate:
 

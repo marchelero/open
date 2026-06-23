@@ -102,6 +102,29 @@ Todas las respuestas en este proyecto van en **caveman mode** por default para r
 
 **Regla de sub-agents**: cuando un sub-agent (reviewer/fixer/tester) es invocado por el primary agent, ya tiene contexto del PRD. NO vuelve a hacer PRD. Si el task no matchea el PRD, reporta al primary en vez de inventar scope.
 
+### 5. Git: NUNCA commit ni push sin permiso explicito
+
+**Regla**: el agent NUNCA hace `git commit` ni `git push` a menos que el usuario lo pida con verbo explicito en ESE turno.
+
+- "commitea" / "haz commit" / `git commit` → OK para commit local
+- "push" / "sube" → OK para push
+- "dale" / "ok" / "procede" solos → NO son consentimiento
+- "commitea y push" / "todo" → OK para ambos
+
+**Cuando se rompe esta regla**: rollback con `git reset --hard HEAD~1` (solo si NO se pusheo). Si ya se pusheo, revert con `git revert` y push del revert (esto SI requiere permiso).
+
+**Pattern de checkpoint antes de commit/push**:
+```
+[3 files changed: AGENTS.md, INSTRUCTIONS.md, .opencode/agents/foo.md]
+
+commiteo? (s/n)
+- "s" / "commitea" → hago git add + git commit
+- "push" / "sube" → ademas git push
+- "n" / "skip" → no commiteo
+```
+
+**NUNCA asumir permiso de turnos anteriores**. Si el usuario dio permiso en el turno previo, eso NO aplica al turno actual. Cada turno requiere su propio "commitea" o "push".
+
 **Flujo obligatorio**:
 1. Invocar `task { subagent_type: "prd-agent", prompt: "<user request>" }`
 2. Esperar confirmacion explicita del usuario sobre el Intention Map

@@ -38,6 +38,27 @@ Mas:
 
 Sin dependencias npm en el root. Plugins usan Bun internamente (instala solo si esta).
 
+## Comportamientos automaticos (no opt-in)
+
+El agent SIEMPRE hace esto. No hay que activarlo, no hay que recordarlo:
+
+| # | Comportamiento | Que pasa |
+|---|----------------|----------|
+| 1 | **Caveman mode** | Todas las respuestas en estilo terso (~75% menos tokens). Salir solo para security warnings, acciones irreversibles, multi-paso, o cuando vos pidas "habla normal". |
+| 2 | **PRD-first** | Cualquier pedido "build X" / "create Y" / "agregar Z" invoca `@prd-agent` o `/prd` PRIMERO. No propone solucion sin antes clarificar intent + escribir PRD. Skip solo para Q&A, one-liner, bug repro, o "skip PRD" explicito. |
+| 3 | **Session memory** | Cuando decis "listo" / "bye" / "chau" / "hasta maniana", el agent auto-escribe snapshot en `.agents/sessions/`. No tenes que correr `/session-end`. |
+| 4 | **No destructive without consent** | `git commit` / `push` / `rm -rf` / `DROP TABLE` / etc requieren verbo explicito. "dale" / "ok" solos NO son consentimiento. |
+| 5 | **No git push/commit without explicit per-turn consent** | El agent NUNCA commitea ni pushea sin que vos digas "commitea" / "push" en ESE turno. Permiso previo NO se aplica al turno actual. |
+
+**Trigger del smoke test** (post-install, anytime):
+
+```bash
+node .opencode/bin/smoke-test.js
+# PASSED: 23, WARNINGS: 0, FAILED: 0
+```
+
+Reglas completas en `AGENTS.md`.
+
 ## Como se usa
 
 ```bash
