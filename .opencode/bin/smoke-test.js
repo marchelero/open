@@ -96,8 +96,8 @@ check('setup.ps1 exists', () => fs.existsSync('setup.ps1'));
 check('setup.sh exists', () => fs.existsSync('setup.sh'));
 check('.opencode/ folder', () => fs.existsSync('.opencode'));
 check('.agents/ folder', () => fs.existsSync('.agents'));
-check('instructions/ folder', () => fs.existsSync('instructions'));
-check('instructions/INSTRUCTIONS.md exists', () => fs.existsSync('instructions/INSTRUCTIONS.md'));
+check('.opencode/instructions/ folder', () => fs.existsSync('.opencode/instructions'));
+check('.opencode/instructions/INSTRUCTIONS.md exists', () => fs.existsSync('.opencode/instructions/INSTRUCTIONS.md'));
 
 console.log('');
 console.log('[Counts]');

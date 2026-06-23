@@ -90,7 +90,7 @@ El config principal. Define:
 }
 ```
 
-### `instructions/INSTRUCTIONS.md`
+### `.opencode/instructions/INSTRUCTIONS.md`
 
 Reglas globales que opencode inyecta automaticamente al system prompt de **cada sesion**. Son cosas que aplican a todo: seguridad, estilo, git, testing, etc. Aca vivian en ECC y se traen como un solo archivo consolidado.
 
@@ -665,7 +665,7 @@ Todo esto pasa en una sola sesion, sin que tengas que cambiar de ventana.
 
 **Cambiar el modelo**: agrega `model` y `small_model` a `opencode.json` (el starter no los incluye). Ejemplo: `{"model": "anthropic/claude-sonnet-4-5", "small_model": "anthropic/claude-haiku-4-5"}`. Cada usuario elige segun su provider y budget.
 
-**Cambiar las instrucciones**: edita `instructions/INSTRUCTIONS.md` o modifica el array `instructions` del config.
+**Cambiar las instrucciones**: edita `.opencode/instructions/INSTRUCTIONS.md` o modifica el array `instructions` del config.
 
 ## Reiniciar
 

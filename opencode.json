@@ -5,7 +5,7 @@
     "autoupdate": "notify",
     "snapshot": true,
     "instructions": [
-        "instructions/INSTRUCTIONS.md",
+        ".opencode/instructions/INSTRUCTIONS.md",
         "AGENTS.md",
         ".opencode/skills/api-design/SKILL.md",
         ".opencode/skills/security-review/SKILL.md",

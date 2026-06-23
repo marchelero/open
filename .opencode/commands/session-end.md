@@ -106,11 +106,96 @@ cp "{FILE}" ".agents/sessions/LATEST.md"
 
 This makes the next `/session-start` find it without scanning by date.
 
-### Step 6 — Report
+### Step 6 — Refresh `.agents/PROJECT.md` (auto-detect staleness)
+
+The project may have grown (new modules, new dependencies, new files). Check if `PROJECT.md` is stale and refresh it.
+
+```bash
+# 1. Check if refresh is needed
+node .opencode/bin/refresh-project.js --check
+
+# 2. If stale, show diff (don't write yet)
+node .opencode/bin/refresh-project.js --dry-run
+
+# 3. If diff looks good, apply
+node .opencode/bin/refresh-project.js
+```
+
+**Behavior**:
+- `--check` exits 0 if up to date, 1 if stale (cheap probe).
+- `--dry-run` shows the diff that would be applied.
+- Default mode: writes a `.bak.{timestamp}` backup, then overwrites.
+- **Manual sections preserved across refreshes**: `Non-Negotiables`, `Architecture Notes`, `Open Questions`. The CLI only regenerates `Identity`, `Stack`, `Conventions`, `Directory Layout`, `License`.
+- If the user says "skip refresh" or "no", do not run the CLI.
+
+**Report the result** to the user:
+- "PROJECT.md refreshed: {N} lines added, {M} removed"
+- Or "PROJECT.md is up to date (no changes)"
+
+### Step 7 — Extract quick instincts (auto, MANDATORY)
+
+Review the session and add 1-3 key insights to the instinct store. This is part of the 4-layer memory hierarchy: the session snapshot captures the WHAT, the instinct store captures the LEARNINGS.
+
+**Skip automatically** if:
+- Session was pure Q&A (no code, no decisions, no debug sessions)
+- No new patterns, fixes, or mistakes were observed
+- All potential insights would duplicate existing instincts (run `/instinct-status` first to check)
+
+**Confidence calibration**:
+- `0.5` — "this worked once in this session" (low confidence, needs more evidence)
+- `0.7` — confirmed by 2+ occurrences this session, or fixed a non-trivial issue
+- `0.9` — contradicted an earlier assumption, or revealed a non-obvious gotcha
+
+**Safeguards**:
+- **Max 3 instincts per session** (avoid contamination of the store)
+- **Confidence >= 0.5 always** (no low-quality noise)
+- **Always include `--source auto-session`** so the user can filter these from manually-added ones
+- **Use `--category`** from a controlled list: `coding`, `testing`, `git`, `debug`, `refactor`, `security`, `arch`, `workflow`
+
+**CLI invocation** (run 1-3 times, depending on how many insights you found):
+
+```bash
+node .opencode/bin/instinct.js add \
+  --trigger "<when this applies>" \
+  --action "<what to do>" \
+  --confidence "<0.5-0.9>" \
+  --category "<coding|testing|git|debug|refactor|security|arch|workflow>" \
+  --scope project
+```
+
+**User can opt out** at any point: if the user says "skip learn" or "no instincts" before this step, do not run the CLI.
+
+**After running**, report:
+- "Instincts added: N (categories: X, Y, Z)"
+- Or "No new instincts (Q&A session / duplicates / low confidence)"
+
+**Anti-pattern**: do not add generic instincts like "always test code" or "use git commits". Only specific, actionable insights with evidence from THIS session.
+
+### Step 8 — Report
 
 ```
 Snapshot saved: .agents/sessions/{DATE}-{SLUG}.md
 Pointer updated: .agents/sessions/LATEST.md
+PROJECT.md:    {refreshed | up to date | skipped}
+Instincts:     {N added | none | skipped}
+```
+
+```
+Snapshot saved: .agents/sessions/{DATE}-{SLUG}.md
+Pointer updated: .agents/sessions/LATEST.md
+PROJECT.md:    {refreshed | up to date | skipped}
+
+Status: {DONE | PARTIAL | BLOCKED}
+Next step 1: {first item from Next steps section}
+
+Maniana / cuando vuelvas:
+  /session-start
+```
+
+```
+Snapshot saved: .agents/sessions/{DATE}-{SLUG}.md
+Pointer updated: .agents/sessions/LATEST.md
+PROJECT.md:    {refreshed | up to date | skipped}
 
 Status: {DONE | PARTIAL | BLOCKED}
 Next step 1: {first item from Next steps section}

@@ -1,5 +1,5 @@
 ---
-description: MANDATORY FIRST STEP for any non-trivial task. Product Requirements specialist. The primary agent MUST delegate to this agent before any planning, design, or implementation when the user requests a new feature, task, project, or system. Reads/creates `.agents/PROJECT.md` for project context, runs an Understanding Protocol (active listening, intention map, ambiguity resolution, explicit confirmation), and produces a `.opencode/prds/{name}.prd.md` artifact. Auto-triggers on: "build X", "create Y", "agregar Z", "implementar W", "hazme una app", "necesito una funcionalidad que...", "/plan" without prior PRD, or any non-trivial implementation request. DO NOT skip unless: pure Q&A, one-liner fix, bug report with repro, code review of existing changes, or user explicitly says "skip PRD" / "implementa directo".
+description: MANDATORY FIRST STEP for any non-trivial task. Product Requirements specialist. The primary agent MUST delegate to this agent before any planning, design, or implementation when the user requests a new feature, task, project, or system. Reads/creates `.agents/PROJECT.md` for project context, runs an Understanding Protocol (active listening, intention map, ambiguity resolution, explicit confirmation), and produces a date-stamped `.opencode/prds/{YYYY-MM-DD}-{name}.prd.md` artifact. Auto-triggers on: "build X", "create Y", "agregar Z", "implementar W", "hazme una app", "necesito una funcionalidad que...", "/plan" without prior PRD, or any non-trivial implementation request. DO NOT skip unless: pure Q&A, one-liner fix, bug report with repro, code review of existing changes, or user explicitly says "skip PRD" / "implementa directo".
 mode: all
 permission:
   read: allow
@@ -212,7 +212,14 @@ Riesgo: BAJO | MEDIO | ALTO  ·  Reversibilidad: alta | media | baja
 
 **If the user does not confirm**, do not proceed. Loop back to the relevant phase. Do not push; do not proceed with "implicit confirmation" (a "yes" is not confirmation — ask for the explicit "confirmo" or "OK" before generating the PRD).
 
-**If the user confirms**, write the PRD to `.opencode/prds/{kebab-case-name}.prd.md`.
+**If the user confirms**, write the PRD to `.opencode/prds/{YYYY-MM-DD}-{kebab-case-name}.prd.md`.
+
+Use today's date in ISO format (e.g., `2026-06-23`). The date prefix makes the PRD:
+- Sortable by creation time in directory listings
+- Disambiguable when the same name is used multiple times
+- Discoverable in `git log` via the filename
+
+If a file with the same date+name already exists, append `-2`, `-3`, etc.
 
 ---
 
@@ -293,7 +300,7 @@ The work is complete when ALL of the following are true (each independently veri
 After writing the PRD, report:
 
 ```
-PRD created: .opencode/prds/{name}.prd.md
+PRD created: .opencode/prds/{YYYY-MM-DD}-{name}.prd.md
 
 Objective:    {one line}
 Hypothesis:   {one line}
@@ -308,7 +315,7 @@ Open questions: {count}
 Risks:          {count} (highest: {name})
 
 Next step:
-  /plan .opencode/prds/{name}.prd.md
+  /plan .opencode/prds/{YYYY-MM-DD}-{name}.prd.md
   → /plan picks the next pending milestone and produces an implementation plan.
 ```
 
@@ -317,7 +324,7 @@ Next step:
 ## Integration
 
 - **`.agents/PROJECT.md`** — read at Phase 0; created if missing.
-- **`.opencode/prds/{name}.prd.md`** — your output. Lives in the repo, can be committed.
+- **`.opencode/prds/{YYYY-MM-DD}-{name}.prd.md`** — your output. Lives in the repo, can be committed.
 - **`/plan`** — consumes your PRD; picks the next pending milestone and produces an implementation plan.
 - **`/orchestrate`** — invokes you FIRST before dispatching `planner` or any other agent.
 - **`@prd-agent`** — direct invocation: user can bypass `/orchestrate` and ask you specifically.
