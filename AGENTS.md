@@ -46,9 +46,13 @@ Si el usuario hace `npx skills add <owner>/<repo>@<skill>`:
 - opencode las descubre automaticamente via `<available_skills>`.
 - El `permission.skill: "allow"` global en `opencode.json` garantiza que los agentes puedan cargarlas.
 
-## Modo Caveman (default: ON)
+## Comportamientos obligatorios (no opt-in)
 
-Todas las respuestas en este proyecto van en **caveman mode** por default para reducir ~75% el consumo de tokens. Reglas:
+Estos 4 comportamientos los hace el agent SIEMPRE, sin que el usuario lo pida. Son enforced, no recomendados.
+
+### 1. Caveman mode (estilo)
+
+Todas las respuestas en este proyecto van en **caveman mode** por default para reducir ~75% el consumo de tokens.
 
 **Estilo**:
 - Drop articulos (a/an/the), filler (just/really/basically), pleasantries (sure/certainly/happy to), hedging.
@@ -68,13 +72,55 @@ Todas las respuestas en este proyecto van en **caveman mode** por default para r
 - Cuando la compresion cree ambiguedad tecnica real.
 - Cuando el usuario pida clarificacion o repita la pregunta.
 
-Despues de la parte riesgosa, resume caveman.
-
 **Como desactivar**: "stop caveman" / "normal mode" / "habla normal" → vuelve a estilo completo. Reactivar: "caveman mode" o `/caveman`.
 
-Referencia completa: `.agents/skills/caveman/SKILL.md`.
+### 2. PRD-first (cualquier task no-trivial)
 
-## Acciones destructivas requieren consentimiento explicito
+**Regla**: cuando el usuario pide una feature / task / proyecto nuevo, el agent SIEMPRE invoca `@prd-agent` PRIMERO. No propone soluciones directas.
+
+**Triggers** (cualquiera activa el flujo):
+- "build X", "create Y", "agregar Z", "implementar W", "hazme una app de..."
+- "necesito una funcionalidad que..."
+- "quiero un sistema de..."
+- "/plan X" sin PRD previo
+- Cualquier pedido que no sea pure Q&A o one-liner fix
+
+**Flujo obligatorio**:
+1. Invocar `task { subagent_type: "prd-agent", prompt: "<user request>" }`
+2. Esperar confirmacion explicita del usuario sobre el Intention Map
+3. PRD escrito en `.opencode/prds/{name}.prd.md`
+4. Reci despues: planning + implementacion
+
+**Excepciones** (puede saltar prd-agent):
+- Pure Q&A: "que hace X?" / "como funciona Y?"
+- One-liner fix: "typo en README" / "agrega coma"
+- Bug report con repro: "el login falla cuando..." (los criterios son obvios)
+- Code review: "/code-review" sobre cambios existentes
+- Usuario explicito: "skip PRD" / "implementa directo" / "ya te di el contexto"
+
+**Anti-pattern explicit**: el agent NUNCA propone una solucion (con archivos, librerias, patrones) antes de pasar por prd-agent. Si el usuario pide feature X, la primera respuesta es invocar prd-agent, no "te recomiendo hacer Y con Z".
+
+### 3. Session memory (auto-snapshot al cerrar)
+
+**Regla**: cuando el usuario senala fin de sesion, el agent AUTO-escribe snapshot en `.agents/sessions/`. No espera a que corra `/session-end`.
+
+**Triggers** (cualquiera activa auto-snapshot):
+- "listo", "listo por hoy", "terminamos", "chau", "bye", "adios", "hasta maniana"
+- "guarda donde quedamos" / "save state" / "snapshot"
+- Inactividad > 30 min (si la sesion tuvo trabajo significativo)
+- Despues de `/verify` exitoso en proyecto con cambios reales
+- Antes de operacion destructiva (commit, push, etc) en sesion larga
+
+**Comportamiento**:
+1. Detectar trigger
+2. Resumir sesion internamente (status, decisions, files, commits)
+3. Preguntar UNA vez: "Snapshot de hoy como 'X' o queres otro titulo?"
+4. Si confirma → escribir `.agents/sessions/{YYYY-MM-DD}-{slug}.md` + actualizar LATEST.md
+5. Si dice "skip" → respetar, no insistir
+
+**`/session-end` y `/session-start`** siguen disponibles para uso manual, pero ya no son necesarios. El auto-snapshot cubre el caso comun.
+
+### 4. Acciones destructivas requieren consentimiento explicito
 
 El agent NUNCA hace estas acciones sin que el usuario lo pida con verbo explicito:
 
@@ -110,20 +156,11 @@ El pack usa una arquitectura de 4 capas para minimizar tokens al retomar:
 | Capa | Que vive | Cuando se carga | Tamanio |
 |------|----------|-----------------|---------|
 | 1 | AGENTS.md + INSTRUCTIONS.md + .agents/PROJECT.md | siempre | ~2K tokens |
-| 2 | .agents/sessions/LATEST.md (ultimo snapshot) | al `/session-start` | ~1-3K tokens |
+| 2 | .agents/sessions/LATEST.md (ultimo snapshot) | al `/session-start` o auto al cerrar | ~1-3K tokens |
 | 3 | Skills on-demand, files especificos, sub-agents | cuando se necesitan | variable |
 | 4 | Full git history, todos los PRDs/plans, instincts | nunca al contexto | disco |
 
-**Comandos**:
-- `/session-start` — lee Capa 1+2, resume en 1-2 lineas
-- `/session-end` — escribe snapshot nuevo, actualiza LATEST.md
-
 **Regla**: todo lo que pueda vivir en disco → disco. Solo lo "vivo" va a contexto.
-
-**Cuando usarlos**:
-- Al retomar proyecto: `/session-start`
-- Al cerrar sesion larga: `/session-end`
-- Despues de checkpoint destructivo: `/session-end` para preservar estado
 
 ## Reinicio
 
