@@ -5,11 +5,18 @@ All notable changes to this starter pack are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- **`validate-frontmatter.js`**: nuevo CLI cero-deps que valida el frontmatter de los 65 agentes, 10 skills y 52 comandos (descripción requerida, modo `subagent`, `name` igual al directorio, descripción de skill entre 1-1024 caracteres, descripción con prefijo "Use when..."). Reporta PASS/WARN/FAIL con códigos de salida. Integrado en `smoke-test.js` y en CI.
+- **CI workflow** (`.github/workflows/validate.yml`): corre `smoke-test.js` + `validate-frontmatter.js` + verificación de JSON válido en cada push/PR a `main`.
+- **Documentación del pack** en `.opencode/docs/` (todo en español neutro): `README.md` (entrada), `ruteo-de-agentes.md` (qué sub-agente usar según intención), `arquitectura.md` (4 capas, flujo PRD, ciclo de instintos), `superficies-de-capacidad.md` (regla vs skill vs MCP vs agente vs CLI).
 - **Auto-extract instincts in `/session-end`**: Step 7 of session-end now adds 1-3 high-quality instincts to the store automatically. Safeguards: max 3 per session, confidence >= 0.5, auto-skip on Q&A, user can opt out with "skip learn".
 - **CHANGELOG.md** (12 KB, 155 lines): full version history with Keep a Changelog format, summary tables, architecture diagram, token efficiency metrics.
 - **STARTER.md** sections: "Primeros 5 minutos" (post-install quickstart), "Quick Reference" (1-page cheat sheet), "Recipes" (common workflows).
 
 ### Changed
+- **`opencode.json > instructions`**: se eliminaron las 10 skills de la lista de instrucciones siempre cargadas. El catálogo `<available_skills>` ya las expone, así que cargarlas duplicaba contenido y desperdiciaba ~30K tokens por turno. Solo quedan `INSTRUCTIONS.md` y `AGENTS.md` como capa 1.
+- **`.agents/PROJECT.md`**: se rellenó con el contenido real del pack (stack, convenciones, no negociables, arquitectura de 4 capas). Antes era un template con placeholders, lo que dejaba al prd-agent sin contexto en Fase 0.
+- **`STARTER.md` movido a `.opencode/docs/README.md`**: el archivo se renombró y se movió dentro de `.opencode/` para que viaje con el pack al copiarlo a otros proyectos. Toda la documentación del pack ahora vive en `.opencode/docs/` (en español neutro, sin voseo). El `README.md` raíz queda solo como landing de GitHub.
+- **`smoke-test.js`**: 24 comprobaciones (antes 23). Añadido check `validate-frontmatter.js runs`. Actualizado para apuntar a `.opencode/docs/README.md` en vez del antiguo `STARTER.md`.
 - **README.md**: updated to use `cp` instead of setup scripts. Quick start is now a single copy command.
 - **smoke-test.js**: removed `setup.ps1`/`setup.sh` checks; added `CHANGELOG.md` check.
 - **STARTER.md**: updated stats (65 agents, 10 skills, 52 commands, 4 CLIs).

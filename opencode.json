@@ -6,20 +6,14 @@
     "snapshot": true,
     "instructions": [
         ".opencode/instructions/INSTRUCTIONS.md",
-        "AGENTS.md",
-        ".opencode/skills/api-design/SKILL.md",
-        ".opencode/skills/security-review/SKILL.md",
-        ".opencode/skills/tdd-workflow/SKILL.md",
-        ".opencode/skills/verification-loop/SKILL.md",
-        ".opencode/skills/error-handling/SKILL.md",
-        ".opencode/skills/coding-standards/SKILL.md",
-        ".opencode/skills/git-workflow/SKILL.md",
-        ".opencode/skills/intent-driven-development/SKILL.md",
-        ".opencode/skills/documentation-lookup/SKILL.md",
-        ".opencode/skills/mcp-server-patterns/SKILL.md"
+        "AGENTS.md"
     ],
     "permission": {
-        "skill": "allow"
+        "skill": "allow",
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow"
     },
     "mcp": {
         "context7": {

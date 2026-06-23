@@ -90,7 +90,7 @@ console.log('');
 console.log('[Structure]');
 check('opencode.json exists', () => fs.existsSync('opencode.json'));
 check('AGENTS.md exists', () => fs.existsSync('AGENTS.md'));
-check('STARTER.md exists', () => fs.existsSync('STARTER.md'));
+check('.opencode/docs/README.md exists', () => fs.existsSync('.opencode/docs/README.md'));
 check('README.md exists', () => fs.existsSync('README.md'));
 check('CHANGELOG.md exists', () => fs.existsSync('CHANGELOG.md'));
 check('.opencode/ folder', () => fs.existsSync('.opencode'));
@@ -140,6 +140,8 @@ check('SKILL.md files have name:', () => {
     return readFile(skill).match(/^name:/m);
   });
 });
+
+check('validate-frontmatter.js runs', () => testScript('.opencode/bin/validate-frontmatter.js', '--quiet'));
 
 console.log('');
 console.log('[No broken paths in pack]');

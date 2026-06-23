@@ -1,39 +1,64 @@
 # Project Context
 
-> This file is the project's source of truth for stack, conventions, and non-negotiables.
-> Edit freely. The prd-agent reads it before any clarification work.
-> Run `@prd-agent` to auto-generate this from existing project files (README, package.json, etc.).
+> Source of truth for stack, conventions, and non-negotiables. Edit freely.
+> prd-agent reads this at Phase 0. Run `@prd-agent` or `node .opencode/bin/refresh-project.js` to regenerate.
 
 ## Identity
-- **Name**: (your project name)
-- **Type**: (web app | mobile | CLI | library | API service | monorepo | other)
-- **Description**: (one-line description)
+- **Name**: open (opencode starter pack)
+- **Type**: meta-project (config + prompts + zero-deps CLI)
+- **Description**: portable kit of 65 agents, 10 skills, 52 slash commands, 2 MCPs, 4 plugins. Copy to any project, restart opencode, ship.
 
 ## Stack
-- **Language**: (primary, e.g., TypeScript, Dart, Python, Rust, Go)
-- **Framework**: (e.g., Next.js 15, Flutter 3.x, FastAPI, Axum, Gin)
-- **Runtime / Build**: (Node 20+, Flutter 3.x+, Python 3.12, Rust 1.75)
-- **Package manager**: (npm | pnpm | yarn | bun | cargo | pub | pip | poetry | uv)
-- **Database**: (postgres | sqlite | mongo | none | other)
-- **Deployment**: (Vercel | Fly.io | AWS | GCP | local | other)
+- **Language**: Markdown (YAML frontmatter) + Node.js (CLIs)
+- **Runtime**: Node.js 20+ (zero-deps CLIs use only `fs`/`path`/`os`)
+- **Package manager**: n/a (root has no `package.json`; `.opencode/package.json` is for plugin install only and is gitignored)
+- **Configuration**: `opencode.json` (JSON5-compatible)
+- **MCP servers**: context7 (`@upstash/context7-mcp`), playwright (`@playwright/mcp`)
+- **Plugins**: `opencode-dynamic-context-pruning`, `opencode-skillful`, `opencode-vibeguard`, `opencode-pty`
+- **Junctions**: `.opencode/agent` and `.opencode/skill` are 0-byte junctions to `agents/` and `skills/` for opencode 1.17.x backwards compat
 
 ## Conventions
-- **Style**: (prettier, black, rustfmt, gofmt — or "free-form")
-- **Lint**: (eslint, ruff, clippy — or "none")
-- **Tests**: (jest, vitest, pytest, cargo test, go test, flutter test)
-- **Coverage target**: (80%+? 70%? no target?)
-- **Commits**: (conventional commits | free-form | other)
-- **Branching**: (trunk | gitflow | github flow | other)
+- **Style**: free-form (no formatter — content is prompts/configs)
+- **Lint**: `node .opencode/bin/smoke-test.js` + `node .opencode/bin/validate-frontmatter.js` (both zero-deps)
+- **Tests**: smoke-test (23 structural checks) + validate-frontmatter (frontmatter shape)
+- **Coverage target**: n/a (not application code)
+- **Commits**: Conventional Commits (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `perf:`)
+- **Branching**: trunk-based on `main`
+- **No-dependency rule**: root has zero npm deps. CLIs in `.opencode/bin/` use only Node stdlib.
 
 ## Non-Negotiables
-- (anything in README that says "always" or "must")
-- (license constraints — MIT? Apache? proprietary?)
-- (security/compliance notes — GDPR? HIPAA? PCI?)
+- **License**: inherited from user project (no embedded license in starter)
+- **Caveman mode default ON**: every session in caveman unless user says otherwise
+- **PRD-first mandatory**: any "build/create/add" goes through `@prd-agent` first
+- **No destructive actions without explicit per-turn consent**: `git commit`/`push`/`rm -rf`/`DROP TABLE` need explicit verb in current turn
+- **Skills on-demand**: do NOT list skills in `opencode.json > instructions` (wastes ~30K tokens/turn). Use `<available_skills>` catalog + `skill` tool.
+- **Junctions preserved**: `.opencode/agent` and `.opencode/skill` are 0-byte junctions opencode 1.17.x scans. Do not delete.
+- **No `model`/`small_model` in `opencode.json`**: each user configures their own provider
 
 ## Architecture Notes
-- (key modules / layers / boundaries)
-- (eventual consistency? offline-first? real-time?)
-- (state management approach)
+
+```
+Capa 1 (always loaded, ~2K tokens):
+  - AGENTS.md                caveman + 5 mandatory behaviors
+  - INSTRUCTIONS.md          global rules (security, git, testing, style)
+  - .agents/PROJECT.md       this file (project source of truth)
+
+Capa 2 (loaded on /session-start, ~1-3K tokens):
+  - .agents/sessions/LATEST.md   copy of most recent snapshot
+  - .agents/sessions/YYYY-MM-DD-{slug}.md   per-session archive
+
+Capa 3 (on-demand via skill/task tools):
+  - 10 skills in .opencode/skills/  (<available_skills> catalog)
+  - 1 user skill in .agents/skills/ (caveman)
+  - 65 sub-agents in .opencode/agents/  (description-triggered)
+
+Capa 4 (disk only, never loaded):
+  - git history
+  - .opencode/prds/             PRD artifacts
+  - .opencode/instincts/        project-scope instincts (JSON)
+  - ~/.config/opencode/instincts/  global instincts
+  - .opencode/node_modules/     plugin deps
+```
 
 ## Open Questions
-- (anything ambiguous about the project itself, not the request)
+- (none — this is the starter's own context; downstream projects override)
