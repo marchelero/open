@@ -68,7 +68,7 @@ Próxima sesión:
 
 ## Superficies de capacidad (dónde vive cada prompt)
 
-Consulta [`superficies-de-capacidad.md`](./superficies-de-capacidad.md) para el árbol de decisión completo. Versión corta:
+Consulta [`SURFACES.md`](./SURFACES.md) para el árbol de decisión completo. Versión corta:
 
 - **Regla** = capa 1, siempre cargada, restricción dura
 - **Skill** = capa 3, bajo demanda, conocimiento condicional
@@ -142,11 +142,13 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 │   │   └── validate-frontmatter.js
 │   ├── instincts/                   instintos del proyecto (JSON)
 │   ├── prds/                        artefactos PRD
-│   ├── docs/                        documentación del pack (todo en español)
+│   ├── docs/                        documentación del pack (español neutro, nombres en inglés/mayúscula)
 │   │   ├── README.md                punto de entrada
-│   │   ├── ruteo-de-agentes.md
-│   │   ├── arquitectura.md
-│   │   └── superficies-de-capacidad.md
+│   │   ├── ROUTE.md                 sub-agentes por intención
+│   │   ├── COMMANDS.md              slash commands por intención
+│   │   ├── EXAMPLES.md              5 flujos completos
+│   │   ├── ARCH.md                  este archivo
+│   │   └── SURFACES.md              regla vs skill vs MCP vs agente vs CLI
 │   ├── agent → agents               junction (backwards compat opencode 1.17.x)
 │   ├── skill → skills               junction (backwards compat opencode 1.17.x)
 │   └── .gitignore                   ignora node_modules, package*.json, junctions

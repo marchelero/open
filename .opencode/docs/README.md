@@ -83,9 +83,11 @@ node .opencode/bin/refresh-project.js
 
 ## Documentación adicional
 
-- **[ruteo-de-agentes.md](./ruteo-de-agentes.md)** — elige el sub-agente correcto según la intención
-- **[arquitectura.md](./arquitectura.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
-- **[superficies-de-capacidad.md](./superficies-de-capacidad.md)** — regla vs skill vs MCP vs agente vs CLI
+- **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención
+- **[COMMANDS.md](./COMMANDS.md)** — los 52 slash commands agrupados por intención
+- **[EXAMPLES.md](./EXAMPLES.md)** — 5 flujos completos de proyectos reales
+- **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
+- **[SURFACES.md](./SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI
 
 ## Reinicio tras cambios
 
