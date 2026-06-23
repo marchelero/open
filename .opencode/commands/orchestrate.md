@@ -23,7 +23,7 @@ Orchestrate multiple specialized agents for this complex task: $ARGUMENTS
 **BEFORE any planning, dispatch `prd-agent`** to:
 1. Verify/create `.agents/PROJECT.md` (project context)
 2. Run the Understanding Protocol (active listening, intention map, ambiguity resolution, confirmation)
-3. Produce `.opencode/prds/{name}.prd.md`
+3. Produce `.opencode/prds/{YYYY-MM-DD-HHMM}-{name}.prd.md`
 
 **Dispatch via task tool:**
 
@@ -84,7 +84,7 @@ Use when: Multiple perspectives needed
 ### Phase 0: Intent Clarification (ALWAYS FIRST)
 - Agent: `prd-agent`
 - Task: clarify intent, resolve ambiguities, generate PRD
-- Output: `.opencode/prds/{name}.prd.md` + user confirmation
+- Output: `.opencode/prds/{YYYY-MM-DD-HHMM}-{name}.prd.md` + user confirmation
 - Depends on: none
 
 ### Phase 1: Planning

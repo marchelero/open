@@ -128,7 +128,7 @@ commiteo? (s/n)
 **Flujo obligatorio**:
 1. Invocar `task { subagent_type: "prd-agent", prompt: "<user request>" }`
 2. Esperar confirmacion explicita del usuario sobre el Intention Map
-3. PRD escrito en `.opencode/prds/{name}.prd.md`
+3. PRD escrito en `.opencode/prds/{YYYY-MM-DD-HHMM}-{name}.prd.md`
 4. Reci despues: planning + implementacion
 
 **Excepciones** (puede saltar prd-agent):

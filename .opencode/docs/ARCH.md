@@ -31,7 +31,7 @@ prd-agent ejecuta el Protocolo de Entendimiento:
   Fase 3: máximo 3 preguntas de ambigüedad a la vez
   Fase 4: confirmación explícita del usuario sobre el Mapa de Intención
        ↓
-PRD escrito en .opencode/prds/YYYY-MM-DD-{nombre}.prd.md
+PRD escrito en .opencode/prds/YYYY-MM-DD-HHMM-{nombre}.prd.md
        ↓
 Solo ENTONCES: /plan → /orchestrate → implementación → /verify
 ```
