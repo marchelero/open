@@ -1,6 +1,6 @@
 # open
 
-Starter pack portable de opencode: 64 agentes, 11 skills, 47 slash commands.
+Starter pack portable de opencode: 65 agentes, 10 skills, 52 slash commands.
 
 Docs: [STARTER.md](./STARTER.md)
 
@@ -8,12 +8,12 @@ Docs: [STARTER.md](./STARTER.md)
 
 ```bash
 # copiar a tu proyecto
-cp opencode.json instructions/ AGENTS.md .opencode/ /path/a/tu/proyecto/
-
-# o usar el installer
-./setup.sh /path/a/tu/proyecto        # bash
-pwsh ./setup.ps1 /path/a/tu/proyecto  # powershell
+cp -r opencode.json AGENTS.md .opencode/ .agents/ /path/a/tu/proyecto/
 
 # abrir
 cd /path/a/tu/proyecto && opencode .
 ```
+
+> Para Windows PowerShell: `Copy-Item -Path "opencode.json","AGENTS.md",".opencode",".agents" -Destination "C:\path\a\tu\proyecto" -Recurse -Force`
+
+> Si tu proyecto ya tiene un README, no se toca. El `AGENTS.md` se puede mergear/sobrescribir manualmente.

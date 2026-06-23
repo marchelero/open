@@ -532,6 +532,177 @@ Los tres ejecutan prompts, pero en momentos y contextos distintos.
 
 # Agente: lanza un sub-proceso que solo lee y devuelve feedback
 @code-reviewer revisa los cambios de src/api/users.ts
+
+---
+
+## Primeros 5 minutos
+
+Lo que hacer despues de instalar el pack en un proyecto nuevo.
+
+### 1. Verificar que todo funciona
+
+```bash
+node .opencode/bin/smoke-test.js
+```
+
+Debe dar `PASSED: 23+`. Si falla, algo del setup esta roto — el output indica que.
+
+### 2. Cargar contexto del proyecto (si es proyecto nuevo)
+
+```
+/prd "agregar feature X"
+```
+
+El prd-agent te preguntara ambiguedades (max 3 a la vez, una pregunta) y escribira el PRD en `.opencode/prds/YYYY-MM-DD-X.prd.md`. Lee el Intention Map antes de confirmar.
+
+Si `.agents/PROJECT.md` no existe, prd-agent lo genera automaticamente desde README, package.json, etc.
+
+### 3. Retomar al dia siguiente
+
+```
+/session-start
+```
+
+Te muestra 1-2 lineas: donde quedaste, status, next step. Solo carga ~3K tokens de contexto (vs ~30K de chat history completo).
+
+### 4. Cerrar sesion
+
+```
+/session-end
+```
+
+Auto-ejecuta 7 pasos: review sesion → escribir snapshot → actualizar LATEST.md → refresh PROJECT.md si esta stale → extract quick instincts (max 3, conf >= 0.5) → reportar.
+
+### 5. Auditar contexto cuando lo sientas pesado
+
+```
+/context
+```
+
+Ve cuanto pesan tus skills, agents, commands, sessions. Si hay muchos, `/session-end` y empezar fresh.
+
+---
+
+## Quick Reference (1 pagina)
+
+### 5 mandatory behaviors (always on)
+
+1. **Caveman mode** — respuestas tersas, ~75% menos tokens. Salir para security warnings, acciones irreversibles, multi-paso, o cuando vos pidas "habla normal".
+2. **PRD-first** — "build X" / "create Y" / "agregar Z" → invoca `@prd-agent` o `/prd` PRIMERO. No propone solucion sin antes clarificar intent + escribir PRD. Skip solo para Q&A, one-liner, bug repro, o "skip PRD" explicito.
+3. **Session memory** — "listo" / "bye" / "chau" / "hasta maniana" → auto-snapshot en `.agents/sessions/`. No tenes que correr `/session-end`.
+4. **No destructive without consent** — `git commit` / `push` / `rm -rf` / `DROP TABLE` requieren verbo explicito. "dale" / "ok" solos NO son consentimiento.
+5. **No git push/commit without per-turn consent** — permiso previo NO se aplica al turno actual.
+
+### 6 commands clave
+
+| Command | Que hace |
+|---------|----------|
+| `/prd` | clarificar intent + escribir PRD |
+| `/orchestrate` | multi-agent workflow (Phase 0 → prd-agent, luego planners) |
+| `/session-start` / `/session-end` | memoria entre sesiones (auto en close signals) |
+| `/context` | audit de contexto (skills, agents, sessions) |
+| `/refresh-project` | regenerar `.agents/PROJECT.md` desde archivos del proyecto |
+| `/verify` | validar cambios (code-review, security, lang-reviewer) |
+
+### 4-layer memory
+
+| Capa | Que vive | Cuando se carga | Tamanio |
+|------|----------|-----------------|---------|
+| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `.agents/PROJECT.md` | siempre | ~2K tokens |
+| 2 | `.agents/sessions/LATEST.md` | al `/session-start` | ~1-3K tokens |
+| 3 | Skills on-demand, files especificos, sub-agents | cuando se piden | variable |
+| 4 | git history, PRDs, plans, instincts | nunca | disco |
+
+### Token savings (cumulative)
+
+| Mecanismo | Savings |
+|-----------|---------|
+| caveman mode | ~75% en outputs |
+| dynamic-context-pruning plugin | 30-50% en sesiones largas |
+| session memory (4-layer) | ~80% en resumes |
+| sub-agents (task tool) | 70-90% en paralelismo |
+| skills on-demand | ~95% en no usadas |
+| tool result truncation | 20-40% en sesiones con mucho grep |
+| **Total** | **~85% reduction vs unoptimized starter** |
+
+### 4 CLIs nativos (zero deps)
+
+```bash
+node .opencode/bin/instinct.js          # add/status/projects/promote/evolve/export/import
+node .opencode/bin/context.js           # context budget report
+node .opencode/bin/refresh-project.js   # regenerate PROJECT.md
+node .opencode/bin/smoke-test.js        # self-verification
+```
+
+---
+
+## Recipes
+
+Workflows paso-a-paso para tareas comunes.
+
+### "Quiero agregar una feature nueva"
+
+1. `/prd "feature X"` — clarificar intent → PRD escrito
+2. `/plan .opencode/prds/YYYY-MM-DD-X.prd.md` — plan con archivos, patterns, validation
+3. implementar (con skills auto: `tdd-workflow`, `coding-standards`)
+4. `/verify` — 3 sub-agents (code-review, security, lang-reviewer)
+5. checkpoint — "commitea" — commit (solo cuando vos lo pidas)
+6. (opcional) "push" — push
+
+### "Quiero revisar cambios antes de commit"
+
+1. `/code-review` — diff completo
+2. `/security` — si toca auth, payments, secrets, user data
+3. (opcional) `flutter-review` / `typescript-review` / etc. — review por stack
+4. checkpoint — "commitea" o "arregla nits primero"
+
+### "Quiero retomar un proyecto donde quedamos"
+
+1. `/session-start` — ve donde quedaste (1-2 lineas)
+2. `/context` — ve el estado del contexto
+3. continuar con la tarea, o `/prd "nueva cosa"` si cambia de scope
+
+### "Quiero limpiar codigo muerto"
+
+1. `/refactor-clean` — detecta y propone
+2. revisar diff
+3. checkpoint — "commitea"
+
+### "Quiero verificar que el setup funciona despues de instalar"
+
+1. `node .opencode/bin/smoke-test.js` — 23 checks
+2. Si pasa → arrancas a trabajar
+3. Si falla → el output indica que check fallo (estructura, counts, junctions, bin scripts, frontmatter, broken paths)
+
+### "Quiero migrar un proyecto de opencode viejo (commands en JSON)"
+
+1. cada command en `opencode.json > command` → mover a `.opencode/commands/{name}.md`
+2. el `template` → body del .md
+3. el `agent` → frontmatter `agent: nombre`
+4. el `description` → frontmatter `description: "..."`
+5. el `subtask: true` → mantener como subagent
+6. `node .opencode/bin/smoke-test.js` — verifica que carga
+
+### "Quiero aprender de esta sesion (manual)"
+
+1. `/learn` — analysis completo (markdown verbose, opt-in)
+2. (auto) `/session-end` ya extrae 1-3 instincts al final
+3. `/instinct-status` — ve los instincts acumulados
+4. `/instinct-export` — comparte con el team
+
+---
+
+## Primeros auxilios: troubleshooting
+
+| Problema | Solucion |
+|----------|----------|
+| `smoke-test.js` falla con "junction" | El setup no creo junctions. Recrea con `New-Item -ItemType Junction` (PS) o `ln -s` (bash). |
+| `node` command not found | Instala Node.js 20+ |
+| opencode no carga commands | Verifica `.opencode/commands/*.md` tienen frontmatter `description:` |
+| agents no se ven en picker | Verifica `.opencode/agents/*.md` tienen frontmatter `description:` y `mode: all` |
+| `node_modules` gigante | No commitees `.opencode/node_modules/`. Esta gitignored. |
+| context feels heavy | `/context` para ver. Si pesa, `/session-end` y empezar fresh. |
+| PRDs duplicados | Usan timestamp `YYYY-MM-DD-{name}.prd.md`. Mismo dia + mismo name → sufijo `-2`. |
 ```
 
 `/code-review` es rapido y simple. `@code-reviewer` es mas profundo porque es un sub-proceso con prompt especializado. La skill ni la invocas — se carga sola cuando el contexto lo amerita.
