@@ -103,6 +103,28 @@ checkpoint. espera instruccion.
 
 Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmacion que romper algo.
 
+## Memoria de sesiones (4 capas)
+
+El pack usa una arquitectura de 4 capas para minimizar tokens al retomar:
+
+| Capa | Que vive | Cuando se carga | Tamanio |
+|------|----------|-----------------|---------|
+| 1 | AGENTS.md + INSTRUCTIONS.md + .agents/PROJECT.md | siempre | ~2K tokens |
+| 2 | .agents/sessions/LATEST.md (ultimo snapshot) | al `/session-start` | ~1-3K tokens |
+| 3 | Skills on-demand, files especificos, sub-agents | cuando se necesitan | variable |
+| 4 | Full git history, todos los PRDs/plans, instincts | nunca al contexto | disco |
+
+**Comandos**:
+- `/session-start` — lee Capa 1+2, resume en 1-2 lineas
+- `/session-end` — escribe snapshot nuevo, actualiza LATEST.md
+
+**Regla**: todo lo que pueda vivir en disco → disco. Solo lo "vivo" va a contexto.
+
+**Cuando usarlos**:
+- Al retomar proyecto: `/session-start`
+- Al cerrar sesion larga: `/session-end`
+- Despues de checkpoint destructivo: `/session-end` para preservar estado
+
 ## Reinicio
 
 opencode lee la config al arrancar. Despues de cualquier cambio:
