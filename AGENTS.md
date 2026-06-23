@@ -76,14 +76,31 @@ Todas las respuestas en este proyecto van en **caveman mode** por default para r
 
 ### 2. PRD-first (cualquier task no-trivial)
 
-**Regla**: cuando el usuario pide una feature / task / proyecto nuevo, el agent SIEMPRE invoca `@prd-agent` PRIMERO. No propone soluciones directas.
+**Regla**: cuando el usuario pide una feature / task / proyecto nuevo, el primary agent (quien sea) SIEMPRE invoca `@prd-agent` PRIMERO. No propone soluciones directas.
+
+**Trigger: USER INTENT, no agent name.** Si el mensaje del usuario contiene verbos de construccion, PRD-first aplica sin importar que agent sea invocado.
 
 **Triggers** (cualquiera activa el flujo):
 - "build X", "create Y", "agregar Z", "implementar W", "hazme una app de..."
 - "necesito una funcionalidad que..."
 - "quiero un sistema de..."
+- "mejorar X" / "optimizar Y" (cambios de comportamiento, no solo cleanup)
 - "/plan X" sin PRD previo
 - Cualquier pedido que no sea pure Q&A o one-liner fix
+
+**Agents que SIEMPRE aplican PRD-first** (cualquier invocacion):
+- `build` (primary default)
+- `planner`, `code-architect`, `tdd-guide` (BUILD specialists)
+
+**Agents que NO requieren PRD** (tienen rol especifico):
+- `code-reviewer`, `security-reviewer`, `flutter-reviewer`, `typescript-reviewer`, `go-reviewer`, etc (REVIEW)
+- `build-error-resolver`, `cpp-build-resolver`, etc (FIX)
+- `e2e-runner`, `test-coverage` (TEST)
+- `doc-updater`, `update-docs`, `update-codemaps` (DOC)
+- `refactor-cleaner` (CLEAN)
+- `learn`, `instinct-status`, `projects`, `evolve`, etc (UTILITY)
+
+**Regla de sub-agents**: cuando un sub-agent (reviewer/fixer/tester) es invocado por el primary agent, ya tiene contexto del PRD. NO vuelve a hacer PRD. Si el task no matchea el PRD, reporta al primary en vez de inventar scope.
 
 **Flujo obligatorio**:
 1. Invocar `task { subagent_type: "prd-agent", prompt: "<user request>" }`
