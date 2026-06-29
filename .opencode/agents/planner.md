@@ -55,7 +55,15 @@ Create detailed steps with:
 
 ## Plan Format
 
+Todo plan DEBE incluir este frontmatter al inicio. El campo `prd` es OBLIGATORIO si el plan proviene de un PRD — sin el, el auditor no puede cruzar criterios.
+
 ```markdown
+---
+prd: .opencode/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md
+status: DRAFT | APPROVED | IN_PROGRESS | COMPLETED | BLOCKED
+created: YYYY-MM-DD_HHMM
+---
+
 # Implementation Plan: [Feature Name]
 
 ## Overview

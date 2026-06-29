@@ -128,7 +128,7 @@ commiteo? (s/n)
 **Flujo obligatorio**:
 1. Invocar `task { subagent_type: "prd-agent", prompt: "<user request>" }`
 2. Esperar confirmacion explicita del usuario sobre el Intention Map
-3. PRD escrito en `.opencode/prds/{YYYY-MM-DD-HHMM}-{name}.prd.md`
+3. PRD escrito en `.opencode/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md`
 4. Reci despues: planning + implementacion
 
 **Excepciones** (puede saltar prd-agent):
@@ -188,6 +188,33 @@ checkpoint. espera instruccion.
 ```
 
 Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmacion que romper algo.
+
+### 6. Report + Audit (trazabilidad de ejecucion)
+
+**Regla**: cualquier flujo con agentes DEJA artefactos. No se ejecutan agentes en el vacio.
+
+**Report obligatorio** en `.opencode/reports/{YYYY-MM-DD_HHMM}-{slug}.report.md` cuando:
+- `/orchestrate` completo (Phase 4 obligatoria).
+- `/verify` exitoso con cambios + PRD activo.
+- `/code-review`, `/security`, `/plan`, `/tdd` finalizados.
+- Cualquier flow `/flow-*` (bugfix, feature, refactor, security).
+
+**Report NO se genera** en:
+- Pure Q&A.
+- One-liner fix sin flujo.
+- Usuario cancelo antes de empezar.
+
+**Audit opcional** via `/audit-report {name}` o `/audit-report index`:
+- Cruza report contra PRD origen.
+- Emite veredicto PASS / PASS-WITH-NITS / FAIL.
+- Detecta skill gaps (skill cargada pero ignorada).
+- INDEX global en `.opencode/reports/INDEX.md` se regenera silent.
+
+**Naming convention** completa en `.opencode/CONVENTIONS.md`. Todos los archivos generados siguen `YYYY-MM-DD_HHMM-{slug}.{ext}`.
+
+**Cleanup**: `/archive-reports` mueve reports viejos a `_archive/YYYY/`. NUNCA borra.
+
+**Health check**: `/pack-doctor` valida el pack. Corre antes de un release o cuando algo se comporta raro.
 
 ## Memoria de sesiones (4 capas)
 

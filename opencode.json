@@ -5,8 +5,8 @@
     "autoupdate": false,
     "snapshot": true,
     "instructions": [
-        ".opencode/instructions/INSTRUCTIONS.md",
-        "AGENTS.md"
+        ".opencode/AGENTS.md",
+        ".opencode/instructions/INSTRUCTIONS.md"
     ],
     "permission": {
         "skill": "allow"

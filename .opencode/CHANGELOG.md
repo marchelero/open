@@ -5,12 +5,58 @@ All notable changes to this starter pack are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- En desarrollo. Próxima iteración.
+
+## [1.0.0] — 2026-06-29
+
+**MILESTONE**: El pack deja de ser "starter" y se considera completo. Incluye todos los flujos de trabajo, auditoría post-ejecución, archivado automático, validación de salud y convenciones de naming estandarizadas.
+
+### Changed (breaking)
+- **Estructura del pack consolidada en `.opencode/`**: todos los archivos del pack viven en `.opencode/`. Cero conflicto con archivos del proyecto del user (su `README.md`, `CHANGELOG.md`, `AGENTS.md` ya no chocan con los del pack). Cambio de paths en `opencode.json > instructions`:
+  - Antes: `["AGENTS.md", ".opencode/instructions/INSTRUCTIONS.md"]`
+  - Ahora: `[".opencode/AGENTS.md", ".opencode/instructions/INSTRUCTIONS.md"]`
+- **Naming convention formalizada**: `YYYY-MM-DD_HHMM-{slug}.{ext}` con guion bajo entre fecha y hora. Documentado en `.opencode/CONVENTIONS.md`. Anteriormente el patron era `YYYY-MM-DD-HHMM-` con guion (mas dificil de tipear y parsear).
+
+### Added
+- **Reportes y auditoria post-ejecucion (paquete completo)**:
+  - `report-auditor` agent: auditor lightweight (no exhaustivo). Cruza report contra PRD origen y skills cargadas, emite veredicto PASS / PASS-WITH-NITS / FAIL. ~30-60 lineas de output, sin tablas decorativas.
+  - `/audit-report` command: invoca el auditor. Soporta `--separate` (auditoria en archivo aparte), `index` / `--index` (regenera INDEX global), `quick {name}` (solo veredicto), `compare {a} {b}` (diff de veredictos).
+  - `/archive-reports` command: mueve reports viejos a `.opencode/reports/_archive/{YYYY}/`. NUNCA borra. Default: COMPLETADO >30d. Flags: `--older-than Nd`, `--all-completed`, `--dry-run`.
+  - `/quick-prd` command: mini-PRD de 10 lineas para bugs/fixes/one-liners. Auto-regenera a PRD completo si crece en scope.
+- **Auto-report al cerrar flujos**:
+  - `/orchestrate` ahora tiene Phase 4 OBLIGATORIA: genera `.opencode/reports/{YYYY-MM-DD-HHMM}-{name}.report.md` con agentes usados, decisiones, criterios PRD, desvios, skills, archivos.
+  - `/verify` exitoso auto-genera report (cuando hay cambios + PRD activo). Ofrece auditar al final.
+  - `/code-review`, `/security`, `/plan`, `/tdd` ofrecen guardar el output como report y auditar contra el PRD origen.
+- **Cross-link plans↔PRDs**: frontmatter obligatorio al inicio de cada plan con `prd:`, `status:`, `created:`. El auditor usa este link cuando el report no nombra el PRD directamente.
+- **INDEX global** (`.opencode/reports/INDEX.md`): tabla de todos los reports con status, criterios, veredicto, skill gaps. Se regenera en cada `/audit-report` (silent). Seccion "Skill gaps recurrentes" con flag para refactor si >3 ocurrencias.
+- **Skills feedback loop**: el auditor emite NIT "skill gap" cuando una skill se cargo pero se ignoro, o cuando deberia haberse cargado y no se cargo. Esto mantiene las skills vivas.
+- **Regla de idioma en PRDs**: espanol por default. Ingles solo para identificadores de codigo, terminos tecnicos sin traduccion natural, siglas. Sin espanglish tipo "el button de push". Documentado en `prd-agent.md` con ejemplos good A/B.
+- **`/pack-doctor` command**: valida la salud del pack completo. Detecta frontmatter invalido, agents duplicados, commands huerfanos (que apuntan a agents inexistentes), skills sin descripcion, permalinks rotos, archivos >800 lineas.
+- **4 workflows pre-hechos** (`/flow-*`): bajan el costo cognitivo. Cada workflow es un slash command que encadena los commands existentes.
+  - `/flow-bugfix`: `/quick-prd` → fix → `/verify` → report → audit
+  - `/flow-feature`: `/orchestrate` → implement → `/verify` → report → audit
+  - `/flow-refactor`: `/plan` → refactor → `/verify` → report → audit
+  - `/flow-security`: `/security` → fix → `/verify` → report → audit
+- **Plantillas de report por stack** en `.opencode/reports/templates/`: `default.md`, `angular.md`, `python.md`, `rust.md`. El orquestador auto-elige segun `.agents/PROJECT.md`.
+- **Recovery state**: cada command escribe `.opencode/state/{command}.state.json` con el progreso. Al reabrir, `/session-start` detecta estados interrumpidos y ofrece resumir.
+- **Stats del pack** en `/pack-doctor`: cuenta agents/skills/commands/PRDs/reports/audits. Utilidad baja en tokens, valor alto de orientacion.
+
+### Changed
+- **`prd-agent.md`**: seccion "Idioma del PRD" agregada. Default espanol, ingles solo para terminos tecnicos. Reglas explicitas con ejemplos bad/good.
+- **`orchestrate.md`**: Phase 4 obligatoria con template completo de report. Coordinacion rule #7 ("Report always") agregada.
+- **5 commands existentes** (`/code-review`, `/security`, `/verify`, `/plan`, `/tdd`): bloque "Post-X: Audit" agregado al final. Indica cuando aplica y cuando no. `/verify` es el unico con auto-snapshot, el resto solo ofrece.
+- **`audit-report.md`**: INDEX con columna "Skill gaps" + seccion recurrente.
+- **AGENTS.md**: pendiente actualizar con la nueva seccion "Comportamientos obligatorios" que cubra auto-report y audit.
+
+### Removed
+- Nada. Todo es aditivo.
+
+---
+
+## [0.8.0] — 2026-06-29
+
+### Added
 - **`validate-frontmatter.js`**: nuevo CLI cero-deps que valida el frontmatter de los 65 agentes, 10 skills y 52 comandos (descripción requerida, modo `subagent`, `name` igual al directorio, descripción de skill entre 1-1024 caracteres, descripción con prefijo "Use when..."). Reporta PASS/WARN/FAIL con códigos de salida. Integrado en `smoke-test.js` y en CI.
-- **CI workflow** (`.github/workflows/validate.yml`): corre `smoke-test.js` + `validate-frontmatter.js` + verificación de JSON válido en cada push/PR a `main`.
-- **Documentación del pack** en `.opencode/docs/` (todo en español neutro, nombres en inglés/mayúscula): `README.md` (entrada), `ROUTE.md` (qué sub-agente usar según intención), `COMMANDS.md` (los 52 slash commands por intención), `EXAMPLES.md` (5 flujos completos de proyectos reales), `ARCH.md` (4 capas, flujo PRD, ciclo de instintos), `SURFACES.md` (regla vs skill vs MCP vs agente vs CLI).
-- **Auto-extract instincts in `/session-end`**: Step 7 of session-end now adds 1-3 high-quality instincts to the store automatically. Safeguards: max 3 per session, confidence >= 0.5, auto-skip on Q&A, user can opt out with "skip learn".
-- **CHANGELOG.md** (12 KB, 155 lines): full version history with Keep a Changelog format, summary tables, architecture diagram, token efficiency metrics.
-- **STARTER.md** sections: "Primeros 5 minutos" (post-install quickstart), "Quick Reference" (1-page cheat sheet), "Recipes" (common workflows).
 
 ### Changed
 - **`opencode.json > instructions`**: se eliminaron las 10 skills de la lista de instrucciones siempre cargadas. El catálogo `<available_skills>` ya las expone, así que cargarlas duplicaba contenido y desperdiciaba ~30K tokens por turno. Solo quedan `INSTRUCTIONS.md` y `AGENTS.md` como capa 1.
@@ -137,17 +183,21 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## Summary by numbers
 
-| Metric | Before | After | Delta |
-|--------|--------|-------|-------|
-| Source pack size | 53.85 MB | 1.38 MB | -97% |
-| `opencode.json` size | 63 KB | 1.3 KB | -98% |
-| Agents | 64 | 65 (+prd-agent) | +1 |
-| Skills | 11 | 10 (consolidated) | -1 |
-| Commands | 47 | 52 | +5 |
-| Bin CLIs | 0 | 4 (instinct, context, smoke-test, refresh-project) | +4 |
-| Mandatory behaviors | 0 | 5 | +5 |
-| Token reduction (typical) | baseline | ~80% | -80% |
-| Auto-destructive actions blocked | no | yes (rule enforced) | safety+ |
+| Metric | 0.1.0 (init) | 0.8.0 | 1.0.0 (current) | Delta total |
+|--------|-------------|-------|------------------|-------------|
+| Source pack size | 53.85 MB | 1.38 MB | ~1.5 MB | -97% |
+| `opencode.json` size | 63 KB | 1.3 KB | 1.3 KB | -98% |
+| Files in repo root (pack) | 7 | 3 | **1** (opencode.json) | -86% |
+| Agents | 64 | 65 | 66 | +2 |
+| Skills | 11 | 10 | 10 | -1 |
+| Commands | 47 | 52 | 60 | +13 |
+| Bin CLIs | 0 | 4 | 4 | +4 |
+| Mandatory behaviors | 0 | 5 | 6 | +6 |
+| Report templates | 0 | 0 | 4 (default/angular/python/rust) | +4 |
+| Recovery state | 0 | 0 | 1 (documented) | +1 |
+| Naming convention | ad-hoc | informal | formal (`CONVENTIONS.md`) | formal |
+| Token reduction (typical) | baseline | ~80% | ~85% | -85% |
+| Auto-destructive actions blocked | no | yes | yes | safety+ |
 
 ## Commands added across versions
 
@@ -165,28 +215,34 @@ All notable changes to this starter pack are documented here. The format follows
 | 0.7.0 | /refresh-project | Regenerate .agents/PROJECT.md from current state |
 | 0.7.0 | /prd | Quick invocation of prd-agent |
 
-## Architecture (current)
+## Architecture (current — v1.0.0)
 
 ```
 D:\dev\2026\open\
-├── AGENTS.md           (root, project-level rules, 4 mandatory behaviors)
-├── README.md           (root, GitHub landing)
-├── STARTER.md          (root, complete docs)
-├── opencode.json       (root, config: mcp + plugin + instructions)
-├── setup.ps1           (root, Windows installer)
-├── setup.sh            (root, bash installer)
+├── opencode.json       (root, ONLY this. 1.3 KB: mcp + plugin + instructions)
 ├── .agents/            (user-installed skills + project context)
 │   ├── PROJECT.md      (auto-refreshable)
 │   ├── sessions/       (1 .md per session + LATEST.md)
 │   └── skills/caveman/ (user-installed)
-└── .opencode/          (opencode-specific config + content)
-    ├── agents/         (65 .md, mode: all)
-    ├── skills/         (10 .md)
-    ├── commands/       (52 .md)
-    ├── instructions/   (INSTRUCTIONS.md)
+└── .opencode/          (TODO el pack vive aca — zero conflict con archivos del user)
+    ├── AGENTS.md       (reglas del pack, referenciado en opencode.json)
+    ├── README.md       (doc del pack)
+    ├── CHANGELOG.md    (version history)
+    ├── CONVENTIONS.md  (naming + estados + frontmatter schemas)
+    ├── agents/         (66 .md, mode: all|primary|subagent)
+    ├── skills/         (10 .md, on-demand)
+    ├── commands/       (60 .md, slash commands)
+    ├── instructions/   (INSTRUCTIONS.md, 8 KB, capa 1)
+    ├── reports/        (reports + templates + INDEX)
+    ├── audits/         (auditorias separadas)
+    ├── prds/           (PRD artifacts, YYYY-MM-DD_HHMM-{slug}.prd.md)
+    ├── plans/          (planes, YYYY-MM-DD_HHMM-{slug}.plan.md)
+    ├── state/          (recovery state por sesion)
     ├── bin/            (4 CLIs, zero deps)
     ├── instincts/      (JSON store)
-    ├── prds/           (PRD artifacts, date-stamped)
+    ├── docs/           (ROUTE, COMMANDS, EXAMPLES, ARCH, SURFACES)
+    ├── node_modules/   (regenerable con bun install)
+    ├── package.json    (deps de plugins/MCPs)
     ├── agent           (junction → agents/)
     └── skill           (junction → skills/)
 ```

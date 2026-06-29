@@ -86,3 +86,17 @@ Analyze the specified code for security vulnerabilities following OWASP guidelin
 ---
 
 **IMPORTANT**: Security issues are blockers. Do not proceed until critical issues are resolved.
+
+---
+
+## Post-Review: Audit
+
+Despues de cerrar este security review, si hubo un PRD origen:
+
+1. Guardar el output como `.opencode/reports/{YYYY-MM-DD_HHMM}-{name}.report.md` con status `COMPLETADO`.
+2. Ofrecer: "¿Audito contra el PRD origen con `/audit-report {name}`? (s/n)".
+
+El auditor confirma que las fallas de seguridad CRITICAL/HIGH no invalidan criterios del PRD. Si el user acepta, invocar `/audit-report`. Si rechaza, respetar.
+
+**Cuando aplicar**: security reviews de features nuevas, auth changes, endpoints nuevos, manejo de datos sensibles.
+**Cuando NO aplicar**: security scans de dependencias puras (npm audit), sin cambios de codigo.

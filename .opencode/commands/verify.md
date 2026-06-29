@@ -65,3 +65,36 @@ Execute comprehensive verification:
 ---
 
 **NOTE**: Verification loop should be run before every commit and PR.
+
+---
+
+## Post-Verify: Auto-Snapshot Report
+
+**MANDATORY** cuando el verify pasa Y hubo cambios reales desde el ultimo verify.
+
+### Cuando aplica auto-snapshot
+
+- Status final: **PASS** (todo verde) o **PASS-WITH-NITS** (1-2 nits, 0 fail).
+- Hubo archivos modificados: `git diff --name-only HEAD~1` no vacio.
+- Existe un PRD activo: `.opencode/prds/*.prd.md` con status != COMPLETADO.
+
+### Cuando NO aplica
+
+- Status final: **FAIL** (primero arreglar).
+- No hubo cambios desde el ultimo verify.
+- No hay PRD activo (trabajo de mantenimiento sin PRD).
+
+### Comportamiento
+
+Al pasar verify:
+
+1. Generar automaticamente `.opencode/reports/{YYYY-MM-DD_HHMM}-{kebab-name}.report.md` con:
+   - Status: `COMPLETADO`
+   - Agentes usados: solo `build` (verify)
+   - Criterios PRD: marcar como PASS los que el verify cubre (build, tests, lint, typecheck)
+   - Skills usadas: `verification-loop`
+   - Archivos modificados: output de `git diff --name-only HEAD~1`
+2. Preguntar UNA vez: "Report generado. ¿Audito contra el PRD origen con `/audit-report {name}`? (s/n)".
+3. Si `s` → invocar `/audit-report`. Si `n` → respetar.
+
+Esto evita que un verify exitoso quede sin trazabilidad.

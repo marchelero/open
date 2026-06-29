@@ -65,3 +65,17 @@ Fix: [How to fix]
 ---
 
 **IMPORTANT**: Never approve code with security vulnerabilities!
+
+---
+
+## Post-Review: Audit
+
+Despues de cerrar este code review, si hubo un PRD origen (`.opencode/prds/{name}.prd.md`):
+
+1. Guardar el output del review como `.opencode/reports/{YYYY-MM-DD_HHMM}-{name}.report.md`.
+2. Ofrecer al usuario: "¿Audito contra el PRD origen con `/audit-report {name}`? (s/n)".
+
+El auditor verifica que los hallazgos del review NO rompen criterios del PRD. Si el user acepta, invocar `/audit-report`. Si rechaza, respetar.
+
+**Cuando aplicar**: code reviews de features nuevas, refactors grandes, o cambios que tocan criterios de un PRD existente.
+**Cuando NO aplicar**: reviews de typos, format fixes, o cambios sin PRD documentado.

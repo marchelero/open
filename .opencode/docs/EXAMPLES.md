@@ -14,12 +14,12 @@
 /prd "endpoint GET /users/:id con perfil, auth JWT, rate limit"
 ```
 
-Dispara: `@prd-agent` (Understanding Protocol). Genera `.opencode/prds/YYYY-MM-DD-HHMM-users-profile.prd.md`.
+Dispara: `@prd-agent` (Understanding Protocol). Genera `.opencode/prds/YYYY-MM-DD_HHMM-users-profile.prd.md`.
 
 ### Paso 2 — planear
 
 ```
-/plan .opencode/prds/YYYY-MM-DD-HHMM-users-profile.prd.md
+/plan .opencode/prds/YYYY-MM-DD_HHMM-users-profile.prd.md
 ```
 
 Dispara: `@planner` + `@code-architect` + `@architect` (en paralelo). Devuelve: archivos a crear, dependencias, orden, criterios de validación.

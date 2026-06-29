@@ -46,3 +46,17 @@ Create a detailed implementation plan for: $ARGUMENTS
 ---
 
 **CRITICAL**: Do NOT write any code until the user explicitly confirms with "yes", "proceed", or similar affirmative response.
+
+---
+
+## Post-Plan: Audit al Implementar
+
+Despues de que el plan sea aprobado y se implemente, el flujo termina idealmente con `/verify` que auto-genera un report (ver `/verify` command). Si no se corre verify, documentar manualmente:
+
+1. Al cerrar la implementacion, generar `.opencode/reports/{YYYY-MM-DD_HHMM}-{name}.report.md` referenciando el plan.
+2. Ofrecer: "¿Audito contra el PRD origen con `/audit-report {name}`? (s/n)".
+
+El auditor verifica que TODOS los milestones del PRD (no solo los del plan) quedaron cumplidos.
+
+**Cuando aplicar**: planes que producen cambios de codigo, especialmente cuando hay un PRD origen.
+**Cuando NO aplicar**: planes de investigacion, planes descartados, planes revertidos.

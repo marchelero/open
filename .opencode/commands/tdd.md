@@ -63,3 +63,20 @@ RED → GREEN → REFACTOR → REPEAT
 ---
 
 **MANDATORY**: Tests must be written BEFORE implementation. Never skip the RED phase.
+
+---
+
+## Post-TDD: Audit
+
+Despues de cerrar el ciclo TDD (RED → GREEN → REFACTOR → coverage >= 80%):
+
+1. Generar `.opencode/reports/{YYYY-MM-DD_HHMM}-{name}.report.md` con:
+   - Status: `COMPLETADO`
+   - Coverage: output real de `npm run test:coverage`
+   - Criterios PRD: los que el TDD cubre (tests existentes, cobertura)
+2. Ofrecer: "¿Audito contra el PRD origen con `/audit-report {name}`? (s/n)".
+
+El auditor verifica que la cobertura reportada es real y que los tests cubren los criterios del PRD, no solo line coverage.
+
+**Cuando aplicar**: TDD de features nuevas con PRD, TDD de bug fixes criticos, TDD de logica de negocio.
+**Cuando NO aplicar**: TDD de prototipos, spikes, o cambios exploratorios.
