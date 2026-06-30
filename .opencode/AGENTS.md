@@ -33,10 +33,19 @@ Starter pack portable de opencode. El "producto" son los 65 comandos, 68 agentes
 
 ## Que NO hacer
 
-- No agregar dependencias npm. Este proyecto es zero-deps por diseño.
-- No crear `package.json`, `tsconfig.json`, ni archivos de build.
-- No committear el `.opencode/.gitignore` modificado sin actualizarlo (ignora `node_modules`, `package.json`, etc. por si opencode intenta instalar plugins).
+- No crear `tsconfig.json` ni archivos de build.
 - No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 68 agentes — avisar antes.
+
+## Plugins (npm)
+
+El pack declara 4 plugins opcionales en `.opencode/package.json`:
+- `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp`, `@zenobius/opencode-skillful`
+
+**Reglas**:
+- `package.json` y `package-lock.json` están **tracked** en git. `node_modules/` está **gitignored** (regenerable).
+- Después de clonar, correr **una vez**: `node .opencode/bin/install-plugins.js`. Idempotente (skip si `node_modules/` existe).
+- El script usa `npm install --ignore-scripts` para evitar postinstalls problemáticos. Si un plugin necesita su postinstall, remover el flag.
+- No agregar plugins sin actualizar `package.json` + smoke test post-install.
 
 ## Skills y agentes custom del usuario
 
