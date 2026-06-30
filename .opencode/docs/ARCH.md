@@ -131,16 +131,17 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 │           ├── SKILL.md
 │           └── README.md
 ├── .opencode/                       configuración de opencode (se copia a los proyectos)
-│   ├── agents/                      65 sub-agentes (.md)
-│   ├── skills/                      10 skills (<nombre>/SKILL.md)
-│   ├── commands/                    52 slash commands (.md)
-│   ├── bin/                         4 CLIs cero-deps (solo Node stdlib)
+│   ├── agents/                      69 sub-agentes (.md)
+│   ├── skills/                      14 skills (<nombre>/SKILL.md)
+│   ├── commands/                    65 slash commands (.md)
+│   ├── bin/                         9 CLIs cero-deps (solo Node stdlib)
 │   │   ├── instinct.js
 │   │   ├── context.js
 │   │   ├── refresh-project.js
 │   │   ├── smoke-test.js
 │   │   └── validate-frontmatter.js
-│   ├── instincts/                   instintos del proyecto (JSON)
+│   ├── instincts/                   instintos del proyecto (JSON, auto-creado al primer save)
+│   ├── state/                       recovery state por command (auto-generado)
 │   ├── prds/                        artefactos PRD
 │   ├── docs/                        documentación del pack (español neutro, nombres en inglés/mayúscula)
 │   │   ├── README.md                punto de entrada
@@ -151,10 +152,8 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 │   │   └── SURFACES.md              regla vs skill vs MCP vs agente vs CLI
 │   ├── agent → agents               junction (backwards compat opencode 1.17.x)
 │   ├── skill → skills               junction (backwards compat opencode 1.17.x)
-│   └── .gitignore                   ignora node_modules, package*.json, junctions
-├── .github/
-│   └── workflows/
-│       └── validate.yml             CI: smoke-test + validate-frontmatter
+│   └── .gitignore                   ignora node_modules y bun.lock
+# CI recomendado: smoke-test + validate-frontmatter (workflow no incluido en el pack)
 └── package.json (root)              intencionalmente ausente (regla cero-deps)
 ```
 

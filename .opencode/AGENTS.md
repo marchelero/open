@@ -4,7 +4,7 @@ Reglas del proyecto para opencode cuando trabaja en este repo.
 
 ## Que es esto
 
-Starter pack portable de opencode. El "producto" son los 65 comandos, 68 agentes y 14 skills en `.opencode/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
+Starter pack portable de opencode. El "producto" son los 65 comandos, 69 agentes y 14 skills en `.opencode/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
 
 ## Estructura
 
@@ -16,7 +16,7 @@ Starter pack portable de opencode. El "producto" son los 65 comandos, 68 agentes
 │   └── INSTRUCTIONS.md    Reglas globales (seguridad, estilo, git) que se inyectan en cada sesion
 ├── .agents/skills/        Skills custom del usuario (ej: caveman via npx skills add)
 └── .opencode/
-    ├── agents/            68 subagentes (.md, frontmatter: description + mode + permission)
+    ├── agents/            69 subagentes (.md, frontmatter: description + mode + permission)
     ├── skills/            14 skills portables (<name>/SKILL.md, frontmatter: name + description)
     ├── docs/README.md     Guia de uso del starter (rename: cada proyecto tiene su README)
     ├── agent -> agents    JUNCTION oculta (backwards compat opencode 1.17.x)
@@ -34,16 +34,21 @@ Starter pack portable de opencode. El "producto" son los 65 comandos, 68 agentes
 ## Que NO hacer
 
 - No crear `tsconfig.json` ni archivos de build.
-- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 68 agentes — avisar antes.
+- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 69 agentes — avisar antes.
 
 ## Plugins (npm)
 
-El pack declara 4 plugins opcionales en `.opencode/package.json`:
+El pack declara 5 dependencias (4 plugins + el plugin system core) en `.opencode/package.json`:
 - `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp`, `@zenobius/opencode-skillful`
+- `@opencode-ai/plugin` (peer del runtime, necesario para que los plugins carguen)
+
+**Auto-install (first time)**:
+- Después de clonar, correr **una vez**: `cd .opencode && npm install`.
+- El hook `postinstall` de `package.json` llama automáticamente a `bin/install-plugins.js`. Idempotente (skip si `node_modules/` ya existe).
+- Si ya tenes `node_modules/`, podés saltear el paso. Para forzar reinstall: borrar `node_modules/` y correr `npm install` de nuevo.
 
 **Reglas**:
 - `package.json` y `package-lock.json` están **tracked** en git. `node_modules/` está **gitignored** (regenerable).
-- Después de clonar, correr **una vez**: `node .opencode/bin/install-plugins.js`. Idempotente (skip si `node_modules/` existe).
 - El script usa `npm install --ignore-scripts` para evitar postinstalls problemáticos. Si un plugin necesita su postinstall, remover el flag.
 - No agregar plugins sin actualizar `package.json` + smoke test post-install.
 
@@ -53,6 +58,22 @@ Si el usuario hace `npx skills add <owner>/<repo>@<skill>`:
 - Las skills se instalan en `.agents/skills/<name>/SKILL.md` (path global reconocido).
 - opencode las descubre automaticamente via `<available_skills>`.
 - El `permission.skill: "allow"` global en `opencode.json` garantiza que los agentes puedan cargarlas.
+
+## PRDs, reports, audits (directorios template)
+
+El pack incluye `.opencode/prds/`, `.opencode/reports/`, `.opencode/audits/` como **plantilla** — existen en el pack por dos razones:
+
+1. **Proyectos que clonan el pack** arrancan con la estructura lista. No necesitan `mkdir`.
+2. **Las convenciones de naming** (`YYYY-MM-DD_HHMM-{slug}.{ext}`) viven en el pack y se aplican por convencion, no por codigo.
+
+**El pack mismo NO genera PRDs/reports/audits.** El pack es un template de config, no un proyecto. Si en algun momento el pack crece a un proyecto con trabajo real (features, refactors, flows), ahi si se generan artefactos en estos directorios.
+
+**Cuando un proyecto downstream corre `/plan`, `/orchestrate`, `/verify`**:
+- PRDs van a `.opencode/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md`
+- Reports a `.opencode/reports/{YYYY-MM-DD_HHMM}-{slug}.report.md`
+- Audits a `.opencode/audits/{YYYY-MM-DD_HHMM}-{slug}.audit.md`
+
+Naming completo en `.opencode/CONVENTIONS.md`.
 
 ## Comportamientos obligatorios (no opt-in)
 

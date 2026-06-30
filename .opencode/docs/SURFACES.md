@@ -23,12 +23,12 @@ El pack expone cuatro superficies para las capacidades. Elegir la correcta es un
 
 ¿Es un flujo o pipeline independiente que el usuario EJECUTA
 (init, auditoría, migración, sincronización)?
-  └─ SÍ → CLI en .opencode/bin/ (cero-deps) O slash command en .opencode/comandos/
+  └─ SÍ → CLI en .opencode/bin/ (cero-deps) O slash command en .opencode/commands/
   └─ NO ↓
 
 ¿Es trabajo profundo que debe correr en un contexto aislado con su propio
 system prompt y permisos (revisión de código, auditoría de seguridad, planning)?
-  └─ SÍ → SUB-AGENTE (.opencode/agentes/<nombre>.md)
+  └─ SÍ → SUB-AGENTE (.opencode/agents/<nombre>.md)
 ```
 
 ## Las superficies en detalle
@@ -82,7 +82,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 ### 4. CLI / slash command (invocado por el usuario, sin prompt de agente)
 
-**Dónde**: `.opencode/bin/<nombre>.js` (CLI) o `.opencode/comandos/<nombre>.md` (slash)
+**Dónde**: `.opencode/bin/<nombre>.js` (CLI) o `.opencode/commands/<nombre>.md` (slash)
 
 **Coste de tokens**: cero hasta que se invoca.
 
@@ -97,7 +97,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 ### 5. Sub-agente (capa 3, contexto aislado)
 
-**Dónde**: `.opencode/agentes/<nombre>.md`
+**Dónde**: `.opencode/agents/<nombre>.md`
 
 **Coste de tokens**: arranca un sub-proceso nuevo con su propio system prompt e historial de conversación.
 

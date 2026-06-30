@@ -1,7 +1,7 @@
 # Ruteo de agentes
 
-> 65 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
-> Descripciones completas en `.opencode/agentes/<nombre>.md`.
+> 69 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
+> Descripciones completas en `.opencode/agents/<nombre>.md`.
 
 ## "Quiero clarificar la intención antes de construir"
 

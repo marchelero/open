@@ -1,6 +1,6 @@
 # COMMANDS
 
-> 52 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
+> 65 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
 > El archivo JSON vive en `.opencode/commands/<nombre>.md` con frontmatter `description` y `agent`.
 
 ## "Quiero clarificar antes de implementar"
@@ -13,6 +13,7 @@
 | `/model-route` | Recomienda el mejor modelo para la complejidad de la tarea. | build |
 | `/harness-audit` | Auditoría determinista del repo y devuelve un scorecard priorizado. | build |
 | `/aside` | Pregunta rápida sin cambiar el contexto de la sesión. | build |
+| `/quick-prd` | Mini-PRD de 10 lineas para bugs, fixes o one-liners. Auto-regenera a PRD completo si crece. | build |
 
 ## "Quiero validar cambios"
 
@@ -28,6 +29,7 @@
 | `/eval` | Ejecuta evaluación contra criterios de aceptación. | build |
 | `/quality-gate` | Ejecuta el pipeline de calidad. | build |
 | `/checkpoint` | Guarda el estado de verificación y checkpoint de progreso. | build |
+| `/audit-report` | Cruza un report contra su PRD origen. Veredicto PASS / PASS-WITH-NITS / FAIL. | report-auditor |
 
 ## "Quiero revisar por stack"
 
@@ -131,3 +133,34 @@
 |---------|----------|-------|
 | `/setup-pm` | Configura la preferencia de package manager. | build |
 | `/skill-create` | Genera skills a partir del análisis de git history. | build |
+
+## "Quiero descubrir el pack"
+
+| Comando | Qué hace | Agent |
+|---------|----------|-------|
+| `/help` | Overview del pack: comandos principales, agentes, skills, convenciones. | build |
+| `/list-agents` | Lista los 69 agents con descripción y triggers. Filtros: keyword, categoría. | build |
+| `/list-skills` | Lista las 14 skills con descripción y triggers. Filtros: keyword. | build |
+| `/pack-doctor` | Diagnostica la salud del pack (10 checks: frontmatter, duplicados, permalinks, etc). | build |
+
+## "Quiero usar un workflow pre-hecho"
+
+| Comando | Qué hace | Agent |
+|---------|----------|-------|
+| `/flow-bugfix` | Bug fix end-to-end: `/quick-prd` → fix → `/verify` → report → audit. | build |
+| `/flow-feature` | Feature nueva end-to-end: `/orchestrate` → implement → `/verify` → report → audit. | build |
+| `/flow-refactor` | Refactor end-to-end: `/plan` → refactor → `/verify` → report → audit. | build |
+| `/flow-security` | Security review end-to-end: `/security` → fix → `/verify` → report → audit. | build |
+
+## "Quiero colaborar via PR"
+
+| Comando | Qué hace | Agent |
+|---------|----------|-------|
+| `/pr-review` | Review de un PR de GitHub con dispatch paralelo a 5 reviewers. Veredicto: APPROVE / WARN / BLOCK. | build |
+| `/merge-conflict` | Analiza conflictos de merge, los clasifica y propone resolución. | build |
+
+## "Quiero mantener reports"
+
+| Comando | Qué hace | Agent |
+|---------|----------|-------|
+| `/archive-reports` | Mueve reports viejos a `.opencode/reports/_archive/{YYYY}/`. NO borra. Default: COMPLETADO >30d. | build |

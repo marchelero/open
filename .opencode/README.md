@@ -1,6 +1,6 @@
 # open
 
-Pack portable de opencode: **68 agentes, 14 skills, 65 slash commands, 2 MCPs, 4 plugins, 4 CLIs cero-deps**.
+Pack portable de opencode: **69 agentes, 14 skills, 65 slash commands, 0 MCPs, 5 plugins, 9 CLIs cero-deps**.
 
 Cópialo a cualquier proyecto, reinicia opencode y empieza a trabajar.
 
@@ -24,7 +24,7 @@ Toda la documentación del pack vive dentro de `.opencode/docs/`, así se copia 
 
 - **[.opencode/docs/README.md](./.opencode/docs/README.md)** — punto de entrada, instalación, comandos principales
 - **[.opencode/docs/ROUTE.md](./.opencode/docs/ROUTE.md)** — qué sub-agente usar según la intención
-- **[.opencode/docs/COMMANDS.md](./.opencode/docs/COMMANDS.md)** — los 52 slash commands por intención
+- **[.opencode/docs/COMMANDS.md](./.opencode/docs/COMMANDS.md)** — los 65 slash commands por intención
 - **[.opencode/docs/EXAMPLES.md](./.opencode/docs/EXAMPLES.md)** — 5 flujos completos de proyectos reales
 - **[.opencode/docs/ARCH.md](./.opencode/docs/ARCH.md)** — 4 capas de memoria, flujo PRD, ciclo de instintos
 - **[.opencode/docs/SURFACES.md](./.opencode/docs/SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI

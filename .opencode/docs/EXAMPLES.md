@@ -84,13 +84,13 @@ Dispara build con skill `git-workflow` auto. Conventional commit. **No push** (v
 /orchestrate "app Flutter quiz: 10 preguntas, scoring, animaciones, dark mode"
 ```
 
-Dispara el flujo completo: `@prd-agent` (Phase 0) → `@planner` (síntesis) → dispatch paralelo a `@architect`, `@flutter-reviewer`, `@tdd-guide`, `@intent-driven-development`.
+Dispara el flujo completo: `@prd-agent` (Phase 0) → `@planner` (síntesis) → dispatch paralelo a `@architect`, `@flutter-reviewer`, `@tdd-guide`. La skill `intent-driven-development` se auto-carga para producir criterios de aceptación.
 
 Cada sub-agente devuelve su parte en caveman mode:
 ```
 @flutter-reviewer: checklist → const widgets, mounted checks, semantic labels, theme no hardcoded
 @tdd-guide: 3 archivos test (models, providers, widget), 80%+ coverage
-@intent-driven-development: 5 acceptance criteria verificables
+skill `intent-driven-development`: 5 acceptance criteria verificables
 ```
 
 Skills auto: `coding-standards`, `tdd-workflow`, `verification-loop`.

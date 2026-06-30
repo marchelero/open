@@ -4,12 +4,12 @@
 
 ## ¿Qué incluye?
 
-- **65 sub-agentes** en `.opencode/agentes/` (revisores, planners, resolvers, especialistas por stack)
-- **10 skills portables** en `.opencode/skills/` (patrones de API, TDD, seguridad, error handling, etc.)
-- **52 slash commands** en `.opencode/comandos/` (atajos recurrentes)
-- **2 servidores MCP**: `context7` (documentación actualizada) y `playwright` (automatización de navegador)
-- **4 plugins**: `dynamic-context-pruning`, `skillful`, `vibeguard`, `pty`
-- **4 CLIs nativos** en `.opencode/bin/` (cero dependencias, solo Node stdlib)
+- **69 sub-agentes** en `.opencode/agents/` (revisores, planners, resolvers, especialistas por stack)
+- **14 skills portables** en `.opencode/skills/` (patrones de API, TDD, seguridad, error handling, etc.)
+- **65 slash commands** en `.opencode/commands/` (atajos recurrentes)
+- **0 servidores MCP** configurados por default (soporte via `opencode.json`; los comunes son `context7` y `playwright`)
+- **5 plugins**: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp`, `@zenobius/opencode-skillful`, `@opencode-ai/plugin`
+- **9 CLIs nativos** en `.opencode/bin/` (cero dependencias, solo Node stdlib)
 
 ## Instalación
 
@@ -46,9 +46,9 @@ cd /ruta/a/tu/proyecto && opencode .
 | `/session-start` / `/session-end` | Memoria entre sessions (automática al cerrar) |
 | `/context` | Audita el presupuesto de contexto (skills, agentes, sessions) |
 
-Lista completa: `node .opencode/bin/context.js` o explora `.opencode/comandos/`.
+Lista completa: `node .opencode/bin/context.js` o explora `.opencode/commands/`.
 
-## 4 CLIs nativos (cero dependencias, solo Node stdlib)
+## 9 CLIs nativos (cero dependencias, solo Node stdlib)
 
 ```bash
 node .opencode/bin/smoke-test.js         # 24 comprobaciones estructurales
@@ -84,7 +84,7 @@ node .opencode/bin/refresh-project.js
 ## Documentación adicional
 
 - **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención
-- **[COMMANDS.md](./COMMANDS.md)** — los 52 slash commands agrupados por intención
+- **[COMMANDS.md](./COMMANDS.md)** — los 65 slash commands agrupados por intención
 - **[EXAMPLES.md](./EXAMPLES.md)** — 5 flujos completos de proyectos reales
 - **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
 - **[SURFACES.md](./SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI

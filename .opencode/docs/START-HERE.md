@@ -6,10 +6,10 @@
 
 A portable, zero-deps starter pack for [opencode](https://opencode.ai):
 
-- **67 agents** — specialist roles (reviewers, builders, planners, domain experts)
-- **13 skills** — on-demand reference material (patterns, checklists, frameworks)
-- **63 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
-- **6 bin scripts** — local CLIs (`context.js`, `instinct.js`, `build-agents-index.js`)
+- **69 agents** — specialist roles (reviewers, builders, planners, domain experts)
+- **14 skills** — on-demand reference material (patterns, checklists, frameworks)
+- **65 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
+- **9 bin scripts** — local CLIs (`context.js`, `instinct.js`, `build-agents-index.js`)
 
 No `package.json` at the project root. No build step. Drop the `.opencode/` folder in any repo and it works.
 
@@ -96,10 +96,10 @@ No `package.json` at the project root. No build step. Drop the `.opencode/` fold
 ### I want to discover what exists
 
 ```
-/list-agents                       # all 67 agents
+/list-agents                       # all 69 agents
 /list-agents react                 # filter by keyword
 /list-agents "Language Reviewers"  # filter by category
-/list-skills                       # all 13 skills
+/list-skills                       # all 14 skills
 ```
 
 ## Mental model: 4 layers
