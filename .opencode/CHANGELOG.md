@@ -4,8 +4,9 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
-### Added
-- En desarrollo. Próxima iteración.
+### Changed
+- **Docs sync (Tiers A-D)**: 14 archivos actualizados para reflejar el estado real del pack. Números canónicos fijados (69 agents, 14 skills, 65 commands, 5 plugins, 9 CLIs, 0 MCPs). Paths corregidos (`agentes/`→`agents/`, `comandos/`→`commands/`, `instincts/` ahora existe con `.gitkeep`). 13 commands faltantes agregados a `COMMANDS.md` en 4 secciones nuevas. `@intent-driven-development` corregido en EXAMPLES.md (es skill, no agent).
+- **EXAMPLES.md**: nuevo "Ejemplo 6" mostrando `/quick-prd` + `/flow-bugfix` workflow. Tabla "Patrones comunes" extendida con 4 patrones nuevos (`/quick-prd`, `/flow-*`, `/audit-report`, `/pack-doctor`). Header actualizado a "6 ejemplos".
 
 ## [1.0.0] — 2026-06-29
 

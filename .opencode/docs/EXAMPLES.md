@@ -322,12 +322,68 @@ Dispara `@refactor-cleaner` que corre `knip`, `depcheck`, `vulture`. Detecta imp
 
 ---
 
-## Patrones comunes a través de los 5 ejemplos
+## Ejemplo 6 — Bug fix con /quick-prd + /flow-bugfix
+
+**Pedido inicial**: *"el botón de logout no anda en mobile"*
+
+### Paso 1 — mini-PRD
+
+```
+/quick-prd "logout button no funciona en mobile"
+```
+
+`@prd-agent` genera un mini-PRD de ~10 lineas: scope exacto, criterios de aceptación, archivos sospechosos. Si el scope crece, auto-regenera a PRD completo.
+
+### Paso 2 — fix directo
+
+```
+dale, el fix es agregar e.preventDefault() en el onClick
+```
+
+build aplica el cambio. `@code-reviewer` (paralelo) valida el diff.
+
+### Paso 3 — validar + auditar
+
+```
+/verify
+```
+
+Corre lint + typecheck + tests + dispatch paralelo a reviewers. Auto-genera report.
+
+```
+/audit-report bug-logout-mobile
+```
+
+Cruza el report contra el mini-PRD. Emite PASS / PASS-WITH-NITS / FAIL.
+
+### Paso 4 — atajo: /flow-bugfix
+
+Todo lo anterior en un solo comando:
+
+```
+/flow-bugfix "logout button no funciona en mobile"
+```
+
+Encadena: `/quick-prd` → fix → `/verify` → report → audit. Útil cuando sabés que el scope es chico.
+
+### Paso 5 — commit
+
+```
+"commitea"
+```
+
+---
+
+## Patrones comunes a través de los 6 ejemplos
 
 | Patrón | Cuándo |
 |--------|--------|
 | `/prd` SIEMPRE primero | cualquier tarea no trivial |
 | `/orchestrate` > `/plan` | cuando querés que prd-agent corra automático |
+| `/quick-prd` en vez de `/prd` | cuando el scope es chico (1-2 archivos, bug conocido) |
+| `/flow-*` (feature/bugfix/refactor/security) | shortcut al patron completo, encadena los pasos del ejemplo |
+| `/audit-report` después de `/verify` | cruzar report contra PRD origen, agrega veredicto |
+| `/pack-doctor` antes de release | detecta frontmatter invalido, duplicados, permalinks rotos |
 | `@code-explorer` antes de `/plan` | en codebases desconocidos o refactors |
 | Sub-agentes en paralelo | el primary los dispara via `task` tool, no espera uno a otro |
 | TDD con `@tdd-guide` | features nuevas, refactors, bug fixes |
