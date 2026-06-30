@@ -20,6 +20,7 @@ Ejecutar checks de salud sobre `.opencode/` y reportar PASS/WARN/FAIL.
 
 ```bash
 for f in .opencode/agents/*.md; do
+  case "$(basename "$f")" in INDEX.md) continue ;; esac
   head -n 5 "$f" | grep -q "^---$" || echo "FAIL: $f no tiene frontmatter"
 done
 ```
@@ -31,7 +32,7 @@ done
 
 #### 3. Frontmatter de commands
 - Cada `commands/*.md` debe tener frontmatter con: `description`, `agent`.
-- El `agent` referenciado debe existir en `agents/`.
+- El `agent` referenciado debe existir (built-in de opencode o archivo en `agents/`). Verificamos en check 5.
 
 #### 4. Agents duplicados
 - No debe haber 2+ agents con el mismo `description` (mismo rol).
@@ -41,12 +42,18 @@ grep -h "^description:" .opencode/agents/*.md | sort | uniq -c | sort -rn | head
 ```
 
 #### 5. Commands huerfanos
-- Cada `agent:` en un command debe corresponder a un archivo en `agents/`.
+- Cada `agent:` en un command debe corresponder a un agent existente.
+- **Built-ins de opencode** (whitelist): `build`, `plan`, `general`, `explore`, `compaction`, `title`. Verificar lista con `opencode debug v2` si hay duda.
+- Resto: archivo en `agents/`.
 
 ```bash
+BUILTINS="build plan general explore compaction title"
 for cmd in .opencode/commands/*.md; do
-  agent=$(grep "^agent:" "$cmd" | awk '{print $2}')
-  [ ! -f ".opencode/agents/${agent}.md" ] && echo "WARN: $cmd referencia agent inexistente: $agent"
+  agent=$(grep "^agent:" "$cmd" | awk -F': *' '{print $2}' | head -1)
+  [ -z "$agent" ] && continue
+  [ -f ".opencode/agents/${agent}.md" ] && continue
+  echo " $BUILTINS " | grep -q " $agent " && continue
+  echo "WARN: $cmd referencia agent inexistente: $agent"
 done
 ```
 
