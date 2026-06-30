@@ -1,7 +1,8 @@
 ---
 name: intent-driven-development
 description: Use this skill when the user asks to clarify a feature, define acceptance criteria, de-risk a security/data/migration/integration change, prepare implementation requirements for another agent, or make a complex request testable. Turns ambiguous or high-impact changes into scoped, verifiable acceptance criteria before or alongside implementation. Do not trigger for trivial edits, straightforward fixes, active debugging, code review, or requests whose acceptance conditions are already clear unless the user explicitly invokes this skill.
-origin: ECC
+triggers: [PRD, requirement, acceptance criteria, scope, objective, success criteria, intention]
+origin: starter-pack
 ---
 
 # Intent-Driven Development

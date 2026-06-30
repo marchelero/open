@@ -48,7 +48,7 @@ function check(name, fn) {
 
 function countFiles(dir, ext) {
   if (!fs.existsSync(dir)) return 0;
-  return fs.readdirSync(dir).filter(f => f.endsWith(ext)).length;
+  return fs.readdirSync(dir).filter(f => f.endsWith(ext) && f !== 'INDEX.md').length;
 }
 
 function isJunction(p) {
@@ -57,8 +57,8 @@ function isJunction(p) {
     const lst = fs.lstatSync(p);
     if (lst.isSymbolicLink()) return true;
     if (process.platform === 'win32' && lst.isDirectory()) {
-      const attrs = lst.mode !== undefined ? lst.mode : 0;
-      return (attrs & 0x400) !== 0 || lst.isSymbolicLink();
+      // NTFS junctions and symlinks both report isSymbolicLink() === true in modern Node
+      return lst.isSymbolicLink();
     }
   } catch {}
   return false;
@@ -70,7 +70,7 @@ function readFile(p) {
 
 function hasFrontmatter(dir, key) {
   if (!fs.existsSync(dir)) return false;
-  const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(dir).filter(f => f.endsWith('.md') && f !== 'INDEX.md');
   return files.every(f => readFile(path.join(dir, f)).match(new RegExp(`^${key}:`, 'm')));
 }
 
@@ -89,10 +89,10 @@ console.log('');
 
 console.log('[Structure]');
 check('opencode.json exists', () => fs.existsSync('opencode.json'));
-check('AGENTS.md exists', () => fs.existsSync('AGENTS.md'));
+check('.opencode/AGENTS.md exists', () => fs.existsSync('.opencode/AGENTS.md'));
 check('.opencode/docs/README.md exists', () => fs.existsSync('.opencode/docs/README.md'));
-check('README.md exists', () => fs.existsSync('README.md'));
-check('CHANGELOG.md exists', () => fs.existsSync('CHANGELOG.md'));
+check('.opencode/README.md exists', () => fs.existsSync('.opencode/README.md'));
+check('.opencode/CHANGELOG.md exists', () => fs.existsSync('.opencode/CHANGELOG.md'));
 check('.opencode/ folder', () => fs.existsSync('.opencode'));
 check('.agents/ folder', () => fs.existsSync('.agents'));
 check('.opencode/instructions/ folder', () => fs.existsSync('.opencode/instructions'));
@@ -147,7 +147,7 @@ console.log('');
 console.log('[No broken paths in pack]');
 function findBrokenRefs() {
   if (!fs.existsSync('.opencode')) return [];
-  const knownSkills = ['api-design', 'coding-standards', 'documentation-lookup', 'error-handling', 'git-workflow', 'intent-driven-development', 'mcp-server-patterns', 'security-review', 'tdd-workflow', 'verification-loop', 'caveman'];
+  const knownSkills = ['api-design', 'backend-patterns', 'coding-standards', 'documentation-lookup', 'error-handling', 'frontend-patterns', 'git-workflow', 'intent-driven-development', 'mcp-server-patterns', 'security-review', 'task-decomposition', 'tdd-workflow', 'verification-loop', 'caveman'];
   const broken = [];
   const files = require('child_process').execSync(
     `powershell -NoProfile -Command "Get-ChildItem -Path .opencode -Recurse -File -Force | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object -ExpandProperty FullName"`,

@@ -91,13 +91,13 @@
 |---------|----------|-------|
 | `/build-fix` | Arregla errores de build y TypeScript con cambios mínimos. | build-error-resolver |
 
-## "Quiero mantener la memoria entre sesiones"
+## "Quiero mantener la memoria entre sessions"
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
 | `/session-start` | Lee la Capa 1+2 de memoria y reporta un resumen compacto. Auto en señales de cierre. | build |
 | `/session-end` | Escribe snapshot, actualiza `LATEST.md`, refresca `PROJECT.md`, extrae 1-3 instintos. | build |
-| `/context` | Audita el presupuesto de contexto: skills, agentes, comandos, sesiones. | build |
+| `/context` | Audita el presupuesto de contexto: skills, agentes, comandos, sessions. | build |
 | `/refresh-project` | Regenera `.agents/PROJECT.md` desde los archivos del proyecto. | build |
 
 ## "Quiero limpiar / refactorizar"

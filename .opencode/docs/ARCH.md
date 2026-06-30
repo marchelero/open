@@ -9,7 +9,7 @@ El pack minimiza el uso de tokens dividiendo el contexto en 4 capas. Solo las ca
 | Capa | Qué contiene | Cuándo se carga | Tamaño |
 |------|--------------|-----------------|--------|
 | 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `.agents/PROJECT.md` | siempre | ~2K tokens |
-| 2 | `.agents/sesiones/LATEST.md` (copia del último snapshot) | `/session-start` o auto al cerrar | ~1-3K tokens |
+| 2 | `.agents/sessions/LATEST.md` (copia del último snapshot) | `/session-start` o auto al cerrar | ~1-3K tokens |
 | 3 | Skills bajo demanda, archivos, sub-agentes | cuando se necesitan (skill tool, task tool) | variable |
 | 4 | historial git, PRDs, planes, instintos | nunca al contexto | solo disco |
 
@@ -103,11 +103,11 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 | Mecanismo | Ahorro |
 |-----------|--------|
 | caveman mode (AGENTS.md) | ~75% en outputs |
-| plugin `dynamic-context-pruning` | 30-50% en sesiones largas |
+| plugin `dynamic-context-pruning` | 30-50% en sessions largas |
 | memoria de sesión de 4 capas | ~80% al reanudar |
 | sub-agentes vía `task` tool | 70-90% en paralelismo |
 | skills bajo demanda (no en `instructions`) | ~95% en skills no usadas |
-| truncado de resultados de tools (`grep -m 50`, `head -n 100`) | 20-40% en sesiones con muchos greps |
+| truncado de resultados de tools (`grep -m 50`, `head -n 100`) | 20-40% en sessions con muchos greps |
 | **Total vs starter sin optimizar** | **~85%** |
 
 ## Estructura de archivos
@@ -122,7 +122,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 │   └── INSTRUCTIONS.md              capa 1: reglas globales (seguridad, git, testing, estilo)
 ├── .agents/                         contexto persistente
 │   ├── PROJECT.md                   capa 1: fuente de verdad del proyecto
-│   ├── sesiones/                    capa 2: snapshots por sesión
+│   ├── sessions/                    capa 2: snapshots por sesión
 │   │   ├── README.md
 │   │   ├── LATEST.md                copia del snapshot más reciente
 │   │   └── YYYY-MM-DD-{slug}.md

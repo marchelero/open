@@ -125,7 +125,7 @@ Schema:
 .agents/sessions/LATEST.md
 ```
 
-Sesiones usan solo fecha (sin hora) porque son humanas, no automatizadas.
+sessions usan solo fecha (sin hora) porque son humanas, no automatizadas.
 
 ### Instincts
 

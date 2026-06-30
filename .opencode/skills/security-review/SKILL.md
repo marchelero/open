@@ -1,7 +1,8 @@
 ---
 name: security-review
 description: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.
-origin: ECC
+triggers: [auth, password, JWT, session, CSRF, XSS, SQL injection, secret, OWASP, vulnerability]
+origin: starter-pack
 ---
 
 # Security Review Skill

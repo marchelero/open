@@ -29,7 +29,7 @@ cd /ruta/a/tu/proyecto && opencode .
 
 1. **Caveman mode** — respuestas tersas, ~75% menos tokens. Solo se sale en advertencias de seguridad, acciones irreversibles, secuencias multi-paso o cuando dices "habla normal".
 2. **PRD-first** — "construir X" / "crear Y" / "agregar Z" → `@prd-agent` o `/prd` PRIMERO. Nunca se propone una solución sin antes clarificar la intención y escribir el PRD. Solo se omite en preguntas y respuestas, arreglos de una línea, reportes de bug con reproducción o cuando dices "skip PRD" de forma explícita.
-3. **Memoria de sesión** — "listo" / "bye" / "hasta mañana" → snapshot automático en `.agents/sesiones/`. No hace falta ejecutar `/session-end` manualmente.
+3. **Memoria de sesión** — "listo" / "bye" / "hasta mañana" → snapshot automático en `.agents/sessions/`. No hace falta ejecutar `/session-end` manualmente.
 4. **Nada destructivo sin consentimiento** — `git commit` / `push` / `rm -rf` / `DROP TABLE` requieren verbo explícito. "vale" / "ok" solos NO son consentimiento.
 5. **El consentimiento no se hereda entre turnos** — el permiso de un turno previo NO se aplica al actual. Cada `commit`/`push` necesita su propio "commitea"/"push" en el turno actual.
 
@@ -43,8 +43,8 @@ cd /ruta/a/tu/proyecto && opencode .
 | `/verify` | Valida cambios (revisión de código + seguridad + revisor del lenguaje) |
 | `/code-review` | Revisión de código puntual |
 | `/security` | Auditoría de seguridad puntual |
-| `/session-start` / `/session-end` | Memoria entre sesiones (automática al cerrar) |
-| `/context` | Audita el presupuesto de contexto (skills, agentes, sesiones) |
+| `/session-start` / `/session-end` | Memoria entre sessions (automática al cerrar) |
+| `/context` | Audita el presupuesto de contexto (skills, agentes, sessions) |
 
 Lista completa: `node .opencode/bin/context.js` o explora `.opencode/comandos/`.
 
@@ -63,7 +63,7 @@ node .opencode/bin/refresh-project.js    # regenera .agents/PROJECT.md desde el 
 | Capa | Qué contiene | Cuándo se carga | Tamaño |
 |------|--------------|-----------------|--------|
 | 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `.agents/PROJECT.md` | siempre | ~2K tokens |
-| 2 | `.agents/sesiones/LATEST.md` | al iniciar sesión | ~1-3K tokens |
+| 2 | `.agents/sessions/LATEST.md` | al iniciar sesión | ~1-3K tokens |
 | 3 | Skills bajo demanda, archivos, sub-agentes | cuando se piden | variable |
 | 4 | Historial git, PRDs, planes, instintos | nunca | disco |
 

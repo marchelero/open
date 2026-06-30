@@ -1,7 +1,8 @@
 ---
 name: mcp-server-patterns
 description: Use this skill when building MCP servers with Node/TypeScript SDK. Covers tools, resources, prompts, Zod validation, stdio vs Streamable HTTP. Use Context7 or official MCP docs for the latest API.
-origin: ECC
+triggers: [MCP, model-context-protocol, server, tool, resource, prompt, stdio]
+origin: starter-pack
 ---
 
 # MCP Server Patterns

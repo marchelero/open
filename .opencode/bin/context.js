@@ -73,7 +73,7 @@ function skillsReport() {
 function agentsReport() {
   const agentsDir = path.join(CWD, '.opencode', 'agents');
   if (!exists(agentsDir)) return { count: 0, totalBytes: 0 };
-  const files = readDir(agentsDir).filter(f => f.isFile() && f.name.endsWith('.md'));
+  const files = readDir(agentsDir).filter(f => f.isFile() && f.name.endsWith('.md') && f.name !== 'INDEX.md');
   let total = 0;
   for (const f of files) { try { total += fs.statSync(path.join(agentsDir, f.name)).size; } catch {} }
   return { count: files.length, totalBytes: total };

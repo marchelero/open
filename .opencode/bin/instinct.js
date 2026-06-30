@@ -2,9 +2,8 @@
 /**
  * instinct.js - opencode-native instinct management CLI
  *
- * Replaces ECC's continuous-learning-v2 Python plugin.
  * Storage: ~/.config/opencode/instincts/ (global) + .opencode/instincts/ (project)
- * Format: compatible with ECC's JSON shape (instincts[], metadata)
+ * Format: JSON shape with instincts[] and metadata
  *
  * Usage:
  *   node instinct.js status [--scope project|global|all] [--domain coding]

@@ -1,7 +1,8 @@
 ---
 name: git-workflow
 description: Use this skill when creating branches, committing changes, opening PRs, resolving merge conflicts, or following branching/commit conventions. Covers Git workflow patterns for teams of all sizes.
-origin: ECC
+triggers: [commit, branch, PR, merge, rebase, conflict, git, cherry-pick, stash]
+origin: starter-pack
 ---
 
 # Git Workflow Patterns

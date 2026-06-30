@@ -64,10 +64,13 @@ function listDirs(dir) {
 }
 
 function parseFrontmatter(content) {
-  if (!content || !content.startsWith('---')) return null;
-  const end = content.indexOf('\n---', 3);
+  if (!content) return null;
+  // Strip leading HTML comments and blank lines (Prompt Defense reference)
+  const stripped = content.replace(/^(?:<!--[^-]*(?:-[^-]+)*-->\s*\n)+\s*/, '');
+  if (!stripped.startsWith('---')) return null;
+  const end = stripped.indexOf('\n---', 3);
   if (end === -1) return null;
-  const block = content.substring(3, end);
+  const block = stripped.substring(3, end);
   const fm = {};
   for (const line of block.split(/\r?\n/)) {
     const m = line.match(/^([a-zA-Z_][\w-]*)\s*:\s*(.*)$/);
@@ -84,10 +87,13 @@ function parseFrontmatter(content) {
 
 function validateAgent(file) {
   const base = path.basename(file, '.md');
+  if (base === 'INDEX') return; // auto-generated index, skip
   const content = readFile(file);
   if (!content) return log('fail', `agent/${base}`, 'cannot read file');
 
-  if (!content.startsWith('---')) {
+  // Allow leading HTML comments (Prompt Defense reference) before ---
+  const stripped = content.replace(/^(?:<!--[^-]*(?:-[^-]+)*-->\s*\n)+\s*/, '');
+  if (!stripped.startsWith('---')) {
     return log('fail', `agent/${base}`, 'no frontmatter (no leading ---)');
   }
 

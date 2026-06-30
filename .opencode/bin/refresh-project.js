@@ -31,6 +31,19 @@ const ARGS = process.argv.slice(2);
 const DRY_RUN = ARGS.includes('--dry-run');
 const CHECK_ONLY = ARGS.includes('--check');
 
+if (ARGS.includes('--help') || ARGS.includes('-h')) {
+  console.log(`Usage:
+  node .opencode/bin/refresh-project.js              # scan + write
+  node .opencode/bin/refresh-project.js --dry-run    # scan + show diff, no write
+  node .opencode/bin/refresh-project.js --check      # exit 0 if up to date, 1 if stale
+  node .opencode/bin/refresh-project.js --help       # this help
+
+Scans: package.json, pubspec.yaml, pyproject.toml, requirements.txt, setup.py,
+       Cargo.toml, go.mod, *.csproj, *.sln, pom.xml, build.gradle*, index.html, README.*.md
+Writes: .agents/PROJECT.md (backup at .agents/PROJECT.md.bak.<ts>)`);
+  process.exit(0);
+}
+
 const HOME = os.homedir();
 const PROJECT_MD = path.join(CWD, '.agents', 'PROJECT.md');
 const BACKUP_MD = path.join(CWD, '.agents', `PROJECT.md.bak.${Date.now()}`);

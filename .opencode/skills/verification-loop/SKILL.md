@@ -1,7 +1,8 @@
 ---
 name: verification-loop
 description: Use this skill when running post-change verification of implementations, builds, tests, and reviews. Provides a comprehensive verification system for sessions.
-origin: ECC
+triggers: [verify, check, audit, validate, regression, post-change]
+origin: starter-pack
 ---
 
 # Verification Loop Skill

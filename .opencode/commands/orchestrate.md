@@ -215,3 +215,26 @@ In all other cases, Phase 0 is mandatory. The cost of a clear PRD is one extra r
 ---
 
 **NOTE**: Complex tasks benefit from multi-agent orchestration starting with intent clarification. Simple tasks should use single agents directly (`@prd-agent` for new work, `@code-reviewer` for review, `@build-error-resolver` for build issues).
+
+---
+
+## State Persistence (REQUIRED)
+
+This flow writes to `.opencode/state/` so it can be resumed after interruption. See `.opencode/state/README.md` for the schema.
+
+``bash
+# At flow start
+node .opencode/bin/state.js init orchestrate "" [<prd-path>]
+# Capture the printed path as 
+
+# After each phase
+node .opencode/bin/state.js update "" <phase> '{"agentsInvoked":["..."],"filesModified":["..."]}'
+
+# On success
+node .opencode/bin/state.js complete ""
+
+# On error
+node .opencode/bin/state.js fail "" "<error message>"
+``
+
+The flow is resumable: if interrupted, `/session-start` detects active states in `.opencode/state/` and offers to resume from `currentPhase`.

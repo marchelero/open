@@ -1,13 +1,13 @@
 # Project Context
 
-> Auto-refreshed by refresh-project.js on 2026-06-23.
+> Auto-refreshed by refresh-project.js on 2026-06-30.
 > Source of truth: actual project files (package.json, pubspec.yaml, etc.)
 > Edit `Conventions` / `Non-Negotiables` / `Architecture Notes` sections manually — they are preserved across refreshes.
 
 ## Identity
 - **Name**: open
 - **Type**: unknown
-- **Description**: Pack portable de opencode: **65 agentes, 10 skills, 52 slash commands, 2 MCPs, 4 plugins, 4 CLIs cero-deps**.
+- **Description**: (no description)
 
 ## Stack
 - **Language**: ?

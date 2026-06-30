@@ -1,7 +1,8 @@
 ---
 name: api-design
 description: Use this skill when designing, reviewing, or documenting REST APIs. Covers resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs.
-origin: ECC
+triggers: [REST, GraphQL, endpoint, status code, pagination, API, rate limit, version]
+origin: starter-pack
 ---
 
 # API Design Patterns

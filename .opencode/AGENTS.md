@@ -216,7 +216,7 @@ Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmaci
 
 **Health check**: `/pack-doctor` valida el pack. Corre antes de un release o cuando algo se comporta raro.
 
-## Memoria de sesiones (4 capas)
+## Memoria de sessions (4 capas)
 
 El pack usa una arquitectura de 4 capas para minimizar tokens al retomar:
 

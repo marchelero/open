@@ -30,9 +30,9 @@
         }
     },
     "plugin": [
-        "opencode-dynamic-context-pruning",
-        "opencode-skillful",
         "opencode-vibeguard",
-        "opencode-pty"
+        "opencode-pty",
+        "@tarquinen/opencode-dcp",
+        "@zenobius/opencode-skillful"
     ]
 }

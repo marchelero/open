@@ -122,3 +122,26 @@ Siguiente paso:
 - Sin cambios de codigo (usar `npx ecc-agentshield` standalone).
 - Refactor puro (usar `/flow-refactor`).
 - Bug no relacionado a security (usar `/flow-bugfix`).
+
+---
+
+## State Persistence (REQUIRED)
+
+This flow writes to `.opencode/state/` so it can be resumed after interruption. See `.opencode/state/README.md` for the schema.
+
+``bash
+# At flow start
+node .opencode/bin/state.js init flow-security "" [<prd-path>]
+# Capture the printed path as 
+
+# After each phase
+node .opencode/bin/state.js update "" <phase> '{"agentsInvoked":["..."],"filesModified":["..."]}'
+
+# On success
+node .opencode/bin/state.js complete ""
+
+# On error
+node .opencode/bin/state.js fail "" "<error message>"
+``
+
+The flow is resumable: if interrupted, `/session-start` detects active states in `.opencode/state/` and offers to resume from `currentPhase`.

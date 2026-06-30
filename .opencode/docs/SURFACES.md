@@ -61,7 +61,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 **Reglas de frontmatter** (las aplica `validate-frontmatter.js`):
 - `name` (requerido, kebab-case)
 - `description` (requerido, 1-1024 caracteres, tercera persona, "Use when...")
-- `origin` (opcional, p. ej. "ECC")
+- `origin` (opcional, p. ej. "starter-pack")
 
 ### 3. Servidor MCP (capa 3, superficie de tools)
 
