@@ -1,6 +1,6 @@
 ---
 description: Analyze type design for encapsulation, invariant expression, usefulness, and enforcement.
-mode: all
+mode: subagent
 permission:
   glob: allow
   grep: allow

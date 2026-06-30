@@ -1,6 +1,6 @@
 ---
 description: Use this agent when analyzing conversation transcripts to find behaviors worth preventing with hooks. Triggered by /hookify without arguments.
-mode: all
+mode: subagent
 permission:
   grep: allow
   read: allow

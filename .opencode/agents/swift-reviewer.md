@@ -1,6 +1,6 @@
 ---
 description: Expert Swift code reviewer specializing in protocol-oriented design, value semantics, ARC memory management, Swift Concurrency, and idiomatic patterns. Use for all Swift code changes. MUST BE USED for Swift projects.
-mode: all
+mode: subagent
 permission:
   bash: allow
   glob: allow

@@ -1,6 +1,6 @@
 ---
 description: Accessibility Architect specializing in WCAG 2.2 compliance for Web and Native platforms. Use PROACTIVELY when designing UI components, establishing design systems, or auditing code for inclusive user experiences.
-mode: all
+mode: subagent
 permission:
   edit: allow
   glob: allow

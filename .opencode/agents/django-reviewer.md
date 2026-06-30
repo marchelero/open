@@ -1,6 +1,6 @@
 ---
 description: Expert Django code reviewer specializing in ORM correctness, DRF patterns, migration safety, security misconfigurations, and production-grade Django practices. Use for all Django code changes. MUST BE USED for Django projects.
-mode: all
+mode: subagent
 permission:
   bash: allow
   glob: allow

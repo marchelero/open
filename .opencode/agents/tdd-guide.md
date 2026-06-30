@@ -1,6 +1,6 @@
 ---
 description: Test-Driven Development specialist enforcing write-tests-first methodology. Use PROACTIVELY when writing new features, fixing bugs, or refactoring code. Ensures 80%+ test coverage.
-mode: all
+mode: subagent
 permission:
   bash: allow
   edit: allow

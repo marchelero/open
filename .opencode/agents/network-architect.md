@@ -1,6 +1,6 @@
 ---
 description: Designs enterprise or multi-site network architecture from requirements, using existing network skills for focused routing, validation, automation, and troubleshooting detail.
-mode: all
+mode: subagent
 permission:
   grep: allow
   read: allow

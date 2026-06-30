@@ -1,6 +1,6 @@
 ---
 description: Dead code cleanup and consolidation specialist. Use PROACTIVELY for removing unused code, duplicates, and refactoring. Runs analysis tools (knip, depcheck, ts-prune) to identify dead code and safely removes it.
-mode: all
+mode: subagent
 permission:
   bash: allow
   edit: allow

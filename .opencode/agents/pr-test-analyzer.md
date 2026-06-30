@@ -1,6 +1,6 @@
 ---
 description: Review pull request test coverage quality and completeness, with emphasis on behavioral coverage and real bug prevention.
-mode: all
+mode: subagent
 permission:
   bash: deny
   glob: allow

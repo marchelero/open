@@ -1,6 +1,6 @@
 ---
 description: Expert Go code reviewer specializing in idiomatic Go, concurrency patterns, error handling, and performance. Use for all Go code changes. MUST BE USED for Go projects.
-mode: all
+mode: subagent
 permission:
   bash: allow
   glob: allow

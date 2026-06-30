@@ -1,7 +1,7 @@
 ---
 description: "GAN Harness — Planner agent. Expands a one-line prompt into a full product specification with features, sprints, evaluation criteria, and design direction."
 color: accent
-mode: all
+mode: subagent
 permission:
   edit: allow
   glob: allow

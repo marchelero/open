@@ -1,6 +1,6 @@
 ---
 description: Deeply analyzes existing codebase features by tracing execution paths, mapping architecture layers, and documenting dependencies to inform new development.
-mode: all
+mode: subagent
 permission:
   glob: allow
   grep: allow

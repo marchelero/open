@@ -4,22 +4,21 @@ Reglas del proyecto para opencode cuando trabaja en este repo.
 
 ## Que es esto
 
-Starter pack portable de opencode. El "producto" son los 47 comandos, 64 agentes y 11 skills en `.opencode/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
+Starter pack portable de opencode. El "producto" son los 65 comandos, 68 agentes y 14 skills en `.opencode/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
 
 ## Estructura
 
 ```
 .
 ├── opencode.json          Config principal (commands, instructions, permission, mcp, plugin)
-├── STARTER.md             Guia de uso del starter (rename: cada proyecto tiene su README)
 ├── AGENTS.md              Este archivo (reglas para agentes)
-├── STARTER-AGENTS.md      Reglas starter-specific (opcional, solo este repo)
 ├── instructions/
 │   └── INSTRUCTIONS.md    Reglas globales (seguridad, estilo, git) que se inyectan en cada sesion
 ├── .agents/skills/        Skills custom del usuario (ej: caveman via npx skills add)
 └── .opencode/
-    ├── agents/            64 subagentes (.md, frontmatter: description + mode + permission)
-    ├── skills/            11 skills portables (<name>/SKILL.md, frontmatter: name + description)
+    ├── agents/            68 subagentes (.md, frontmatter: description + mode + permission)
+    ├── skills/            14 skills portables (<name>/SKILL.md, frontmatter: name + description)
+    ├── docs/README.md     Guia de uso del starter (rename: cada proyecto tiene su README)
     ├── agent -> agents    JUNCTION oculta (backwards compat opencode 1.17.x)
     └── skill -> skills    JUNCTION oculta (backwards compat opencode 1.17.x)
 ```
@@ -37,7 +36,7 @@ Starter pack portable de opencode. El "producto" son los 47 comandos, 64 agentes
 - No agregar dependencias npm. Este proyecto es zero-deps por diseño.
 - No crear `package.json`, `tsconfig.json`, ni archivos de build.
 - No committear el `.opencode/.gitignore` modificado sin actualizarlo (ignora `node_modules`, `package.json`, etc. por si opencode intenta instalar plugins).
-- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 64 agentes — avisar antes.
+- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 68 agentes — avisar antes.
 
 ## Skills y agentes custom del usuario
 

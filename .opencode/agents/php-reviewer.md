@@ -1,6 +1,6 @@
 ---
 description: Expert PHP code reviewer specializing in PSR-12 compliance, PHP type system, Eloquent ORM patterns, security, and performance. Use for all PHP code changes. MUST BE USED for PHP projects.
-mode: all
+mode: subagent
 permission:
   bash: allow
   glob: allow

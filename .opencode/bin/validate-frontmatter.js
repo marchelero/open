@@ -71,16 +71,37 @@ function parseFrontmatter(content) {
   const end = stripped.indexOf('\n---', 3);
   if (end === -1) return null;
   const block = stripped.substring(3, end);
+  const lines = block.split(/\r?\n/);
   const fm = {};
-  for (const line of block.split(/\r?\n/)) {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const m = line.match(/^([a-zA-Z_][\w-]*)\s*:\s*(.*)$/);
-    if (m) {
-      const key = m[1];
-      let val = m[2].trim();
+    if (!m) continue;
+    const key = m[1];
+    let val = m[2].trim();
+    // Inline value present
+    if (val.length > 0) {
       if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
       if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1);
       fm[key] = val;
+      continue;
     }
+    // Empty value: collect indented sub-lines (YAML block scalar / nested mapping)
+    const sub = {};
+    let hasSub = false;
+    while (i + 1 < lines.length) {
+      const next = lines[i + 1];
+      if (!next.startsWith(' ') && !next.startsWith('\t')) break;
+      const sm = next.match(/^\s+([a-zA-Z_][\w-]*)\s*:\s*(.*)$/);
+      if (!sm) break;
+      hasSub = true;
+      let sval = sm[2].trim();
+      if (sval.startsWith('"') && sval.endsWith('"')) sval = sval.slice(1, -1);
+      if (sval.startsWith("'") && sval.endsWith("'")) sval = sval.slice(1, -1);
+      sub[sm[1]] = sval;
+      i++;
+    }
+    fm[key] = hasSub ? sub : '';
   }
   return fm;
 }

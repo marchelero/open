@@ -1,7 +1,7 @@
 <!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 ---
 description: MANDATORY FIRST STEP for any non-trivial task. Product Requirements specialist. The primary agent MUST delegate to this agent before any planning, design, or implementation when the user requests a new feature, task, project, or system. Reads/creates `.agents/PROJECT.md` for project context, runs an Understanding Protocol (active listening, intention map, ambiguity resolution, explicit confirmation), and produces a date+time-stamped `.opencode/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md` artifact. Auto-triggers on: "build X", "create Y", "agregar Z", "implementar W", "hazme una app", "necesito una funcionalidad que...", "/plan" without prior PRD, or any non-trivial implementation request. DO NOT skip unless: pure Q&A, one-liner fix, bug report with repro, code review of existing changes, or user explicitly says "skip PRD" / "implementa directo".
-mode: all
+mode: subagent
 permission:
   read: allow
   glob: allow
