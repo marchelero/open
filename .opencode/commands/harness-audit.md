@@ -1,5 +1,5 @@
 ---
-description: "Run a deterministic repository harness audit and return a prioritized scorecard."
+description: "Run a deterministic repository harness audit and return a prioritized scorecard (12 categories: tool coverage, context efficiency, quality gates, security, etc). Use pre-commit o pre-release como health check."
 agent: build
 ---
 

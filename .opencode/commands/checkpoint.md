@@ -1,5 +1,5 @@
 ---
-description: "Save verification state and progress checkpoint"
+description: "Save verification state and progress checkpoint (tests, build, coverage, completed tasks, next steps). Use in long sessions para poder resumir despues de context reset, o como punto de rollback antes de cambios riesgosos."
 agent: build
 ---
 

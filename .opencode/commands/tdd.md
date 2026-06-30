@@ -1,5 +1,5 @@
 ---
-description: "Enforce TDD workflow with 80%+ coverage"
+description: "Enforce TDD workflow estricto (RED → GREEN → REFACTOR) con 80%+ coverage. Use when implementing new features, fixing non-trivial bugs, o refactoring critical logic — tests antes que codigo."
 agent: tdd-guide
 ---
 

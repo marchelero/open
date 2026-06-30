@@ -1,5 +1,5 @@
 ---
-description: "Run evaluation against acceptance criteria"
+description: "Run evaluation against acceptance criteria del PRD (binary, scalar, o rubric grader). Use when un PRD existe y queres checkear que cada criterio este cumplido antes de marcar done."
 agent: build
 ---
 

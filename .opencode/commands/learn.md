@@ -1,5 +1,5 @@
 ---
-description: "Extract patterns and learnings from current session"
+description: "Extract patterns, learnings, y reusable insights de la sesion actual. Use at end of long sessions o cuando notaste un patron repetido 3+ veces que vale la pena guardar como instinct."
 agent: build
 ---
 

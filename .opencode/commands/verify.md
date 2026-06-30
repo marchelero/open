@@ -1,5 +1,5 @@
 ---
-description: "Run verification loop to validate implementation"
+description: "Run verification loop consolidado: typecheck + lint + tests + coverage + build + security. Auto-genera report si PASS. Use before committing significant changes, o como gate pre-PR."
 agent: build
 ---
 

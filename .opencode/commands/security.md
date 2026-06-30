@@ -1,5 +1,5 @@
 ---
-description: "Run comprehensive security review"
+description: "Run comprehensive security review contra OWASP Top 10 (injection, broken auth, XSS, CSRF, deserialization, components with vulns). Use for security-sensitive code (auth, payments, user data) o pre-release."
 agent: security-reviewer
 ---
 

@@ -1,5 +1,5 @@
 ---
-description: "Audita un report existente contra su PRD origen. Wrapper para invocar report-auditor manualmente."
+description: "Audita un report existente contra su PRD origen via report-auditor. Use post-/verify para cruzar evidencia contra el plan original, o cuando el user dice 'audita X' / 'revisa el report de Y'."
 agent: report-auditor
 ---
 

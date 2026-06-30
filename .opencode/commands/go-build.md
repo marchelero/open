@@ -1,5 +1,5 @@
 ---
-description: "Fix Go build and vet errors"
+description: "Fix Go build, vet, and linter errors with minimal changes (no refactor). Use when `go build ./...` o `go vet ./...` falla, o staticcheck reporta issues."
 agent: go-build-resolver
 ---
 

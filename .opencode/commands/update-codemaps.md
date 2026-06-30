@@ -1,5 +1,5 @@
 ---
-description: "Update codemaps for codebase navigation"
+description: "Update codemaps en docs/CODEMAPS/ (ARCHITECTURE, MODULES, FILES) regenerando la estructura actual del codebase. Use when agregaste modulo nuevo, refactoreaste estructura, o PR-test-analyzer reporta codemaps stale."
 agent: doc-updater
 ---
 

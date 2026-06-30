@@ -1,5 +1,5 @@
 ---
-description: "Archiva reports viejos a .opencode/reports/_archive/. NO borra. Solo mueve."
+description: "Archiva reports viejos a .opencode/reports/_archive/. NO borra, solo mueve. Use when .opencode/reports/ tenga >20 archivos o antes de un commit grande para mantener el directorio limpio."
 agent: build
 ---
 

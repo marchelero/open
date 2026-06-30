@@ -1,5 +1,5 @@
 ---
-description: "Run AgentShield against agent, hook, MCP, permission, and secret surfaces."
+description: "Run AgentShield contra agent, hook, MCP, permission, y secret surfaces. Output grade + score + findings con severidad. Use when auditas la config del pack, detectas surface area nueva, o pre-release de un proyecto con MCP servers."
 agent: security-reviewer
 ---
 

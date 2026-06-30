@@ -245,6 +245,44 @@ Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmaci
 
 **Health check**: `/pack-doctor` valida el pack. Corre antes de un release o cuando algo se comporta raro.
 
+### 7. Flow suggestions (primary proactivo)
+
+**Regla**: cuando el request del user matchee un `/flow-*` command, el primary OFRECE correrlo antes de empezar a implementar. No proponer soluciones directas, no asumir que el user conoce el shortcut.
+
+**Tabla de matcheo** (request → flow):
+
+| User dice algo como... | Primary sugiere |
+|------------------------|-----------------|
+| "agregar feature X" / "implementar Y" / "build Z" | `/flow-feature "<X>"` |
+| "fix bug en Y" / "no funciona Z" / "rompio W" (con repro) | `/flow-bugfix "<repro>"` |
+| "refactor X" / "cleanup Y" / "consolidar Z" (sin cambio de comportamiento) | `/flow-refactor "<X>"` |
+| "security audit" / "es seguro X" / "vulnerability" | `/flow-security` |
+| "como uso el pack" / "no se que hacer" / "empezar" | `/start-here` |
+| "que comando uso para X" / "como hago Y" | `/route "<X>"` o `/help <Y>` |
+| "olvide / no se / ayuda" | `/help` |
+
+**Comportamiento**:
+
+1. Detectar match por keywords del request (no full NLP — pattern match basta).
+2. Si matchea, primary dice UNA sola vez:
+   ```
+   "Eso matchea /flow-X. Lo corro? (s/n)"
+   ```
+3. Si user dice "s" / "dale" / "go" → invocar el flow.
+4. Si user dice "n" / "no" / "skip" → proceder manual, sin insistir.
+5. NO ofrecer flow si user ya lo invoco o si el request es claramente one-liner.
+
+**Cuando NO aplicar** (skip la sugerencia):
+
+- User ya uso el flow explicitamente ("hace /flow-feature").
+- Request es pure Q&A o one-liner.
+- User esta mid-flow (ya empezo un /flow-X).
+- User dijo "skip" / "no" / "manual" en este turno.
+
+**Anti-pattern**: primary NUNCA asume que el user prefiere manual. Si hay un flow que matchee, ofrecer. User decide.
+
+**Integration**: este comportamiento NO requiere que el user conozca los flows. Es la forma en que el pack reduce friccion para newcomers.
+
 ## Memoria de sessions (4 capas)
 
 El pack usa una arquitectura de 4 capas para minimizar tokens al retomar:

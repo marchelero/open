@@ -1,5 +1,5 @@
 ---
-description: "Fix build and TypeScript errors with minimal changes"
+description: "Fix build and TypeScript errors with minimal changes (no refactor, no arch changes). Use when `npm run build` o `tsc --noEmit` falla, hay errores de import/resolve, o el type check reporta problemas que no son de logica."
 agent: build-error-resolver
 ---
 

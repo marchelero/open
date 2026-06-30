@@ -1,5 +1,5 @@
 ---
-description: "Generate skills from git history analysis"
+description: "Analyze git history para detectar patterns repetidos y generar skills nuevas (SKILL.md + instincts). Use when un pattern aparece 5+ veces en commit history y queres formalizarlo como knowledge reusable."
 agent: build
 ---
 

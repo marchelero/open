@@ -1,5 +1,5 @@
 ---
-description: "Generate and run E2E tests with Playwright"
+description: "Generate and run E2E tests with Playwright for critical user flows (login, checkout, signup). Use for flows that unit/integration tests no cubren — captura screenshots, videos y traces en failures."
 agent: e2e-runner
 ---
 

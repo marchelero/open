@@ -1,5 +1,5 @@
 ---
-description: "Import instincts from external sources"
+description: "Import instincts from external JSON files (exports de otros proyectos o de team). Deduplica, ajusta confidence ×0.8, merge to target scope. Use when arrancas un proyecto nuevo y queres traer patterns ya aprendidos."
 agent: build
 ---
 

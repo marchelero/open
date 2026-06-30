@@ -1,5 +1,5 @@
 ---
-description: "Export instincts for sharing"
+description: "Export instincts filtrados por confidence/category/scope a JSON para sharing. Use when quieres compartir learnings acumulados con team members o importar en otro proyecto."
 agent: build
 ---
 

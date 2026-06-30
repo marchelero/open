@@ -1,5 +1,5 @@
 ---
-description: "Analyze and improve test coverage"
+description: "Analyze test coverage, identify gaps (unit/integration/E2E), y genera tests para uncovered code. Use when coverage bajo 80%, antes de un release, o cuando agregas funcionalidad nueva sin tests."
 agent: tdd-guide
 ---
 

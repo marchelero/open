@@ -1,5 +1,5 @@
 ---
-description: "Review code for quality, security, and maintainability"
+description: "Review code changes for quality (functions <50L, files <800L, no deep nesting, no mutation), security (secrets, injection, validation), and maintainability. Use after writing or modifying code, before committing, o como gate pre-PR."
 agent: code-reviewer
 ---
 

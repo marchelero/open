@@ -1,5 +1,5 @@
 ---
-description: "Go TDD workflow with table-driven tests"
+description: "Go TDD workflow enforcing table-driven tests, interfaces-first, and RED→GREEN→REFACTOR. Use when implementing new Go functions, refactoring Go logic, o fix de bugs en Go con test-first."
 agent: tdd-guide
 ---
 

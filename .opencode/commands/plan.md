@@ -1,5 +1,5 @@
 ---
-description: "Create implementation plan with risk assessment"
+description: "Create implementation plan with risk assessment (HIGH/MEDIUM/LOW), dependencies, y phases. Use for complex features o refactors que necesitan desglose de tareas antes de implementar. WAIT for confirmation before code."
 agent: planner
 ---
 

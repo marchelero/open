@@ -1,5 +1,5 @@
 ---
-description: "Configure package manager preference"
+description: "Configure package manager preference (npm/pnpm/yarn/bun) del proyecto o global. Use first time setup, cuando cambias de package manager, o cuando un agente no detecta el lock file."
 agent: build
 ---
 

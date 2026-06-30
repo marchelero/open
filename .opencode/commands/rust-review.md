@@ -1,5 +1,5 @@
 ---
-description: "Rust code review for ownership, safety, and idiomatic patterns"
+description: "Rust code review for ownership (clones, &str vs String), lifetimes, error handling (? propagation, no unwrap), unsafe usage (// SAFETY: comments), and idiomatic patterns. Use after writing or modifying .rs source."
 agent: rust-reviewer
 ---
 

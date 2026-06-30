@@ -1,5 +1,5 @@
 ---
-description: "Show the top-level overview of the opencode starter pack: commands, agents, skills, conventions"
+description: "Show overview of the pack (commands, agents, skills, conventions) OR route a free-text request to the right tool. Use when you don't know what to invoke, want a quick orientation, or need a section drill-down (`/help agents`, `/help skills`, etc)."
 agent: build
 ---
 
@@ -9,13 +9,20 @@ Show a one-screen overview of the pack: most useful commands, the agent catalog 
 
 ## Your Task
 
-### Step 1 — Detect the Section
+### Step 1 — Detect the Mode
 
-If `$ARGUMENTS` is one of `agents`, `skills`, `commands`, `conventions`, `flows`, jump to that section.
+Three modes based on `$ARGUMENTS`:
 
-Otherwise, show the overview (sections 2-7 below).
+**A. Free-text request** (e.g. `/help how do I fix a React build error?`):
+Delegate to the routing logic (same as `/route`). Skip to Step 4.
 
-### Step 2 — Overview
+**B. Section name** (one of `agents`, `skills`, `commands`, `conventions`, `flows`):
+Jump to Step 3 with that section.
+
+**C. Empty** (no arguments):
+Show compact overview (Step 2), then ask "que queres hacer?" (Step 2.5).
+
+### Step 2 — Overview (mode C)
 
 Display:
 
@@ -38,6 +45,34 @@ New here? Read `.opencode/docs/START-HERE.md` (5-minute orientation).
 
 Stuck? Run `node .opencode/bin/validate-frontmatter.js` or `/list-agents` to verify discovery.
 ```
+
+### Step 2.5 — Ask the User (mode C)
+
+After showing the overview, ask interactively:
+
+```
+Que queres hacer? (responde libre o con keyword)
+
+  1. "agregar feature X"        → /prd o /flow-feature
+  2. "fix bug en Y"              → /flow-bugfix o /quick-prd
+  3. "refactor Z"                → /flow-refactor o /refactor-clean
+  4. "review codigo"             → /code-review o /pr-review
+  5. "como se usa el pack"       → /start-here (5 min onboarding)
+  6. otra cosa / no se           → describe con tus palabras
+
+Tambien podes correr:
+  /help <section>      # agents, skills, commands, conventions, flows
+  /help <pregunta>     # ruta libre contra el catalogo
+  /list-agents [kwd]   # ver 69 agentes
+  /list-skills [kwd]   # ver 14 skills
+  /pack-doctor         # health check del pack
+```
+
+Wait for user response, then:
+- If it matches an intent above (1-6), route to that command/agent.
+- If it's a free description, treat as mode A.
+- If `5` (onboarding), suggest `/start-here`.
+- If user says "skip" / "nada" / "salir", exit.
 
 ### Step 3 — Sections (only when `$ARGUMENTS` matches)
 
@@ -117,7 +152,7 @@ Enforced conventions (see .opencode/AGENTS.md for full list):
 
 **`flows`**: show the 3 most common end-to-end flows.
 
-```
+```text
 Flow 1: Idea → Shipped
   /prd "<idea>"           →  .opencode/prds/{ts}-{slug}.prd.md
   /plan <prd-path>        →  phased plan with risks
@@ -137,6 +172,29 @@ Flow 3: Refactor → Validate
   /verify                 →  tests still pass, types still check
   /audit-report           →  did the refactor keep behavior?
 ```
+
+### Step 4 — Free-text routing (mode A)
+
+If user typed a free-text request (anything not matching the 5 section names), treat it as a routing request — same as `/route "<request>"`.
+
+Output:
+
+```text
+[help] Matching "<request>" against the catalog...
+
+→ Recommended: <command-or-agent-or-skill>
+  Why: <1-line match reason>
+  Type: command | agent | skill
+
+  Alt 1: <option>   (<why>)
+  Alt 2: <option>   (<why>)
+
+Run it: <exact invocation, e.g. "/prd '<verbatim request>'">
+
+Need more help? /help <section> | /list-agents <kwd> | /list-skills <kwd>
+```
+
+For routing tables (intent→command, domain→agent, topic→skill), see `/route` command. This mode is a shortcut.
 
 ## Behavior Notes
 

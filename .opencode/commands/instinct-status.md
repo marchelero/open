@@ -1,5 +1,5 @@
 ---
-description: "Show learned instincts (project + global) with confidence"
+description: "Show learned instincts (project + global scopes) grouped por domain con confidence bars. Use when quieras ver que aprendio el pack de tu estilo de trabajo, o auditar la base de instincts antes de un release."
 agent: build
 ---
 

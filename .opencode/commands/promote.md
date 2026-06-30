@@ -1,5 +1,5 @@
 ---
-description: "Promote project instincts to global scope"
+description: "Promueve un instinct de project scope a global scope (reusable across projects). Use when un pattern de tu proyecto sirve para mas de 1 codebase y queres compartirlo con el resto del pack."
 agent: build
 ---
 

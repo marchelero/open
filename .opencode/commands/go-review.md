@@ -1,5 +1,5 @@
 ---
-description: "Go code review for idiomatic patterns"
+description: "Go code review for idiomatic patterns (naming, interface design), concurrency (goroutines, channels, data races), error handling (wrapping with %w), and performance. Use after writing or modifying .go source."
 agent: go-reviewer
 ---
 

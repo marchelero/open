@@ -1,5 +1,5 @@
 ---
-description: "Rust TDD workflow with unit and property tests"
+description: "Rust TDD workflow enforcing unit tests in #[cfg(test)] modules y property tests con proptest. Use when implementing new Rust functions, refactoring Rust logic, o fix de bugs en Rust con test-first."
 agent: tdd-guide
 ---
 

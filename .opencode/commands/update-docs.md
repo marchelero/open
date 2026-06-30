@@ -1,5 +1,5 @@
 ---
-description: "Update documentation for recent changes"
+description: "Update documentation (READMEs, API docs, JSDoc, guides) para reflejar cambios recientes. Use after significant code changes, pre-release, o cuando un nuevo dev se queja de que la doc no matchea."
 agent: doc-updater
 ---
 

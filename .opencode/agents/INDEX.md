@@ -119,5 +119,5 @@
 ## See also
 
 - [Skills index](../skills/) — 14 starter-pack skills (api-design, coding-standards, frontend-patterns, backend-patterns, error-handling, git-workflow, intent-driven-development, mcp-server-patterns, security-review, task-decomposition, tdd-workflow, verification-loop)
-- [Commands index](../commands/) — 65 starter-pack commands
+- [Commands index](../commands/) — 67 starter-pack commands
 - `/list-agents` — interactive catalog with filters

@@ -1,5 +1,5 @@
 ---
-description: "Analyze instincts and suggest or generate evolved structures"
+description: "Analyze instincts acumulados y propone evolved structures (skill merges, agent splits, project-to-global promotions). Use when hay >20 instincts y queres detectar patterns que ya ameritan su propia skill/agent."
 agent: build
 ---
 

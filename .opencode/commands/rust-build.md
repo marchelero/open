@@ -1,5 +1,5 @@
 ---
-description: "Fix Rust build errors and borrow checker issues"
+description: "Fix Rust build errors, borrow checker issues, clippy warnings, and Cargo.toml problems with minimal changes. Use when `cargo check` o `cargo clippy` falla o hay ownership/lifetime errors."
 agent: rust-build-resolver
 ---
 
