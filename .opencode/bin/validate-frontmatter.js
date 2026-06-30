@@ -79,6 +79,18 @@ function parseFrontmatter(content) {
     if (!m) continue;
     const key = m[1];
     let val = m[2].trim();
+    // YAML folded scalar (`>` or `>-` or `>+`): collect indented lines, join with space
+    if (/^>-?\+?$/.test(val)) {
+      const parts = [];
+      while (i + 1 < lines.length) {
+        const next = lines[i + 1];
+        if (!next.startsWith(' ') && !next.startsWith('\t')) break;
+        parts.push(next.trim());
+        i++;
+      }
+      fm[key] = parts.join(' ');
+      continue;
+    }
     // Inline value present
     if (val.length > 0) {
       if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
