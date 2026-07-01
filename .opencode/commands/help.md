@@ -76,7 +76,7 @@ Wait for user response, then:
 
 ### Step 3 — Sections (only when `$ARGUMENTS` matches)
 
-**`agents`**: list 5 most-invoked agents with one-line each, plus the path to the full catalog (`.opencode/agents/INDEX.md`).
+**`agents`**: list 5 most-invoked agents with one-line each, plus the path to the full catalog (`.opencode/AGENTS_INDEX.md`).
 
 ```
 Most-invoked agents:
@@ -86,7 +86,7 @@ Most-invoked agents:
   security-reviewer   — auth, input, secrets, payments
   tdd-guide           — enforce test-first on new code
 
-Full catalog: /list-agents  or  .opencode/agents/INDEX.md
+Full catalog: /list-agents  or  .opencode/AGENTS_INDEX.md
 ```
 
 **`skills`**: list 5 most-loaded skills with one-line each, plus the path to the full catalog.
@@ -201,7 +201,7 @@ For routing tables (intent→command, domain→agent, topic→skill), see `/rout
 - This command is read-only. No side effects.
 - If `START-HERE.md` exists, link to it in section 2.
 - Keep this command terse. If the user is reading `/help`, they want a quick orientation, not a wall of text.
-- For deep dives, point to `.opencode/docs/START-HERE.md` and `.opencode/agents/INDEX.md`.
+- For deep dives, point to `.opencode/docs/START-HERE.md` and `.opencode/AGENTS_INDEX.md`.
 
 ## When to Use
 

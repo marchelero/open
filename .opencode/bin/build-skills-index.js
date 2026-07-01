@@ -144,7 +144,7 @@ function renderMarkdown(skills) {
   lines.push('');
   lines.push('## See also');
   lines.push('');
-  lines.push('- [Agents index](../agents/INDEX.md) — 67 starter-pack agents');
+  lines.push('- [Agents index](../AGENTS_INDEX.md) — 69 starter-pack agents');
   lines.push('- [Commands index](../commands/) — 63 starter-pack commands');
   lines.push('- `/list-skills` — interactive catalog with filters');
   lines.push('');

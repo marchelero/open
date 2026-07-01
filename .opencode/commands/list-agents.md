@@ -31,7 +31,7 @@ Show the catalog of available agents. `$ARGUMENTS` may be a keyword, category, o
 
 ### Step 1 — Read the Catalog
 
-The full catalog lives in `.opencode/agents/INDEX.md` (auto-generated). Read it.
+The full catalog lives in `.opencode/AGENTS_INDEX.md` (auto-generated). Read it.
 
 If the file is missing or stale, regenerate it by running:
 
@@ -60,7 +60,7 @@ For each matching agent, show a 1-line summary:
 Then a count and a hint:
 
 ```
-Total: <N> agents. Use `/list-agents <keyword>` to filter. See `.opencode/agents/INDEX.md` for the full catalog.
+Total: <N> agents. Use `/list-agents <keyword>` to filter. See `.opencode/AGENTS_INDEX.md` for the full catalog.
 ```
 
 If filtered to a specific category, group the output by sub-category (Reviewers by language, etc.) and show the category header.

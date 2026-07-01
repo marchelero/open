@@ -123,6 +123,6 @@ When a user request comes in, the primary agent loads the right skill based on t
 
 ## See also
 
-- [Agents index](../agents/INDEX.md) — 67 starter-pack agents
+- [Agents index](../AGENTS_INDEX.md) — 69 starter-pack agents
 - [Commands index](../commands/) — 63 starter-pack commands
 - `/list-skills` — interactive catalog with filters

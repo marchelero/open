@@ -27,7 +27,7 @@ Identify from the request:
 Read these 3 indexes in order (auto-generated):
 
 ```bash
-node .opencode/bin/build-agents-index.js    # .opencode/agents/INDEX.md
+node .opencode/bin/build-agents-index.js    # .opencode/AGENTS_INDEX.md
 node .opencode/bin/build-skills-index.js    # .opencode/skills/INDEX.md
 # commands have no INDEX but list them via ls + parse frontmatter
 ```

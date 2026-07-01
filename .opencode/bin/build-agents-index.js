@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build-agents-index.js - regenerate .opencode/agents/INDEX.md
+ * build-agents-index.js - regenerate .opencode/AGENTS_INDEX.md
  *
  * Reads all agent .md files in .opencode/agents/, extracts the
  * description and mode from frontmatter, categorizes by filename
@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AGENTS_DIR = path.join(__dirname, '..', 'agents');
-const OUT_MD = path.join(AGENTS_DIR, 'INDEX.md');
+const OUT_MD = path.join(__dirname, '..', 'AGENTS_INDEX.md');
 
 const CATEGORIES = [
   { name: 'Build / Plan',       match: /^(build|prd-agent|planner|code-architect|code-explorer|architect|migration-planner)\.md$/ },

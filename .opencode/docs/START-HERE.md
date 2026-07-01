@@ -132,7 +132,7 @@ These are the agents you'll see most often. Each has a focused specialty and a s
 | `migration-planner` | DB/framework/monorepo migrations |
 | `report-auditor` | Cross-check a report against the source PRD |
 
-For the full catalog: `/list-agents` or `.opencode/agents/INDEX.md`.
+For the full catalog: `/list-agents` or `.opencode/AGENTS_INDEX.md`.
 
 ## The skills you should know
 
@@ -199,7 +199,7 @@ Add a new command:
 |---------|-----|
 | "agent not found" | Restart opencode (`Ctrl+C`, `opencode .`) |
 | Skills/agents not loading | `node .opencode/bin/validate-frontmatter.js` |
-| INDEX.md missing | `node .opencode/bin/build-agents-index.js` |
+| AGENTS_INDEX.md missing | `node .opencode/bin/build-agents-index.js` |
 | Junk in catalog | Edit the agent/skill description |
 | Want to start fresh | `/session-end` then close + reopen |
 | Pack feels heavy | `node .opencode/bin/context.js` |
