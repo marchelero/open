@@ -54,6 +54,21 @@ Si hay archivos:
 | /security | no | single-pass |
 | /quick-prd | no | corre rapido |
 
+## CLI manual
+
+```bash
+node .opencode/bin/state.js init <command> <user-request> [<prd-path>] [--dry-run]
+node .opencode/bin/state.js update <file-or-basename> <phase> <context-json> [--dry-run]
+node .opencode/bin/state.js complete <file-or-basename>
+node .opencode/bin/state.js fail <file-or-basename> "<error message>"
+node .opencode/bin/state.js list          # muestra todos los activos
+node .opencode/bin/state.js archive <file-or-basename>   # mueve a _archive/
+```
+
+**Path resolution**: `update`, `complete`, `fail`, `archive` aceptan tanto el full path (de `init` output) como el basename (de `list` output). El script busca primero el path as-is, después prueba `docs/state/{basename}`.
+
+**--dry-run**: para `init` y `update`, preview el cambio sin escribir. Útil para verificar que el state quedaría bien antes de commitear un flow largo.
+
 ## Garantias
 
 - State solo se escribe. **Nunca se borra automaticamente** salvo al completar exitosamente.

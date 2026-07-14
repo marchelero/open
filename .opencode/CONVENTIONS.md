@@ -13,7 +13,7 @@ Todos los archivos generados siguen el patron `YYYY-MM-DD_HHMM-{slug}.{ext}`:
 - Separador fecha↔hora: guion bajo `_`.
 - Separador timestamp↔slug: guion `-`.
 - Slug: kebab-case, lowercase, sin acentos, max 50 chars.
-- Extension: lowercase, punto antes (`prd.md`, `plan.md`, `report.md`, `audit.md`, `state.json`).
+- Extension: lowercase, punto antes (`prd.md`, `plan.md`, `report.md`, `audit.md`, `json`).
 
 **Caracteristica comun a TODOS los archivos generados:** llevan timestamp con hora. Esto permite:
 - Ordenamiento cronologico estricto (`ls` ordena naturalmente).
@@ -27,7 +27,7 @@ Todos los archivos generados siguen el patron `YYYY-MM-DD_HHMM-{slug}.{ext}`:
 2026-06-29_1830-csv-import.plan.md
 2026-06-29_1830-csv-import.report.md
 2026-06-29_1830-csv-import.audit.md
-2026-06-29_1830-orchestrate.state.json
+orchestrate-2026-07-14T19-30-27.json
 2026-06-29_1830-quick-typo-fix.prd.md
 ```
 
@@ -98,21 +98,33 @@ Unico, sin timestamp. Se regenera en cada `/audit-report` (silent).
 ### Recovery state
 
 ```
-docs/state/YYYY-MM-DD_HHMM-{command}.state.json
+docs/state/{command}-{ISO-timestamp}.json
 ```
+
+Filename = `{command}-{YYYY-MM-DDTHH-MM-SS}.json`. Time part uses hyphens (not colons) for filesystem safety. **Command comes first, timestamp second** — this groups files by command in `ls` output and makes ISO timestamps grep-friendly.
+
+Examples:
+```
+orchestrate-2026-07-14T19-30-27.json
+flow-feature-2026-07-14T19-30-27.json
+plan-2026-07-14T19-30-27.json
+```
+
+Written by `bin/state.js`. On successful flow completion the file is **removed** (no state = done). On interruption, `/session-start` detects and offers to resume from `currentPhase`.
 
 Schema:
 
 ```json
 {
   "command": "orchestrate",
-  "started": "2026-06-29T18:30:00Z",
-  "prd": "docs/prds/2026-06-29_1830-csv-import.prd.md",
+  "started": "2026-07-14T19:30:27.000Z",
+  "prd": "docs/prds/2026-07-14_1930-csv-import.prd.md",
   "currentPhase": 2,
   "completed": [0, 1],
   "context": {
     "userRequest": "feat: import CSV",
-    "agentsInvoked": ["prd-agent", "planner"]
+    "agentsInvoked": ["prd-agent", "planner"],
+    "filesModified": ["src/app/foo.ts"]
   },
   "error": null
 }

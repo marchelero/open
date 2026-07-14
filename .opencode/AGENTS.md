@@ -112,7 +112,7 @@ docs/
 - Reports a `docs/reports/{YYYY-MM-DD_HHMM}-{slug}.report.md`
 - Audits a `docs/audits/{YYYY-MM-DD_HHMM}-{slug}.audit.md`
 - Snapshots a `docs/sessions/{YYYY-MM-DD}-{slug}.md`
-- Recovery state a `docs/state/{YYYY-MM-DD_HHMM}-{command}.state.json`
+- Recovery state a `docs/state/{command}-{ISO-timestamp}.json` (e.g. `orchestrate-2026-07-14T19-30-27.json`)
 - Instincts a `docs/instincts/{YYYY-MM-DD}-{slug}.instinct.json`
 
 Naming completo en `.opencode/CONVENTIONS.md`.

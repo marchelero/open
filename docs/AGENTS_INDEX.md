@@ -122,5 +122,5 @@
 ## See also
 
 - [Skills index](../.agents/skills/) — 17 starter-pack skills (api-design, coding-standards, frontend-patterns, backend-patterns, error-handling, git-workflow, intent-driven-development, mcp-server-patterns, security-review, task-decomposition, tdd-workflow, verification-loop)
-- [Commands index](../.opencode/commands/) — 69 starter-pack commands
+- [Commands index](../.opencode/commands/) — 71 starter-pack commands
 - `/list-agents` — interactive catalog with filters
