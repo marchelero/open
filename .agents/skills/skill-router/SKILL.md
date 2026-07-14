@@ -57,7 +57,7 @@ If multiple match, load the most specific (framework-specific beats language-spe
 |-----------|------|
 | "build a React form with validation" | `frontend-patterns` (React) + `backend-patterns` (validation flow) |
 | "add JWT auth to my Express API" | `backend-patterns` + `security-review` |
-| "review this code" | `code-reviewer` agent (NOT a skill — different surface) |
+| "review this code" | `code-reviewer` agent (NOT a skill — different surface). Use `agent-router` skill to pick the right reviewer. |
 | "how do I use Prisma" | `documentation-lookup` (Prisma → Context7) |
 | "write tests for this function" | `tdd-workflow` |
 | "plan a DB migration" | `task-decomposition` + (delegate to `migration-planner` agent) |
@@ -71,11 +71,24 @@ If multiple match, load the most specific (framework-specific beats language-spe
 - **Skipping the router when uncertain** — if 0 skills match, ask the user or load `intent-driven-development` to clarify.
 - **Treating the router as optional** — for ambiguous requests, this skill prevents the primary agent from guessing and producing wrong-context output.
 
+## Pairing With agent-router
+
+This skill covers **knowledge** (which patterns to apply). For **execution** (which subagent to dispatch), use the parallel `agent-router` skill. Most requests need both.
+
+| If the request is... | Load both |
+|----------------------|-----------|
+| "build a React form with validation" | `skill-router` (frontend + backend skills) + `agent-router` (planner + tdd-guide + react-reviewer) |
+| "add JWT auth to my Express API" | `skill-router` (security-review + backend-patterns) + `agent-router` (prd-agent → planner → security-reviewer) |
+| "fix build error in Go" | `agent-router` only (go-build-resolver) |
+| "write tests for X" | `skill-router` (tdd-workflow) + `agent-router` (tdd-guide) |
+| "review this code" | `agent-router` (stack-specific reviewer) + `skill-router` (coding-standards + error-handling) |
+
 ## Integration
 
 - This skill is loaded on-demand. It does NOT auto-load on every request.
 - The primary agent loads it when it sees trigger words or when the request is ambiguous.
-- For tool-based discovery, see `.opencode/skills/INDEX.md` (auto-generated).
+- For tool-based discovery, see `.agents/skills/INDEX.md` (auto-generated).
+- See `agent-router` skill for the parallel agent-selection matrix.
 
 ## When NOT to Activate
 

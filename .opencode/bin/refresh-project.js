@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * refresh-project.js - regenerate .agents/PROJECT.md from current project state
+ * refresh-project.js - regenerate docs/PROJECT.md from current project state
  *
  * Scans:
  *   - package.json (Node/JS/TS)
@@ -13,7 +13,7 @@
  *   - index.html (Web)
  *   - README.*.md
  *
- * Generates a fresh .agents/PROJECT.md and (in --dry-run) shows the diff
+ * Generates a fresh docs/PROJECT.md and (in --dry-run) shows the diff
  * without writing. In normal mode, writes a backup then overwrites.
  *
  * Usage:
@@ -40,13 +40,13 @@ if (ARGS.includes('--help') || ARGS.includes('-h')) {
 
 Scans: package.json, pubspec.yaml, pyproject.toml, requirements.txt, setup.py,
        Cargo.toml, go.mod, *.csproj, *.sln, pom.xml, build.gradle*, index.html, README.*.md
-Writes: .agents/PROJECT.md (backup at .agents/PROJECT.md.bak.<ts>)`);
+Writes: docs/PROJECT.md (backup at docs/PROJECT.md.bak.<ts>)`);
   process.exit(0);
 }
 
 const HOME = os.homedir();
-const PROJECT_MD = path.join(CWD, '.agents', 'PROJECT.md');
-const BACKUP_MD = path.join(CWD, '.agents', `PROJECT.md.bak.${Date.now()}`);
+const PROJECT_MD = path.join(CWD, 'docs', 'PROJECT.md');
+const BACKUP_MD = path.join(CWD, 'docs', `PROJECT.md.bak.${Date.now()}`);
 
 function exists(p) { return fs.existsSync(p); }
 function read(p) { try { return fs.readFileSync(p, 'utf8'); } catch { return ''; } }
@@ -283,7 +283,7 @@ if (CHECK_ONLY) {
 }
 
 if (DRY_RUN) {
-  console.log('--- DRY RUN: would write to .agents/PROJECT.md ---');
+  console.log('--- DRY RUN: would write to docs/PROJECT.md ---');
   console.log('');
   if (oldContent === newContent) {
     console.log('(no changes — already up to date)');

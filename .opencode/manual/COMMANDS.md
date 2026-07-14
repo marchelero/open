@@ -100,7 +100,7 @@
 | `/session-start` | Lee la Capa 1+2 de memoria y reporta un resumen compacto. Auto en señales de cierre. | build |
 | `/session-end` | Escribe snapshot, actualiza `LATEST.md`, refresca `PROJECT.md`, extrae 1-3 instintos. | build |
 | `/context` | Audita el presupuesto de contexto: skills, agentes, comandos, sessions. | build |
-| `/refresh-project` | Regenera `.agents/PROJECT.md` desde los archivos del proyecto. | build |
+| `/refresh-project` | Regenera `docs/PROJECT.md` desde los archivos del proyecto. | build |
 
 ## "Quiero limpiar / refactorizar"
 
@@ -163,4 +163,4 @@
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
-| `/archive-reports` | Mueve reports viejos a `.opencode/reports/_archive/{YYYY}/`. NO borra. Default: COMPLETADO >30d. | build |
+| `/archive-reports` | Mueve reports viejos a `docs/reports/_archive/{YYYY}/`. NO borra. Default: COMPLETADO >30d. | build |

@@ -4,8 +4,30 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- **Skill `agent-router`** (paralelo a `skill-router`): matriz compacta intent → agent para los 69 subagentes del pack, agrupados por purpose (planning, implementation, review, test, refactor, docs, domain specialists, meta). Pairing tipico agent + skill incluido. Cross-referenciado desde `skill-router`. Habilita el Mandatory Routing Protocol (#8 abajo).
+- **Mandatory Routing Protocol** (comportamiento obligatorio #8 en `AGENTS.md`): el primary agent DEBE clasificar el request (action verb + domain noun + stack + stage + risk), load `agent-router` + `skill-router` skills, y dispatchar 1-3 agents + 1-2 skills antes de responder, salvo pure Q&A. Anti-patterns documentados. Pairing table incluida. Integra con flow suggestions (#7) sin colisionar (routing es first, flow es second).
+
 ### Changed
+- **Folder rename: `.opencode/docs/` → `.opencode/manual/`**: el nombre `docs/` colisionaba con el directorio `docs/` del proyecto (donde viven PRDs/plans/reports). Renombrar a `manual/` elimina la confusion y deja la convencion explicita: pack = manual, proyecto = docs. 8 archivos actualizados (AGENTS.md, README.md, CHANGELOG.md, commands/help.md, commands/start-here.md, bin/validate-frontmatter.js, bin/smoke-test.js, docs/README.md).
+- **Merge: `INSTRUCTIONS.md` → `AGENTS.md`**: el boot de opencode cargaba dos archivos (`.opencode/AGENTS.md` 344 lineas + `.opencode/instructions/INSTRUCTIONS.md` 502 lineas). Consolidados en un solo `.opencode/AGENTS.md` de 686 lineas con secciones claras (Prompt Defense Baseline, estructura, convenciones, comportamientos obligatorios, security, coding/testing/git/review standards, agent orchestration, common patterns, reinicio). Se borra `.opencode/instructions/`. `opencode.json > instructions` ahora tiene 1 sola entrada. Smoke test actualizado (drop 2 checks de instructions/). Resultado: 1 archivo de boot en vez de 2, ahorra ~1K tokens por turno y elimina una carpeta de la estructura.
 - **Docs sync (Tiers A-D)**: 14 archivos actualizados para reflejar el estado real del pack. Números canónicos fijados (69 agents, 14 skills, 65 commands, 5 plugins, 9 CLIs, 0 MCPs). Paths corregidos (`agentes/`→`agents/`, `comandos/`→`commands/`, `instincts/` ahora existe con `.gitkeep`). 13 commands faltantes agregados a `COMMANDS.md` en 4 secciones nuevas. `@intent-driven-development` corregido en EXAMPLES.md (es skill, no agent).
+
+### Restructure (path consolidation)
+- **Skills unificadas en `.agents/skills/`**: las 14 pack skills se movieron de `.opencode/skills/` a `.agents/skills/`. La junction `.opencode/skill` ahora apunta a `../.agents/skills/` (backwards compat 1.17.x). opencode descubre skills de ambos paths, pero ahora hay un solo lugar canónico.
+- **Project docs consolidados en `docs/`**: todo el contenido generado por el proyecto vive en `docs/` (un solo directorio, fácil de llevar con rsync/tar). Movido:
+  - `docs/PROJECT.md` (desde `.agents/PROJECT.md`)
+  - `docs/AGENTS_INDEX.md` (desde `.opencode/AGENTS_INDEX.md`)
+  - `docs/prds/`, `docs/plans/`, `docs/reports/`, `docs/audits/`, `docs/sessions/`, `docs/state/`, `docs/instincts/`
+- **Empty template dirs removidos de `.opencode/`**: `.opencode/{prds,plans,reports,audits,state,instincts}/` ya no existen como placeholders. La estructura ahora vive en `docs/` (template para nuevos clones).
+- **Pack docs en `.opencode/docs/`** (renombrado a `.opencode/manual/` poco después para evitar la colision con el `docs/` del proyecto): la documentación del PACK (no del proyecto) sigue en una carpeta separada — no se mezcla con el contenido del proyecto.
+- **7 CLIs actualizados** (refresh-project, state, instinct, build-agents-index, build-skills-index, context, smoke-test) para escribir/leer desde las nuevas rutas.
+- **14 slash commands actualizados** (orchestrate, plan, prd, prd-reviewer, audit-report, archive-reports, refresh-project, flow-{feature,bugfix,refactor,security}, verify, tdd, code-review, learn, etc).
+- **3 agents actualizados** (prd-agent, prd-reviewer, planner) — críticos, referencian paths en sus instrucciones.
+- **`.opencode/AGENTS.md`** reescrito con la nueva estructura y tree.
+- **`.opencode/CONVENTIONS.md`** actualizado: define los nuevos paths como canonical.
+- **`.gitignore` actualizado** (root + `.opencode/.gitignore`).
+- **Nuevo `docs/README.md`** (índice de navegación del directorio de project docs).
 - **EXAMPLES.md**: nuevo "Ejemplo 6" mostrando `/quick-prd` + `/flow-bugfix` workflow. Tabla "Patrones comunes" extendida con 4 patrones nuevos (`/quick-prd`, `/flow-*`, `/audit-report`, `/pack-doctor`). Header actualizado a "6 ejemplos".
 
 ## [1.0.0] — 2026-06-29
@@ -22,14 +44,14 @@ All notable changes to this starter pack are documented here. The format follows
 - **Reportes y auditoria post-ejecucion (paquete completo)**:
   - `report-auditor` agent: auditor lightweight (no exhaustivo). Cruza report contra PRD origen y skills cargadas, emite veredicto PASS / PASS-WITH-NITS / FAIL. ~30-60 lineas de output, sin tablas decorativas.
   - `/audit-report` command: invoca el auditor. Soporta `--separate` (auditoria en archivo aparte), `index` / `--index` (regenera INDEX global), `quick {name}` (solo veredicto), `compare {a} {b}` (diff de veredictos).
-  - `/archive-reports` command: mueve reports viejos a `.opencode/reports/_archive/{YYYY}/`. NUNCA borra. Default: COMPLETADO >30d. Flags: `--older-than Nd`, `--all-completed`, `--dry-run`.
+  - `/archive-reports` command: mueve reports viejos a `docs/reports/_archive/{YYYY}/`. NUNCA borra. Default: COMPLETADO >30d. Flags: `--older-than Nd`, `--all-completed`, `--dry-run`.
   - `/quick-prd` command: mini-PRD de 10 lineas para bugs/fixes/one-liners. Auto-regenera a PRD completo si crece en scope.
 - **Auto-report al cerrar flujos**:
-  - `/orchestrate` ahora tiene Phase 4 OBLIGATORIA: genera `.opencode/reports/{YYYY-MM-DD-HHMM}-{name}.report.md` con agentes usados, decisiones, criterios PRD, desvios, skills, archivos.
+  - `/orchestrate` ahora tiene Phase 4 OBLIGATORIA: genera `docs/reports/{YYYY-MM-DD-HHMM}-{name}.report.md` con agentes usados, decisiones, criterios PRD, desvios, skills, archivos.
   - `/verify` exitoso auto-genera report (cuando hay cambios + PRD activo). Ofrece auditar al final.
   - `/code-review`, `/security`, `/plan`, `/tdd` ofrecen guardar el output como report y auditar contra el PRD origen.
 - **Cross-link plans↔PRDs**: frontmatter obligatorio al inicio de cada plan con `prd:`, `status:`, `created:`. El auditor usa este link cuando el report no nombra el PRD directamente.
-- **INDEX global** (`.opencode/reports/INDEX.md`): tabla de todos los reports con status, criterios, veredicto, skill gaps. Se regenera en cada `/audit-report` (silent). Seccion "Skill gaps recurrentes" con flag para refactor si >3 ocurrencias.
+- **INDEX global** (`docs/reports/INDEX.md`): tabla de todos los reports con status, criterios, veredicto, skill gaps. Se regenera en cada `/audit-report` (silent). Seccion "Skill gaps recurrentes" con flag para refactor si >3 ocurrencias.
 - **Skills feedback loop**: el auditor emite NIT "skill gap" cuando una skill se cargo pero se ignoro, o cuando deberia haberse cargado y no se cargo. Esto mantiene las skills vivas.
 - **Regla de idioma en PRDs**: espanol por default. Ingles solo para identificadores de codigo, terminos tecnicos sin traduccion natural, siglas. Sin espanglish tipo "el button de push". Documentado en `prd-agent.md` con ejemplos good A/B.
 - **`/pack-doctor` command**: valida la salud del pack completo. Detecta frontmatter invalido, agents duplicados, commands huerfanos (que apuntan a agents inexistentes), skills sin descripcion, permalinks rotos, archivos >800 lineas.
@@ -38,8 +60,8 @@ All notable changes to this starter pack are documented here. The format follows
   - `/flow-feature`: `/orchestrate` → implement → `/verify` → report → audit
   - `/flow-refactor`: `/plan` → refactor → `/verify` → report → audit
   - `/flow-security`: `/security` → fix → `/verify` → report → audit
-- **Plantillas de report por stack** en `.opencode/reports/templates/`: `default.md`, `angular.md`, `python.md`, `rust.md`. El orquestador auto-elige segun `.agents/PROJECT.md`.
-- **Recovery state**: cada command escribe `.opencode/state/{command}.state.json` con el progreso. Al reabrir, `/session-start` detecta estados interrumpidos y ofrece resumir.
+- **Plantillas de report por stack** en `docs/reports/templates/`: `default.md`, `angular.md`, `python.md`, `rust.md`. El orquestador auto-elige segun `docs/PROJECT.md`.
+- **Recovery state**: cada command escribe `docs/state/{command}.state.json` con el progreso. Al reabrir, `/session-start` detecta estados interrumpidos y ofrece resumir.
 - **Stats del pack** en `/pack-doctor`: cuenta agents/skills/commands/PRDs/reports/audits. Utilidad baja en tokens, valor alto de orientacion.
 
 ### Changed
@@ -64,7 +86,7 @@ All notable changes to this starter pack are documented here. The format follows
 - **`autoupdate`**: cambiado de `"notify"` a `false` para skippear el HTTP check al startup de opencode. La verificación de updates online estaba causando lentitud al abrir el TUI.
 - **PRD filename format**: la convención de nombres pasó de `{YYYY-MM-DD}-{name}.prd.md` a `{YYYY-MM-DD-HHMM}-{name}.prd.md` (incluye hora en formato 24h). Evita colisiones cuando se crean varios PRDs el mismo día. Actualizado en `prd-agent.md`, `commands/prd.md`, `commands/orchestrate.md`, `AGENTS.md`, `docs/ARCH.md`, `docs/EXAMPLES.md`.
 - **PRD confirmation vocabulary**: el `prd-agent` ahora acepta un set más amplio de confirmaciones, no solo "confirmo" u "OK" mayúscula. Acepta también `dale`, `ok`, `sí`, `aprobado`, `hazlo`, `perfecto`, `procede`, `va`, `adelante` (y equivalentes en inglés). Esto resuelve el caso donde el prd-agent generaba el Intention Map pero no escribía el archivo porque la confirmación no era reconocida.
-- **`.agents/PROJECT.md`**: se rellenó con el contenido real del pack (stack, convenciones, no negociables, arquitectura de 4 capas). Antes era un template con placeholders, lo que dejaba al prd-agent sin contexto en Fase 0.
+- **`docs/PROJECT.md`**: se rellenó con el contenido real del pack (stack, convenciones, no negociables, arquitectura de 4 capas). Antes era un template con placeholders, lo que dejaba al prd-agent sin contexto en Fase 0.
 - **`STARTER.md` movido a `.opencode/docs/README.md`**: el archivo se renombró y se movió dentro de `.opencode/` para que viaje con el pack al copiarlo a otros proyectos. Toda la documentación del pack ahora vive en `.opencode/docs/` (en español neutro, sin voseo). El `README.md` raíz queda solo como landing de GitHub.
 - **`smoke-test.js`**: 24 comprobaciones (antes 23). Añadido check `validate-frontmatter.js runs`. Actualizado para apuntar a `.opencode/docs/README.md` en vez del antiguo `STARTER.md`.
 - **README.md**: updated to use `cp` instead of setup scripts. Quick start is now a single copy command.
@@ -77,16 +99,16 @@ All notable changes to this starter pack are documented here. The format follows
 ## [0.7.0] — 2026-06-23
 
 ### Added
-- **`/refresh-project` slash command** + `refresh-project.js` CLI: regenerate `.agents/PROJECT.md` from current project state. Detects stack from `package.json` / `pubspec.yaml` / `pyproject.toml` / `Cargo.toml` / `go.mod` / etc. Preserves manual sections (Non-Negotiables, Architecture Notes, Open Questions). Backups to `.bak.{timestamp}` before overwrite. Auto-runs in `/session-end` Step 6.
+- **`/refresh-project` slash command** + `refresh-project.js` CLI: regenerate `docs/PROJECT.md` from current project state. Detects stack from `package.json` / `pubspec.yaml` / `pyproject.toml` / `Cargo.toml` / `go.mod` / etc. Preserves manual sections (Non-Negotiables, Architecture Notes, Open Questions). Backups to `.bak.{timestamp}` before overwrite. Auto-runs in `/session-end` Step 6.
 - **`/prd` slash command**: explicit invocation of prd-agent. Same as `@prd-agent` but discoverable via slash menu.
-- **Step 6 in `/session-end`**: refresh `.agents/PROJECT.md` if stale. Reports lines added/removed.
+- **Step 6 in `/session-end`**: refresh `docs/PROJECT.md` if stale. Reports lines added/removed.
 - **PRD timestamp convention**: filenames now use `{YYYY-MM-DD}-{name}.prd.md` for chronological sorting and disambiguation. Conflicts auto-suffix with `-2`, `-3`, etc.
 - **Per-turn consent rule** documented in INSTRUCTIONS.md: permission to commit/push from a previous turn does NOT carry over.
 
 ### Changed
 - **PRD agent description** rewritten as "MANDATORY FIRST STEP for any non-trivial task" to enforce auto-trigger.
 - **AGENTS.md** restructured around 4 mandatory behaviors (caveman, PRD-first, session memory, no-destructive) plus the no-git-push rule.
-- **prd-agent** filename convention updated: `.opencode/prds/{kebab-case-name}.prd.md` → `.opencode/prds/{YYYY-MM-DD}-{kebab-case-name}.prd.md`.
+- **prd-agent** filename convention updated: `docs/prds/{kebab-case-name}.prd.md` → `docs/prds/{YYYY-MM-DD}-{kebab-case-name}.prd.md`.
 
 ## [0.6.0] — 2026-06-23
 
@@ -104,15 +126,15 @@ All notable changes to this starter pack are documented here. The format follows
 
 ### Added
 - **Session memory system** (4-layer hierarchy):
-  - Capa 1: always loaded — `AGENTS.md` + `INSTRUCTIONS.md` + `.agents/PROJECT.md` (~2K tokens)
-  - Capa 2: loaded on session start — `.agents/sessions/LATEST.md` (~1-3K tokens)
+  - Capa 1: always loaded — `AGENTS.md` + `INSTRUCTIONS.md` + `docs/PROJECT.md` (~2K tokens)
+  - Capa 2: loaded on session start — `docs/sessions/LATEST.md` (~1-3K tokens)
   - Capa 3: on-demand — skills, files, sub-agents (variable)
   - Capa 4: never loaded — git history, PRDs, plans, instincts (disk only)
 - **`/session-start` slash command**: reads Capa 1+2, reports compact 1-2 line summary, waits for user direction.
-- **`/session-end` slash command**: writes session snapshot to `.agents/sessions/{DATE}-{SLUG}.md`, updates `LATEST.md`, includes "Decisions made", "Files touched", "Open questions", "Next steps", "Commits this session".
-- **`.agents/sessions/` folder** with README.md explaining the lifecycle.
-- **prd-agent** (`.opencode/agents/prd-agent.md`, 12 KB, mode: all): the MANDATORY FIRST STEP for any non-trivial task. Runs a 4-phase Understanding Protocol: Phase 0 (verify/create `.agents/PROJECT.md`), Phase 1 (active listening), Phase 2 (build Intention Map), Phase 3 (resolve ambiguities, max 3 at a time), Phase 4 (confirm Intention Map with explicit user OK). Output: `.opencode/prds/{name}.prd.md` with full template.
-- **`.agents/PROJECT.md` template** (1.6 KB): project's source of truth for stack, conventions, non-negotiables. prd-agent reads at Phase 0; auto-generates from existing project files if missing.
+- **`/session-end` slash command**: writes session snapshot to `docs/sessions/{DATE}-{SLUG}.md`, updates `LATEST.md`, includes "Decisions made", "Files touched", "Open questions", "Next steps", "Commits this session".
+- **`docs/sessions/` folder** with README.md explaining the lifecycle.
+- **prd-agent** (`.opencode/agents/prd-agent.md`, 12 KB, mode: all): the MANDATORY FIRST STEP for any non-trivial task. Runs a 4-phase Understanding Protocol: Phase 0 (verify/create `docs/PROJECT.md`), Phase 1 (active listening), Phase 2 (build Intention Map), Phase 3 (resolve ambiguities, max 3 at a time), Phase 4 (confirm Intention Map with explicit user OK). Output: `docs/prds/{name}.prd.md` with full template.
+- **`docs/PROJECT.md` template** (1.6 KB): project's source of truth for stack, conventions, non-negotiables. prd-agent reads at Phase 0; auto-generates from existing project files if missing.
 
 ### Changed
 - **`/orchestrate` command** rewritten with Phase 0 (MANDATORY): dispatch to prd-agent FIRST before any planning, then existing 1-5 phases.
@@ -122,9 +144,9 @@ All notable changes to this starter pack are documented here. The format follows
 ## [0.4.0] — 2026-06-22
 
 ### Added
-- **`instinct.js` CLI** (14 KB, zero deps): replaces ECC's continuous-learning-v2 Python plugin. Commands: `status`, `projects`, `promote`, `evolve`, `export`, `import`, `add`. Storage: `~/.config/opencode/instincts/` (global) + `.opencode/instincts/` (project). Format: ECC-compatible JSON (instincts[], metadata).
-- **`.opencode/instincts/`** directory: project-scope instinct storage.
-- **`.opencode/prds/`** directory: PRD artifacts.
+- **`instinct.js` CLI** (14 KB, zero deps): replaces ECC's continuous-learning-v2 Python plugin. Commands: `status`, `projects`, `promote`, `evolve`, `export`, `import`, `add`. Storage: `~/.config/opencode/instincts/` (global) + `docs/instincts/` (project). Format: ECC-compatible JSON (instincts[], metadata).
+- **`docs/instincts/`** directory: project-scope instinct storage.
+- **`docs/prds/`** directory: PRD artifacts.
 
 ### Changed
 - **6 commands migrated** to use `node .opencode/bin/instinct.js`:
@@ -175,7 +197,7 @@ All notable changes to this starter pack are documented here. The format follows
 - **`opencode.json`** (1.3 KB): minimal config — mcp, plugin, instructions. NO `model`/`small_model` (each user configures their own).
 
 ### Fixed
-- `singular` vs `plural` folder names: renamed `.opencode/agent/` and `.opencode/skill/` to `.opencode/agents/` and `.opencode/skills/` per opencode 1.17.x standards.
+- `singular` vs `plural` folder names: renamed `.opencode/agent/` and `.opencode/skill/` to `.opencode/agents/` and `.opencode/skills/` per opencode 1.17.x standards. (Note: `.opencode/skill/` junction now points to `../.agents/skills/` after the v1.x restructure.)
 - `opencode.json` bloat: 63 KB (with inline commands) → 1.3 KB (commands in .md files).
 - **node_modules** bloat: pack was 53.85 MB → 1.38 MB (97% reduction) by deleting `node_modules` and excluding in setup scripts. Regenerated by `bun install` on first `opencode .` (~30s).
 - **Junction untracking**: removed `.opencode/agent/*` and `.opencode/skill/*` from git tracking (75 files were duplicates via junction).
@@ -213,7 +235,7 @@ All notable changes to this starter pack are documented here. The format follows
 | 0.5.0 | /session-start | Load minimal context (Capa 1+2) |
 | 0.5.0 | /session-end | Write session snapshot |
 | 0.6.0 | /context | Show context budget report |
-| 0.7.0 | /refresh-project | Regenerate .agents/PROJECT.md from current state |
+| 0.7.0 | /refresh-project | Regenerate docs/PROJECT.md from current state |
 | 0.7.0 | /prd | Quick invocation of prd-agent |
 
 ## Architecture (current — v1.0.0)

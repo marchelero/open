@@ -29,7 +29,7 @@ Show the catalog of available skills. `$ARGUMENTS` may be a keyword, category, o
 
 ### Step 1 — Read the Catalog
 
-The full catalog lives in `.opencode/skills/INDEX.md` (auto-generated). Read it.
+The full catalog lives in `.agents/skills/INDEX.md` (auto-generated). Read it.
 
 If the file is missing or stale, regenerate it by running:
 
@@ -59,7 +59,7 @@ For each matching skill, show a 1-line summary:
 Then a count and a hint:
 
 ```
-Total: <N> skills. Use `/list-skills <keyword>` to filter. See `.opencode/skills/INDEX.md` for the full catalog.
+Total: <N> skills. Use `/list-skills <keyword>` to filter. See `.agents/skills/INDEX.md` for the full catalog.
 ```
 
 If filtered to a specific category, show the category header.
@@ -100,4 +100,4 @@ When a user request comes in, the primary agent (or `skill-router` skill) decide
 ## When NOT to Use
 
 - For a single specific question (just describe the topic — the primary agent routes).
-- For full skill contents (use the Read tool on `.opencode/skills/<name>/SKILL.md`).
+- For full skill contents (use the Read tool on `.agents/skills/<name>/SKILL.md`).

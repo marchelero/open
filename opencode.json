@@ -3,13 +3,19 @@
     "default_agent": "build",
     "share": "manual",
     "autoupdate": false,
-    "snapshot": true,
+    "snapshot": false,
     "instructions": [
-        ".opencode/AGENTS.md",
-        ".opencode/instructions/INSTRUCTIONS.md"
+        ".opencode/AGENTS.md"
     ],
     "permission": {
         "skill": "allow"
+    },
+    "tool_output": {
+        "max_lines": 200,
+        "max_bytes": 8192
+    },
+    "compaction": {
+        "auto": true
     },
     "mcp": {
         "context7": {
@@ -17,7 +23,7 @@
             "command": [
                 "npx",
                 "-y",
-                "@upstash/context7-mcp"
+                "@upstash/context7-mcp@3.2.3"
             ]
         },
         "playwright": {
@@ -25,14 +31,13 @@
             "command": [
                 "npx",
                 "-y",
-                "@playwright/mcp"
+                "@playwright/mcp@0.0.78"
             ]
         }
     },
     "plugin": [
         "opencode-vibeguard",
         "opencode-pty",
-        "@tarquinen/opencode-dcp",
-        "@zenobius/opencode-skillful"
+        "@tarquinen/opencode-dcp"
     ]
 }

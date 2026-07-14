@@ -1,6 +1,6 @@
 # Recovery State
 
-Cada command de flujo largo (orchestrate, plan, flow-*, verify) escribe su progreso en `.opencode/state/{command}-{timestamp}.json`. Esto permite resumir flujos interrumpidos.
+Cada command de flujo largo (orchestrate, plan, flow-*, verify) escribe su progreso en `docs/state/{command}-{timestamp}.json`. Esto permite resumir flujos interrumpidos.
 
 ## Cuando se escribe
 
@@ -15,7 +15,7 @@ Cada command de flujo largo (orchestrate, plan, flow-*, verify) escribe su progr
 {
   "command": "orchestrate",
   "started": "2026-06-29T18:30:00Z",
-  "prd": ".opencode/prds/2026-06-29-1830-foo.prd.md",
+  "prd": "docs/prds/2026-06-29-1830-foo.prd.md",
   "currentPhase": 2,
   "completed": [0, 1],
   "context": {
@@ -30,14 +30,14 @@ Cada command de flujo largo (orchestrate, plan, flow-*, verify) escribe su progr
 ## Como lo detecta /session-start
 
 ```bash
-ls .opencode/state/*.json 2>/dev/null | head -n 5
+ls docs/state/*.json 2>/dev/null | head -n 5
 ```
 
 Si hay archivos:
 - Parsear el JSON.
 - Mostrar al user: "Detecte un {command} interrumpido en fase {N}. Resumir? (s/n)"
 - Si dice s → continuar desde `currentPhase`.
-- Si dice n → archivar el state (no borrar, mover a `.opencode/state/_archive/`).
+- Si dice n → archivar el state (no borrar, mover a `docs/state/_archive/`).
 
 ## Comandos que escriben state
 

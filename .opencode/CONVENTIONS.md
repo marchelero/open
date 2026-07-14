@@ -49,22 +49,22 @@ Todos los archivos generados siguen el patron `YYYY-MM-DD_HHMM-{slug}.{ext}`:
 
 | Tipo | Patron | Ejemplo |
 |------|--------|---------|
-| PRD normal | `.opencode/prds/YYYY-MM-DD_HHMM-{slug}.prd.md` | `2026-06-29_1830-csv-import.prd.md` |
-| Quick-PRD | `.opencode/prds/YYYY-MM-DD_HHMM-quick-{slug}.prd.md` | `2026-06-29_1830-quick-typo-fix.prd.md` |
+| PRD normal | `docs/prds/YYYY-MM-DD_HHMM-{slug}.prd.md` | `2026-06-29_1830-csv-import.prd.md` |
+| Quick-PRD | `docs/prds/YYYY-MM-DD_HHMM-quick-{slug}.prd.md` | `2026-06-29_1830-quick-typo-fix.prd.md` |
 
 Slug: max 50 chars, kebab-case, derivado del objetivo.
 
 ### Plans
 
 ```
-.opencode/plans/YYYY-MM-DD_HHMM-{slug}.plan.md
+docs/plans/YYYY-MM-DD_HHMM-{slug}.plan.md
 ```
 
 Mismo slug que el PRD origen. Cross-link via frontmatter:
 
 ```markdown
 ---
-prd: .opencode/prds/2026-06-29_1830-csv-import.prd.md
+prd: docs/prds/2026-06-29_1830-csv-import.prd.md
 status: DRAFT
 created: 2026-06-29_1830
 ---
@@ -73,7 +73,7 @@ created: 2026-06-29_1830
 ### Reports
 
 ```
-.opencode/reports/YYYY-MM-DD_HHMM-{slug}.report.md
+docs/reports/YYYY-MM-DD_HHMM-{slug}.report.md
 ```
 
 Mismo slug que el PRD/plan origen.
@@ -83,14 +83,14 @@ Mismo slug que el PRD/plan origen.
 | Modo | Patron | Ejemplo |
 |------|--------|---------|
 | Inline (default) | seccion al final del report | (no archivo separado) |
-| Separate | `.opencode/audits/YYYY-MM-DD_HHMM-{slug}.audit.md` | `2026-06-29_1830-csv-import.audit.md` |
+| Separate | `docs/audits/YYYY-MM-DD_HHMM-{slug}.audit.md` | `2026-06-29_1830-csv-import.audit.md` |
 
 Trigger de `--separate`: el user lo pide explicitamente o el auditor detecta que el report es >500 lineas.
 
 ### INDEX
 
 ```
-.opencode/reports/INDEX.md
+docs/reports/INDEX.md
 ```
 
 Unico, sin timestamp. Se regenera en cada `/audit-report` (silent).
@@ -98,7 +98,7 @@ Unico, sin timestamp. Se regenera en cada `/audit-report` (silent).
 ### Recovery state
 
 ```
-.opencode/state/YYYY-MM-DD_HHMM-{command}.state.json
+docs/state/YYYY-MM-DD_HHMM-{command}.state.json
 ```
 
 Schema:
@@ -107,7 +107,7 @@ Schema:
 {
   "command": "orchestrate",
   "started": "2026-06-29T18:30:00Z",
-  "prd": ".opencode/prds/2026-06-29_1830-csv-import.prd.md",
+  "prd": "docs/prds/2026-06-29_1830-csv-import.prd.md",
   "currentPhase": 2,
   "completed": [0, 1],
   "context": {
@@ -121,8 +121,8 @@ Schema:
 ### Sessions
 
 ```
-.agents/sessions/YYYY-MM-DD-{slug}.md
-.agents/sessions/LATEST.md
+docs/sessions/YYYY-MM-DD-{slug}.md
+docs/sessions/LATEST.md
 ```
 
 sessions usan solo fecha (sin hora) porque son humanas, no automatizadas.
@@ -130,7 +130,7 @@ sessions usan solo fecha (sin hora) porque son humanas, no automatizadas.
 ### Instincts
 
 ```
-.opencode/instincts/YYYY-MM-DD-{slug}.instinct.json
+docs/instincts/YYYY-MM-DD-{slug}.instinct.json
 ```
 
 Mismo razon: humanos, no automatizados.
@@ -138,7 +138,7 @@ Mismo razon: humanos, no automatizados.
 ### Archive
 
 ```
-.opencode/reports/_archive/YYYY/YYYY-MM-DD_HHMM-{slug}.report.md
+docs/reports/_archive/YYYY/YYYY-MM-DD_HHMM-{slug}.report.md
 ```
 
 Agrupa por año del archivo (no del movimiento). Preserva el nombre original con timestamp.
@@ -201,7 +201,7 @@ agent: <nombre de agent existente en agents/>
 
 ```yaml
 ---
-prd: .opencode/prds/{archivo}.prd.md
+prd: docs/prds/{archivo}.prd.md
 status: DRAFT | IN_PROGRESS | COMPLETED | BLOCKED
 created: YYYY-MM-DD_HHMM
 ---
@@ -211,8 +211,8 @@ created: YYYY-MM-DD_HHMM
 
 ```yaml
 ---
-prd: .opencode/prds/{archivo}.prd.md
-plan: .opencode/plans/{archivo}.plan.md
+prd: docs/prds/{archivo}.prd.md
+plan: docs/plans/{archivo}.plan.md
 status: DRAFT | IN_PROGRESS | COMPLETED | BLOCKED
 created: YYYY-MM-DD_HHMM
 audited: YYYY-MM-DD_HHMM  # cuando se audito
@@ -254,7 +254,7 @@ Los archivos con formato viejo (sin hora, con guion en vez de guion bajo) siguen
 
 ```bash
 # Renombrar PRDs viejos
-for f in .opencode/prds/*.md; do
+for f in docs/prds/*.md; do
   base=$(basename "$f" .prd.md)
   # Si no tiene guion bajo entre fecha y nombre, skip
   echo "$base" | grep -q '_' || echo "Skipping: $f (formato nuevo ya)"

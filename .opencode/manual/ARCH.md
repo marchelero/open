@@ -8,8 +8,8 @@ El pack minimiza el uso de tokens dividiendo el contexto en 4 capas. Solo las ca
 
 | Capa | Qué contiene | Cuándo se carga | Tamaño |
 |------|--------------|-----------------|--------|
-| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `.agents/PROJECT.md` | siempre | ~2K tokens |
-| 2 | `.agents/sessions/LATEST.md` (copia del último snapshot) | `/session-start` o auto al cerrar | ~1-3K tokens |
+| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `docs/PROJECT.md` | siempre | ~2K tokens |
+| 2 | `docs/sessions/LATEST.md` (copia del último snapshot) | `/session-start` o auto al cerrar | ~1-3K tokens |
 | 3 | Skills bajo demanda, archivos, sub-agentes | cuando se necesitan (skill tool, task tool) | variable |
 | 4 | historial git, PRDs, planes, instintos | nunca al contexto | solo disco |
 
@@ -25,13 +25,13 @@ build (primary) detecta el verbo de intención
 task { subagent_type: "prd-agent" }
        ↓
 prd-agent ejecuta el Protocolo de Entendimiento:
-  Fase 0: verifica/crea .agents/PROJECT.md
+  Fase 0: verifica/crea docs/PROJECT.md
   Fase 1: escucha activa (lee contexto, no pregunta si puede inferir)
   Fase 2: construye el Mapa de Intención
   Fase 3: máximo 3 preguntas de ambigüedad a la vez
   Fase 4: confirmación explícita del usuario sobre el Mapa de Intención
        ↓
-PRD escrito en .opencode/prds/YYYY-MM-DD_HHMM-{nombre}.prd.md
+PRD escrito en docs/prds/YYYY-MM-DD_HHMM-{nombre}.prd.md
        ↓
 Solo ENTONCES: /plan → /orchestrate → implementación → /verify
 ```
@@ -55,7 +55,7 @@ Ocurre trabajo de sesión (build, plan, review, etc.)
        ↓
 Pasos 1-5: revisión, escribir snapshot, actualizar LATEST.md, refrescar PROJECT.md
 Paso 6: extraer 1-3 instintos de alta calidad (máx 3, confianza ≥ 0.5)
-Paso 7: persistir en .opencode/instincts/instincts.json (proyecto) o
+Paso 7: persistir en docs/instincts/instincts.json (proyecto) o
         ~/.config/opencode/instincts/instincts.json (global)
        ↓
 Próxima sesión:

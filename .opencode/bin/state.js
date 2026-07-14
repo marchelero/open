@@ -2,7 +2,7 @@
 /**
  * state.js - flow state persistence for resumable commands
  *
- * Writes/updates .opencode/state/{command}-{timestamp}.json so long-running
+ * Writes/updates docs/state/{command}-{timestamp}.json so long-running
  * commands (orchestrate, plan, flow-*) can be resumed after interruption.
  *
  * Usage:
@@ -19,7 +19,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_DIR = path.join(process.cwd(), '.opencode', 'state');
+const STATE_DIR = path.join(process.cwd(), 'docs', 'state');
 const ARCHIVE_DIR = path.join(STATE_DIR, '_archive');
 
 function ensureDirs() {
@@ -166,7 +166,7 @@ Context can be:
   - quoted JSON: state.js will strip surrounding shell quotes
 
 Examples:
-  state.js init orchestrate "build feature" .opencode/prds/foo.prd.md
+  state.js init orchestrate "build feature" docs/prds/foo.prd.md
   state.js update $FILE 1 '{"agentsInvoked":["prd-agent"]}'
   echo '{"agentsInvoked":["x"]}' > /tmp/c.json
   state.js update $FILE 1 @/tmp/c.json

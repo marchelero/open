@@ -30,10 +30,10 @@ No `package.json` at the project root. No build step. Drop the `.opencode/` fold
 
 ```
 /prd "user profile editing with avatar upload"
-  → produces .opencode/prds/2026-06-30-1430-profile.prd.md
+  → produces docs/prds/2026-06-30-1430-profile.prd.md
   → asks clarifying questions, builds Intention Map
 
-/plan .opencode/prds/2026-06-30-1430-profile.prd.md
+/plan docs/prds/2026-06-30-1430-profile.prd.md
   → produces phased implementation plan with risks
   → wait for confirmation
 
@@ -43,7 +43,7 @@ No `package.json` at the project root. No build step. Drop the `.opencode/` fold
 
 /verify
   → runs lint + typecheck + tests
-  → produces .opencode/reports/{ts}-{slug}.report.md
+  → produces docs/reports/{ts}-{slug}.report.md
 
 /audit-report profile
   → crosses report against PRD, emits PASS/PASS-WITH-NITS/FAIL
@@ -132,7 +132,7 @@ These are the agents you'll see most often. Each has a focused specialty and a s
 | `migration-planner` | DB/framework/monorepo migrations |
 | `report-auditor` | Cross-check a report against the source PRD |
 
-For the full catalog: `/list-agents` or `.opencode/AGENTS_INDEX.md`.
+For the full catalog: `/list-agents` or `docs/AGENTS_INDEX.md`.
 
 ## The skills you should know
 
@@ -148,7 +148,7 @@ Most commonly auto-loaded:
 - `verification-loop` — post-change validation
 - `coding-standards` — shared floor (naming, immutability, code quality)
 
-For the full catalog: `/list-skills` or `.opencode/skills/INDEX.md`.
+For the full catalog: `/list-skills` or `.agents/skills/INDEX.md`.
 
 ## Conventions (enforced, not optional)
 
@@ -176,7 +176,7 @@ node .opencode/bin/build-agents-index.js       # refresh catalog
 
 Add a new skill:
 ```bash
-mkdir .opencode/skills/<name>
+mkdir .agents/skills/<name>
 # Create <name>/SKILL.md
 # Required frontmatter:
 #   name: <name>
@@ -208,5 +208,5 @@ Add a new command:
 
 - `.opencode/AGENTS.md` — full rules and pack structure
 - `.opencode/INSTRUCTIONS.md` — global instructions (security, code style, git workflow)
-- `.opencode/docs/SURFACES.md` — when to use agent vs skill vs command
+- `.opencode/manual/SURFACES.md` — when to use agent vs skill vs command
 - `.opencode/CHANGELOG.md` — version history

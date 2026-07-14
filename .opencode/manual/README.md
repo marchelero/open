@@ -5,7 +5,7 @@
 ## ¿Qué incluye?
 
 - **69 sub-agentes** en `.opencode/agents/` (revisores, planners, resolvers, especialistas por stack)
-- **14 skills portables** en `.opencode/skills/` (patrones de API, TDD, seguridad, error handling, etc.)
+- **14 skills portables** en `.agents/skills/` (patrones de API, TDD, seguridad, error handling, etc.)
 - **65 slash commands** en `.opencode/commands/` (atajos recurrentes)
 - **0 servidores MCP** configurados por default (soporte via `opencode.json`; los comunes son `context7` y `playwright`)
 - **5 plugins**: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp`, `@zenobius/opencode-skillful`, `@opencode-ai/plugin`
@@ -29,7 +29,7 @@ cd /ruta/a/tu/proyecto && opencode .
 
 1. **Caveman mode** — respuestas tersas, ~75% menos tokens. Solo se sale en advertencias de seguridad, acciones irreversibles, secuencias multi-paso o cuando dices "habla normal".
 2. **PRD-first** — "construir X" / "crear Y" / "agregar Z" → `@prd-agent` o `/prd` PRIMERO. Nunca se propone una solución sin antes clarificar la intención y escribir el PRD. Solo se omite en preguntas y respuestas, arreglos de una línea, reportes de bug con reproducción o cuando dices "skip PRD" de forma explícita.
-3. **Memoria de sesión** — "listo" / "bye" / "hasta mañana" → snapshot automático en `.agents/sessions/`. No hace falta ejecutar `/session-end` manualmente.
+3. **Memoria de sesión** — "listo" / "bye" / "hasta mañana" → snapshot automático en `docs/sessions/`. No hace falta ejecutar `/session-end` manualmente.
 4. **Nada destructivo sin consentimiento** — `git commit` / `push` / `rm -rf` / `DROP TABLE` requieren verbo explícito. "vale" / "ok" solos NO son consentimiento.
 5. **El consentimiento no se hereda entre turnos** — el permiso de un turno previo NO se aplica al actual. Cada `commit`/`push` necesita su propio "commitea"/"push" en el turno actual.
 
@@ -55,15 +55,15 @@ node .opencode/bin/smoke-test.js         # 24 comprobaciones estructurales
 node .opencode/bin/context.js            # informe de presupuesto de contexto
 node .opencode/bin/instinct.js           # add/status/projects/promote/evolve/export/import
 node .opencode/bin/validate-frontmatter.js  # valida frontmatter de agentes/skills/comandos
-node .opencode/bin/refresh-project.js    # regenera .agents/PROJECT.md desde el proyecto
+node .opencode/bin/refresh-project.js    # regenera docs/PROJECT.md desde el proyecto
 ```
 
 ## 4 capas de memoria
 
 | Capa | Qué contiene | Cuándo se carga | Tamaño |
 |------|--------------|-----------------|--------|
-| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `.agents/PROJECT.md` | siempre | ~2K tokens |
-| 2 | `.agents/sessions/LATEST.md` | al iniciar sesión | ~1-3K tokens |
+| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `docs/PROJECT.md` | siempre | ~2K tokens |
+| 2 | `docs/sessions/LATEST.md` | al iniciar sesión | ~1-3K tokens |
 | 3 | Skills bajo demanda, archivos, sub-agentes | cuando se piden | variable |
 | 4 | Historial git, PRDs, planes, instintos | nunca | disco |
 
@@ -74,7 +74,7 @@ node .opencode/bin/refresh-project.js    # regenera .agents/PROJECT.md desde el 
 node .opencode/bin/smoke-test.js         # esperado: PASSED 24+, FAILED 0
 
 # 2. Genera el contexto del proyecto (si el proyecto es nuevo)
-#    Rellena .agents/PROJECT.md a mano, o ejecuta:
+#    Rellena docs/PROJECT.md a mano, o ejecuta:
 node .opencode/bin/refresh-project.js
 
 # 3. Arranca una tarea real

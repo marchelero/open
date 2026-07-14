@@ -13,7 +13,7 @@ El pack expone cuatro superficies para las capacidades. Elegir la correcta es un
 
 ¿Es conocimiento/contexto que el agente debe APLICAR cuando es relevante
 (convenciones REST, patrones de error, disciplina TDD)?
-  └─ SÍ → SKILL (.opencode/skills/<nombre>/SKILL.md, capa 3 bajo demanda)
+  └─ SÍ → SKILL (.agents/skills/<nombre>/SKILL.md, capa 3 bajo demanda)
   └─ NO ↓
 
 ¿Es una acción discreta que el agente LLAMA y que puede tener efectos
@@ -35,7 +35,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 ### 1. Regla (capa 1, siempre cargada)
 
-**Dónde**: `INSTRUCTIONS.md`, `AGENTS.md`, `.agents/PROJECT.md`
+**Dónde**: `INSTRUCTIONS.md`, `AGENTS.md`, `docs/PROJECT.md`
 
 **Coste de tokens**: se paga cada turno. Mantener corto (~2K tokens total).
 
@@ -49,7 +49,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 ### 2. Skill (capa 3, bajo demanda)
 
-**Dónde**: `.opencode/skills/<nombre>/SKILL.md` (o instaladas por el usuario en `.agents/skills/`)
+**Dónde**: `.agents/skills/<nombre>/SKILL.md` (o instaladas por el usuario en `.agents/skills/`)
 
 **Coste de tokens**: cero hasta que el agente decide cargarla (vía catálogo `<available_skills>` + tool `skill`).
 

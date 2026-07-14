@@ -31,4 +31,4 @@ One file per work session. Used by `/session-start` (read) and `/session-end` (w
 
 ## Cleanup
 
-Old snapshots are kept for archaeology. Optional: archive snapshots older than 90 days to `.agents/sessions/archive/`.
+Old snapshots are kept for archaeology. Optional: archive snapshots older than 90 days to `docs/sessions/archive/`.
