@@ -19,7 +19,7 @@ If an agent must extend this baseline (e.g., a domain with stricter rules), it a
 
 ## Que es esto
 
-Starter pack portable de opencode. El "producto" son los 69 agentes, 67 slash commands y 14 skills en `.agents/skills/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
+Starter pack portable de opencode. El "producto" son los 72 agentes, 69 slash commands y 17 skills en `.agents/skills/`. No es codigo de aplicacion — es config + prompts + un CLI de instincts en `.opencode/bin/instinct.js`.
 
 ## Estructura
 
@@ -312,7 +312,7 @@ Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmaci
 
 ### 8. Mandatory Routing Protocol (auto-select agents + skills)
 
-**Regla**: el pack tiene 69 agents y 15 skills. El user NO debe saber cuáles existen ni invocarlos manualmente. El primary agent SIEMPRE clasifica el request y selecciona el agent + skill relevante ANTES de responder, salvo pure Q&A.
+**Regla**: el pack tiene 72 agents y 17 skills. El user NO debe saber cuáles existen ni invocarlos manualmente. El primary agent SIEMPRE clasifica el request y selecciona el agent + skill relevante ANTES de responder, salvo pure Q&A.
 
 **Cuándo aplicar routing** (cualquiera activa):
 

@@ -19,7 +19,7 @@ Show the catalog of available skills. `$ARGUMENTS` may be a keyword, category, o
 
 | Category | Skills |
 |----------|--------|
-| **Code patterns** | coding-standards, frontend-patterns, backend-patterns |
+| **Code patterns** | coding-standards, frontend-patterns, backend-patterns, observability |
 | **API / Design** | api-design, error-handling |
 | **Process** | git-workflow, tdd-workflow, verification-loop, intent-driven-development, task-decomposition |
 | **Security** | security-review |
@@ -73,6 +73,8 @@ When a user request comes in, the primary agent (or `skill-router` skill) decide
 | React, JSX, TSX, hooks, components, useState, useEffect, useMemo, form, prop, state, render | `frontend-patterns` |
 | Express, FastAPI, NestJS, repository, service layer, DI, transaction, auth, validation, controller, middleware | `backend-patterns` |
 | REST, GraphQL, endpoint, route, status code, pagination, API | `api-design` |
+| Angular, NgRx, RxJS, signal, component, directive, pipe, OnPush, zone.js, standalone | `frontend-patterns` (Angular surface) |
+| log, logger, pino, winston, structlog, zap, observability, tracing, OTel, OpenTelemetry, metrics, prometheus, Sentry, health check, graceful shutdown | `observability` |
 | auth, password, JWT, session, CSRF, XSS, SQL injection, secret, OWASP, vulnerability, sanitize | `security-review` |
 | test, TDD, RED, GREEN, coverage, jest, pytest, vitest, mock | `tdd-workflow` |
 | error, exception, try/catch, error handling, retry, circuit breaker | `error-handling` |

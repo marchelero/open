@@ -64,7 +64,7 @@ Tambien podes correr:
   /help <section>      # agents, skills, commands, conventions, flows
   /help <pregunta>     # ruta libre contra el catalogo
   /list-agents [kwd]   # ver 69 agentes
-  /list-skills [kwd]   # ver 14 skills
+  /list-skills [kwd]   # ver 17 skills
   /pack-doctor         # health check del pack
 ```
 

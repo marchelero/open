@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "description": "Optional MCPs (NOT loaded by default). Run `/setup-mcp` to activate any of these. Activation patches `opencode.json` and restarts opencode to take effect.",
+    "rationale": "100% value when needed, 0% cost (no boot slowdown, no leaked tokens) when not. The active MCPs (context7, playwright) stay loaded for everyone; these opt-ins are user-triggered.",
+    "discoverable_via": "/setup-mcp --list"
+  },
+  "optional_mcps": [
+    {
+      "name": "github",
+      "description": "Read GitHub issues, PRs, code search, repo metadata directly from the agent. Replaces manual `gh` CLI invocations with structured MCP tools (list_issues, get_pull_request, search_code, etc).",
+      "package": "@modelcontextprotocol/server-github",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": {
+          "description": "GitHub PAT. Needs 'repo' scope for full read, plus 'read:org' if working with org repos. Generate at https://github.com/settings/tokens (fine-grained token recommended).",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Reviewing PRs that need GitHub context, fetching issues, code search across the org, automating release notes from merged PRs."
+    },
+    {
+      "name": "postgres",
+      "description": "Read-only SQL queries against a PostgreSQL database. Useful for debugging production issues, validating schema, running ad-hoc analytics. By default the connection is read-only (separate role recommended).",
+      "package": "@modelcontextprotocol/server-postgres",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${POSTGRES_CONNECTION_STRING}"
+      ],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": {
+          "description": "PostgreSQL connection string. Format: postgresql://user:password@host:5432/dbname?sslmode=require. RECOMMEND a read-only role for safety.",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Investigating data issues, validating migrations, debugging ORM queries against real data, writing postmortems with concrete numbers."
+    }
+  ]
+}

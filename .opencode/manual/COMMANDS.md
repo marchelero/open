@@ -1,6 +1,6 @@
 # COMMANDS
 
-> 67 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
+> 69 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
 > El archivo vive en `.opencode/commands/<nombre>.md` con frontmatter `description` y `agent`.
 
 ## "Quiero clarificar antes de implementar"

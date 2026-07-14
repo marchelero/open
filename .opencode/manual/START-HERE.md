@@ -6,9 +6,9 @@
 
 A portable, zero-deps starter pack for [opencode](https://opencode.ai):
 
-- **69 agents** — specialist roles (reviewers, builders, planners, domain experts)
-- **16 skills** — on-demand reference material (patterns, checklists, frameworks)
-- **67 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
+- **72 agents** — specialist roles (reviewers, builders, planners, domain experts)
+- **17 skills** — on-demand reference material (patterns, checklists, frameworks)
+- **69 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
 - **9 bin scripts** — local CLIs (`context.js`, `instinct.js`, `build-agents-index.js`)
 
 No `package.json` at the project root. No build step. Drop the `.opencode/` folder in any repo and it works.

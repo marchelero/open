@@ -94,7 +94,7 @@ When: "como esta el pack" / "que tengo disponible" / "se comporta raro"
 # → 69 agentes agrupados por categoria, con triggers
 
 /list-skills
-# → 14 skills con trigger map
+# → 17 skills con trigger map
 
 /help
 # → overview, o ruta libre si decis que queres hacer

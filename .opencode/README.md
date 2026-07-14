@@ -1,6 +1,6 @@
 # open
 
-Pack portable de opencode: **69 agentes, 14 skills, 65 slash commands, 2 MCPs, 3 plugins, 9 CLIs cero-deps**.
+Pack portable de opencode: **72 agentes, 17 skills, 69 slash commands, 2 MCPs activos + 2 opcionales, 3 plugins, 9 CLIs cero-deps**.
 
 Cópialo a cualquier proyecto, reinicia opencode y empieza a trabajar.
 
