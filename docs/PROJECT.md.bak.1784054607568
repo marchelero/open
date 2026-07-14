@@ -1,8 +1,8 @@
 # Project Context
 
-> Auto-refreshed by refresh-project.js on 2026-07-14.
+> Auto-refreshed by refresh-project.js on 2026-06-30.
 > Source of truth: actual project files (package.json, pubspec.yaml, etc.)
-> Edit `Non-Negotiables` / `Architecture Notes` / `Open Questions` sections manually — they are preserved across refreshes.
+> Edit `Conventions` / `Non-Negotiables` / `Architecture Notes` sections manually — they are preserved across refreshes.
 
 ## Identity
 - **Name**: open
@@ -14,26 +14,14 @@
 - **Framework**: ?
 - **Runtime / Build**: ?
 - **Package manager**: ?
-
-
-
-## Tooling
-- **Test runner**: (not detected)
-- **Coverage**: (not detected)
-- **Linter**: (not detected)
-- **Formatter**: (not detected)
-- **CI**: (not detected)
-- **Container**: (not detected)
-- **Env vars**: (not detected)
+- **Database**: (not detected)
+- **Deployment**: (not detected)
 
 ## Conventions
 free-form
 
-## Entry Points
-- (no standard entry point detected)
-
 ## Directory Layout
-- `docs/`
+(no standard layout detected)
 
 ## License
 unspecified

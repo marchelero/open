@@ -368,6 +368,41 @@ Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmaci
 
 **Reference**: routing tables completas en `agent-router` + `skill-router` skills (auto-loaded cuando se dispara el protocolo). Para superset cross-surface, usar `/route <request>` command.
 
+### 9. Always-On Project Context (PROJECT.md as bootstrap gate)
+
+**Regla**: el primary agent SIEMPRE garantiza que `docs/PROJECT.md` esté vigente antes de cualquier task no-trivial. Es la primera fuente de verdad del proyecto — el agent NO debe adivinar stack, entry points, tooling, etc.
+
+**Trigger: PROJECT.md** es bootstrap obligatorio. El primary:
+- **Lee** `docs/PROJECT.md` al arrancar la sesion (Layer 1 de la 4-capas).
+- **Check freshness** via `node .opencode/bin/refresh-project.js --status`.
+- **Si missing**: corre `node .opencode/bin/refresh-project.js --auto` silent. Log al usuario.
+- **Si stale** (>7 dias segun header `> Auto-refreshed by ... on YYYY-MM-DD`): corre `--auto` + muestra summary al usuario.
+- **Si fresh**: no hace nada.
+
+**Regla para sub-agents**: cuando el primary dispatcha a un sub-agent (prd-agent, planner, code-architect, etc.) para trabajo non-trivial, le pasa el path `docs/PROJECT.md` y le instruye: *"leelo primero. Si tu task involucra stack/tooling/dependencies, no adivines — el archivo existe para eso."*
+
+**Regla para prd-agent especificamente** (refuerza #2): antes de empezar el PRD, prd-agent DEBE leer `docs/PROJECT.md`. Si esta stale o missing, corre `refresh-project.js --auto` el mismo. Stack y conventions del proyecto se vuelven restricciones del PRD, no se vuelven a preguntar al user.
+
+**Regla de Q&A**: cuando el user pregunta *"que es este proyecto / que stack usa / que frameworks tiene / que tipo de app es"*, el primary lee PROJECT.md y responde de ahi. NO escanea el codebase en vivo para esa pregunta — esa informacion ya esta consolidada.
+
+**Comandos utiles**:
+- `/project-status` → check freshness, no escribe
+- `node .opencode/bin/refresh-project.js --auto` → silent update
+- `node .opencode/bin/refresh-project.js --dry-run` → preview diff sin escribir
+- `node .opencode/bin/refresh-project.js --check` → exit code (CI-friendly)
+
+**Auto-claridad (correr visible, no silent, cuando)**:
+- Refresh cambia >5 lineas (refactor grande).
+- User esta editando el proyecto en vivo (puede sorprender el diff).
+- Stale >30 dias (probablemente algo importante cambio, mejor confirmar).
+
+**Cuando SKIP** (override):
+- Pure Q&A de un archivo especifico (user pregunta "que hace la funcion X?").
+- One-liner fix sin contexto de proyecto.
+- User explicito dijo "no actualices PROJECT.md" o "skip refresh".
+
+**Integration con #2 (PRD-first)**: PRD-first + Always-On Context se complementan. PRD-first exige plan antes de code. Always-On Context exige PROJECT.md antes del plan. Cadena: PROJECT.md fresh → PRD → plan → code.
+
 ## Memoria de sessions (4 capas)
 
 El pack usa una arquitectura de 4 capas para minimizar tokens al retomar:
