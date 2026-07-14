@@ -5,35 +5,42 @@
 ## ¿Qué incluye?
 
 - **69 sub-agentes** en `.opencode/agents/` (revisores, planners, resolvers, especialistas por stack)
-- **14 skills portables** en `.agents/skills/` (patrones de API, TDD, seguridad, error handling, etc.)
-- **65 slash commands** en `.opencode/commands/` (atajos recurrentes)
-- **0 servidores MCP** configurados por default (soporte via `opencode.json`; los comunes son `context7` y `playwright`)
-- **5 plugins**: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp`, `@zenobius/opencode-skillful`, `@opencode-ai/plugin`
+- **16 skills portables** en `.agents/skills/` (patrones de API, TDD, seguridad, error handling, agent-router, etc.)
+- **67 slash commands** en `.opencode/commands/` (atajos recurrentes)
+- **2 servidores MCP** en `opencode.json`: `context7` (docs) + `playwright` (browser)
+- **3 plugins** npm: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
 - **9 CLIs nativos** en `.opencode/bin/` (cero dependencias, solo Node stdlib)
 
 ## Instalación
 
 ```bash
 # copia las partes portables a tu proyecto
-cp -r .opencode opencode.json AGENTS.md instructions/ /ruta/a/tu/proyecto/
+cp -r .opencode opencode.json .agents /ruta/a/tu/proyecto/
+
+# crea el directorio de project docs
+mkdir -p /ruta/a/tu/proyecto/docs
 
 # abre opencode en ese proyecto
 cd /ruta/a/tu/proyecto && opencode .
 ```
 
-> Windows PowerShell: `Copy-Item -Path ".opencode","opencode.json","AGENTS.md","instructions" -Destination "C:\ruta\a\tu\proyecto" -Recurse -Force`
+> Windows PowerShell: `Copy-Item -Path ".opencode","opencode.json",".agents" -Destination "C:\ruta\a\tu\proyecto" -Recurse -Force`
 
-> Si tu proyecto ya tiene un `README.md`, no se toca. Si quieres fusionar `AGENTS.md` con reglas propias, hazlo a mano.
+> Si tu proyecto ya tiene un `README.md`, no se toca. El primer `/refresh-project` auto-genera `docs/PROJECT.md` desde tu stack.
 
-## 5 comportamientos obligatorios (siempre activos)
+## 9 comportamientos obligatorios (siempre activos)
 
 1. **Caveman mode** — respuestas tersas, ~75% menos tokens. Solo se sale en advertencias de seguridad, acciones irreversibles, secuencias multi-paso o cuando dices "habla normal".
 2. **PRD-first** — "construir X" / "crear Y" / "agregar Z" → `@prd-agent` o `/prd` PRIMERO. Nunca se propone una solución sin antes clarificar la intención y escribir el PRD. Solo se omite en preguntas y respuestas, arreglos de una línea, reportes de bug con reproducción o cuando dices "skip PRD" de forma explícita.
-3. **Memoria de sesión** — "listo" / "bye" / "hasta mañana" → snapshot automático en `docs/sessions/`. No hace falta ejecutar `/session-end` manualmente.
-4. **Nada destructivo sin consentimiento** — `git commit` / `push` / `rm -rf` / `DROP TABLE` requieren verbo explícito. "vale" / "ok" solos NO son consentimiento.
-5. **El consentimiento no se hereda entre turnos** — el permiso de un turno previo NO se aplica al actual. Cada `commit`/`push` necesita su propio "commitea"/"push" en el turno actual.
+3. **Git: nunca commit/push sin permiso explícito** — el agent espera tu "commitea" / "push" en el turno actual. "dale" del turno anterior NO cuenta.
+4. **Session memory (auto-snapshot)** — "listo" / "bye" / "hasta mañana" → snapshot automático en `docs/sessions/`. No hace falta `/session-end` manual.
+5. **Acciones destructivas requieren consentimiento explícito** — `git commit` / `push` / `rm -rf` / `DROP TABLE` necesitan verbo explícito en ESE turno.
+6. **Report + Audit (trazabilidad)** — flujos con agentes dejan artefactos en `docs/reports/` + `docs/audits/`. No se ejecutan agentes en el vacío.
+7. **Flow suggestions (primary proactivo)** — si tu request matchea `/flow-feature` / `/flow-bugfix` / `/flow-refactor` / `/flow-security`, el primary lo ofrece antes de implementar.
+8. **Mandatory Routing Protocol** — el primary auto-clasifica el request, carga `agent-router` + `skill-router` skills, y dispatcha 1-3 sub-agentes + 1-2 skills antes de responder, salvo pure Q&A.
+9. **Always-On Project Context** — el primary garantiza que `docs/PROJECT.md` esté vigente antes de cualquier task no-trivial. Auto-busca si falta, auto-refresca si stale (>7d).
 
-## 8 comandos principales
+## 9 comandos principales
 
 | Comando | Función |
 |---------|---------|
@@ -43,6 +50,7 @@ cd /ruta/a/tu/proyecto && opencode .
 | `/verify` | Valida cambios (revisión de código + seguridad + revisor del lenguaje) |
 | `/code-review` | Revisión de código puntual |
 | `/security` | Auditoría de seguridad puntual |
+| `/project-status` | Check freshness de `docs/PROJECT.md` sin escribir |
 | `/session-start` / `/session-end` | Memoria entre sessions (automática al cerrar) |
 | `/context` | Audita el presupuesto de contexto (skills, agentes, sessions) |
 
@@ -51,18 +59,22 @@ Lista completa: `node .opencode/bin/context.js` o explora `.opencode/commands/`.
 ## 9 CLIs nativos (cero dependencias, solo Node stdlib)
 
 ```bash
-node .opencode/bin/smoke-test.js         # 24 comprobaciones estructurales
-node .opencode/bin/context.js            # informe de presupuesto de contexto
-node .opencode/bin/instinct.js           # add/status/projects/promote/evolve/export/import
-node .opencode/bin/validate-frontmatter.js  # valida frontmatter de agentes/skills/comandos
-node .opencode/bin/refresh-project.js    # regenera docs/PROJECT.md desde el proyecto
+node .opencode/bin/smoke-test.js              # 20 comprobaciones estructurales
+node .opencode/bin/validate-frontmatter.js    # valida frontmatter de agentes/skills/comandos
+node .opencode/bin/context.js                 # informe de presupuesto de contexto
+node .opencode/bin/instinct.js                # add/status/projects/promote/evolve/export/import
+node .opencode/bin/refresh-project.js         # regenera docs/PROJECT.md (--status, --auto, --dry-run, --check)
+node .opencode/bin/build-agents-index.js       # regenera docs/AGENTS_INDEX.md
+node .opencode/bin/build-skills-index.js       # regenera .agents/skills/INDEX.md
+node .opencode/bin/state.js                   # recovery state por command
+node .opencode/bin/install-plugins.js         # postinstall npm (idempotente)
 ```
 
 ## 4 capas de memoria
 
 | Capa | Qué contiene | Cuándo se carga | Tamaño |
 |------|--------------|-----------------|--------|
-| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `docs/PROJECT.md` | siempre | ~2K tokens |
+| 1 | `AGENTS.md` + `docs/PROJECT.md` | siempre | ~2K tokens |
 | 2 | `docs/sessions/LATEST.md` | al iniciar sesión | ~1-3K tokens |
 | 3 | Skills bajo demanda, archivos, sub-agentes | cuando se piden | variable |
 | 4 | Historial git, PRDs, planes, instintos | nunca | disco |
@@ -71,11 +83,15 @@ node .opencode/bin/refresh-project.js    # regenera docs/PROJECT.md desde el pro
 
 ```bash
 # 1. Verifica que todo funciona
-node .opencode/bin/smoke-test.js         # esperado: PASSED 24+, FAILED 0
+node .opencode/bin/smoke-test.js              # esperado: PASSED 20+, FAILED 0
+node .opencode/bin/validate-frontmatter.js    # 0 FAILED esperado
 
 # 2. Genera el contexto del proyecto (si el proyecto es nuevo)
-#    Rellena docs/PROJECT.md a mano, o ejecuta:
+#    Auto-detecta stack, frameworks, tooling, CI, container, env vars.
+#    Secciones Non-Negotiables / Architecture Notes / Open Questions son tuyas para editar a mano.
 node .opencode/bin/refresh-project.js
+# o check freshness sin escribir:
+node .opencode/bin/refresh-project.js --status
 
 # 3. Arranca una tarea real
 /prd "descripción de tu primera feature"
@@ -83,9 +99,9 @@ node .opencode/bin/refresh-project.js
 
 ## Documentación adicional
 
-- **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención
-- **[COMMANDS.md](./COMMANDS.md)** — los 65 slash commands agrupados por intención
-- **[EXAMPLES.md](./EXAMPLES.md)** — 5 flujos completos de proyectos reales
+- **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención (legacy; el agent-router skill es la nueva forma automática)
+- **[COMMANDS.md](./COMMANDS.md)** — los 67 slash commands agrupados por intención
+- **[EXAMPLES.md](./EXAMPLES.md)** — 6 flujos completos de proyectos reales
 - **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
 - **[SURFACES.md](./SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI
 

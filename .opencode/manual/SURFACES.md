@@ -8,7 +8,7 @@ El pack expone cuatro superficies para las capacidades. Elegir la correcta es un
 
 ```
 ¿Es una regla dura que SIEMPRE aplica (seguridad, consentimiento git, no destrucción)?
-  └─ SÍ → REGLA (INSTRUCTIONS.md o AGENTS.md, capa 1)
+  └─ SÍ → REGLA (AGENTS.md, capa 1)
   └─ NO ↓
 
 ¿Es conocimiento/contexto que el agente debe APLICAR cuando es relevante
@@ -35,7 +35,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 ### 1. Regla (capa 1, siempre cargada)
 
-**Dónde**: `INSTRUCTIONS.md`, `AGENTS.md`, `docs/PROJECT.md`
+**Dónde**: `AGENTS.md`, `docs/PROJECT.md`
 
 **Coste de tokens**: se paga cada turno. Mantener corto (~2K tokens total).
 
@@ -116,7 +116,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 | Necesidad | Elige | Por qué |
 |-----------|-------|---------|
-| "Siempre requerir consentimiento explícito para `git push`" | Regla (INSTRUCTIONS.md) | Aplica cada turno, sin opt-out |
+| "Siempre requerir consentimiento explícito para `git push`" | Regla (AGENTS.md) | Aplica cada turno, sin opt-out |
 | "Al diseñar una API REST, seguir estos patrones" | Skill (`api-design`) | Condicional al contexto, contenido extenso |
 | "Recuperar docs actualizadas de la librería X" | Servidor MCP (context7) | Datos externos, petición estructurada |
 | "Listar todos los instintos aprendidos" | CLI (`instinct.js status`) | Escaneo determinista de archivos, el usuario lee el output |

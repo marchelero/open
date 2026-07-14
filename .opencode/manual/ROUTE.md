@@ -3,6 +3,8 @@
 > 69 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
 > Descripciones completas en `.opencode/agents/<nombre>.md`.
 
+> **Nota (2026)**: el primary agent ahora auto-rutea via el skill `agent-router` (Mandatory Routing Protocol, AGENTS.md comportamiento #8). Este archivo es la versión "manual lookup" — útil para entender el catálogo, pero el primary ya no necesita que le digas qué agente invocar.
+
 ## "Quiero clarificar la intención antes de construir"
 
 | Agente | Qué hace | Cuándo usarlo |

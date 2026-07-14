@@ -1,7 +1,7 @@
 # COMMANDS
 
-> 65 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
-> El archivo JSON vive en `.opencode/commands/<nombre>.md` con frontmatter `description` y `agent`.
+> 67 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
+> El archivo vive en `.opencode/commands/<nombre>.md` con frontmatter `description` y `agent`.
 
 ## "Quiero clarificar antes de implementar"
 
@@ -100,7 +100,8 @@
 | `/session-start` | Lee la Capa 1+2 de memoria y reporta un resumen compacto. Auto en señales de cierre. | build |
 | `/session-end` | Escribe snapshot, actualiza `LATEST.md`, refresca `PROJECT.md`, extrae 1-3 instintos. | build |
 | `/context` | Audita el presupuesto de contexto: skills, agentes, comandos, sessions. | build |
-| `/refresh-project` | Regenera `docs/PROJECT.md` desde los archivos del proyecto. | build |
+| `/project-status` | Check freshness de `docs/PROJECT.md` sin escribir. Exit 0/1 (CI-friendly). | build |
+| `/refresh-project` | Regenera `docs/PROJECT.md` desde los archivos del proyecto. Soporta `--status`, `--auto`, `--dry-run`, `--check`. | build |
 
 ## "Quiero limpiar / refactorizar"
 
@@ -140,7 +141,8 @@
 |---------|----------|-------|
 | `/help` | Overview del pack: comandos principales, agentes, skills, convenciones. | build |
 | `/list-agents` | Lista los 69 agents con descripción y triggers. Filtros: keyword, categoría. | build |
-| `/list-skills` | Lista las 14 skills con descripción y triggers. Filtros: keyword. | build |
+| `/list-skills` | Lista las 16 skills con descripción y triggers. Filtros: keyword. | build |
+| `/route` | Sugiere el mejor sub-agente + skills para un request libre. Útil como consulta antes de dispatchar. | build |
 | `/pack-doctor` | Diagnostica la salud del pack (10 checks: frontmatter, duplicados, permalinks, etc). | build |
 
 ## "Quiero usar un workflow pre-hecho"

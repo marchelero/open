@@ -7,8 +7,8 @@
 A portable, zero-deps starter pack for [opencode](https://opencode.ai):
 
 - **69 agents** — specialist roles (reviewers, builders, planners, domain experts)
-- **14 skills** — on-demand reference material (patterns, checklists, frameworks)
-- **65 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
+- **16 skills** — on-demand reference material (patterns, checklists, frameworks)
+- **67 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
 - **9 bin scripts** — local CLIs (`context.js`, `instinct.js`, `build-agents-index.js`)
 
 No `package.json` at the project root. No build step. Drop the `.opencode/` folder in any repo and it works.
@@ -30,10 +30,10 @@ No `package.json` at the project root. No build step. Drop the `.opencode/` fold
 
 ```
 /prd "user profile editing with avatar upload"
-  → produces docs/prds/2026-06-30-1430-profile.prd.md
+  → produces docs/prds/2026-06-30_1430-profile.prd.md
   → asks clarifying questions, builds Intention Map
 
-/plan docs/prds/2026-06-30-1430-profile.prd.md
+/plan docs/prds/2026-06-30_1430-profile.prd.md
   → produces phased implementation plan with risks
   → wait for confirmation
 
@@ -99,7 +99,7 @@ No `package.json` at the project root. No build step. Drop the `.opencode/` fold
 /list-agents                       # all 69 agents
 /list-agents react                 # filter by keyword
 /list-agents "Language Reviewers"  # filter by category
-/list-skills                       # all 14 skills
+/list-skills                       # all 16 skills
 ```
 
 ## Mental model: 4 layers
@@ -108,7 +108,7 @@ The pack uses a 4-layer memory architecture to keep your context window lean:
 
 | Layer | What | When | Size |
 |-------|------|------|------|
-| 1 | `AGENTS.md` + `INSTRUCTIONS.md` + `PROJECT.md` | always | ~2K tokens |
+| 1 | `AGENTS.md` + `docs/PROJECT.md` | always | ~2K tokens |
 | 2 | `LATEST.md` session snapshot | `/session-start` | ~1-3K tokens |
 | 3 | Skills (on-demand), specific files, sub-agents | when needed | variable |
 | 4 | Full git history, all PRDs, instincts | never (disk only) | unlimited |
@@ -152,12 +152,17 @@ For the full catalog: `/list-skills` or `.agents/skills/INDEX.md`.
 
 ## Conventions (enforced, not optional)
 
-These 4 behaviors are enforced by the pack:
+These 9 behaviors are enforced by the pack:
 
-1. **PRD-first** — non-trivial work starts with a PRD via `/prd`. Skip only for one-liners, pure Q&A, or explicit user opt-out.
-2. **Caveman mode** — responses use compact prose by default. Override with `stop caveman` or `normal mode`.
-3. **Session memory** — `/session-end` writes a snapshot. Don't end sessions with important context unrecorded.
-4. **No destructive actions without consent** — `git commit`, `git push`, `rm -rf`, `DROP TABLE` need explicit verbs.
+1. **Caveman mode** — compact responses by default (~75% token savings). Override with `stop caveman` or `normal mode`.
+2. **PRD-first** — non-trivial work starts with a PRD via `/prd`. Skip only for one-liners, pure Q&A, or explicit user opt-out.
+3. **Git safety** — `git commit` / `git push` / `rm -rf` / `DROP TABLE` need explicit verb. "dale" alone is NOT consent.
+4. **Session memory** — auto-snapshot on close ("listo" / "bye"). Manual via `/session-end`.
+5. **No destructive actions without consent** — explicit verb required for irreversible operations.
+6. **Report + audit** — flows leave artifacts in `docs/reports/` + `docs/audits/`.
+7. **Flow suggestions** — primary offers `/flow-*` wrappers when request matches.
+8. **Mandatory routing** — primary auto-loads `agent-router` + `skill-router` to pick the right subagent.
+9. **Always-On Project Context** — primary ensures `docs/PROJECT.md` is fresh before any non-trivial task.
 
 See `.opencode/AGENTS.md` for the full list.
 
@@ -207,6 +212,5 @@ Add a new command:
 ## See also
 
 - `.opencode/AGENTS.md` — full rules and pack structure
-- `.opencode/INSTRUCTIONS.md` — global instructions (security, code style, git workflow)
 - `.opencode/manual/SURFACES.md` — when to use agent vs skill vs command
 - `.opencode/CHANGELOG.md` — version history
