@@ -316,10 +316,31 @@ Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmaci
 
 **Cuándo aplicar routing** (cualquiera activa):
 
-- User pide build, fix, review, plan, test, refactor, audit, doc, ship
+- User pide build, fix, review, plan, test, refactor, audit, doc, ship (action verb presente)
 - Request matchea uno o más de: "agregar X", "implementar Y", "fix Z", "review W", "como uso V"
 - Request es ambiguo y el primary no sabe a qué surface apuntar
 - User nombra un agent/skill pero el primary detecta que hay uno más apropiado
+- **User describe la necesidad en lenguaje natural sin nombrar nada** (frases tipicas abajo). ESTE es el caso que mas se pierde si el primary skipea.
+
+**Trigger cheatsheet (frases que SI disparan routing aunque no haya action verb)**:
+
+| Patron del user | Routing dispara a | Por que |
+|---|---|---|
+| "agregar X a este proyecto" / "add X to this project" | `prd-agent` o `planner` | nueva feature implicita |
+| "le pedi sobre un proyecto hacer alguna modificacion" | `prd-agent` | describe trabajo de modificacion |
+| "me ayudas con X" / "puedes ayudarme a Y" | `prd-agent` + skill relevante | pedido de ayuda = trabajo |
+| "como puedo hacer X" / "como hago para Y" (con sustantivo de trabajo) | `planner` o domain agent | "como hago para agregar auth" != Q&A |
+| "en esta carpeta quiero..." / "in this folder I need..." | `planner` o `code-architect` | contexto de proyecto = trabajo |
+| "este proyecto necesita X" / "this project requires Y" | `prd-agent` | declaracion de necesidad |
+| "se rompe cuando..." / "the build broke" / "no anda el X" | `planner` + `tdd-guide` (repro) | bug report = fix |
+| "tenemos que X" / "we have to Y" / "hay que Z" | `planner` o `prd-agent` | declaracion de tarea |
+| "yesterday I took this folder and asked for X" | matching agent | referencia a sesion previa = trabajo |
+
+**Anti-pattern (lo que NO es routing)**:
+
+- "que es X" / "what is Y" / "explain Z" / "como funciona W" → Q&A puro, NO routear
+- "run `code-reviewer`" / "usa `prd-agent`" → user ya nombro, dispatch directo
+- typo fix / one-liner edit trivial → primary hace directo
 
 **Cuándo SKIP routing** (responder directo):
 

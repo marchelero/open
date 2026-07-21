@@ -1,16 +1,50 @@
 ---
 name: skill-router
-description: Use this skill when the primary agent needs to decide which skill to load for a user request, or when the user asks "what skill should I use for X". Maps request keywords and intent to the right skill from the catalog. Load this BEFORE guessing or asking the user to clarify.
-triggers: [skill, skills, route, routing, trigger, catalog, which skill, what skill, load, knowledge]
+description: Use when the primary agent must select a knowledge skill for any non-Q&A request. Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo..."). Also fires on meta-routing questions ("what skill should I use for X", "que skill uso para..."). Maps request keywords + intent to the right skill from the catalog. Load alongside agent-router when execution + knowledge are both needed.
+triggers: [skill, skills, route, routing, which skill, what skill, load, knowledge, build, create, add, implement, fix, repair, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, simplify, clean, verify, validate, check, crear, agregar, añadir, hacer, implementar, arreglar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto"]
 ---
 
 # Skill Router
 
 Decide which skill to load for a user request. This is the routing layer between "user said something" and "agent knows the right patterns".
 
+## Trigger Conditions (load me when...)
+
+**Default rule**: load this skill for ANY non-Q&A user request. Most work needs at least one knowledge skill (patterns, security checklist, TDD workflow, error handling, etc.), and loading it takes 1 call.
+
+### Direct action verbs (always trigger)
+- **English**: build, create, add, implement, fix, refactor, modify, update, review, audit, test, debug, document, deploy, ship, setup, configure, install, migrate, design, plan, analyze, simplify, clean, verify, validate
+- **Spanish**: crear, agregar, implementar, arreglar, refactorizar, modificar, actualizar, revisar, auditar, probar, testear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, simplificar, limpiar, verificar
+
+### Natural-language patterns (trigger even without an action verb)
+- **English**: "I need to...", "I want to...", "can you...", "in this folder...", "this project requires...", "we have to..."
+- **Spanish**: "me ayudas con...", "puedes ayudarme a...", "como puedo...", "como hago para...", "en esta carpeta...", "este proyecto necesita...", "le pedi sobre un proyecto hacer alguna modificacion"
+
+### Domain signals (also trigger)
+- React, JSX, TSX, hooks, form, component, render
+- Express, FastAPI, NestJS, Spring, Django, controller, middleware, repository
+- REST, GraphQL, endpoint, status code, pagination, API
+- auth, password, JWT, session, CSRF, XSS, SQL injection, secret, OWASP
+- test, TDD, coverage, jest, pytest, vitest, mock
+- error, exception, try/catch, retry, circuit breaker
+- commit, branch, PR, merge, rebase, conflict
+- verify, audit, validate, regression
+- PRD, requirement, acceptance criteria, scope
+- MCP, model-context-protocol, server, tool definition
+
+### Meta-routing questions (also trigger)
+- "what skill should I use for X" / "which skill" / "que skill uso para..."
+
+### When NOT to load
+- Pure Q&A without implementation intent
+- User already named the skill explicitly
+- Single specific tool invocation ("run `npm test`")
+- Pack meta questions ("how many skills are there") — use `bin/build-skills-index.js` directly
+
 ## When to Activate
 
 - The primary agent is unsure which skill applies to the current request
+- The user describes a need in natural language without naming a skill ("I need to add X", "me ayudas con Y") — STILL load, the trigger map below catches it
 - The user explicitly asks "what skill should I use for X"
 - The request spans multiple domains and could match several skills
 - A new skill has been added and the agent needs to know when to use it

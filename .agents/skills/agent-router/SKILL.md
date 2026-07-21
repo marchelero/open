@@ -1,16 +1,39 @@
 ---
 name: agent-router
-description: Use this skill when the primary agent needs to decide which subagent to invoke for a user request, or when the user asks "what agent should I use for X". Maps request intent + domain to the right agent from the 69-agent catalog. Load this alongside skill-router when both are needed.
-triggers: [agent, agents, route, routing, which agent, what agent, invoke, subagent, dispatch, delegate]
+description: Use when the primary agent must dispatch a subagent for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que agente uso para..."). Maps request intent + domain to the right agent from the 69-agent catalog. Load alongside skill-router when execution + knowledge are both needed.
+triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check, crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto", "agent", "agents", "which agent", "what agent", "que agente", "subagent", "dispatch", "delegate"]
 ---
 
 # Agent Router
 
 Decide which subagent to invoke for a user request. The pack ships 69 agents organized by purpose; this skill provides the decision matrix so the primary agent doesn't have to scan all descriptions.
 
+## Trigger Conditions (load me when...)
+
+**Default rule**: load this skill for ANY non-Q&A user request, even if no agent or command is named explicitly. The pack's whole point is that the user shouldn't have to know which agent exists.
+
+### Direct action verbs (always trigger)
+- **English**: build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check
+- **Spanish**: crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar
+
+### Natural-language patterns (trigger even without an action verb)
+- **English**: "I need to...", "I want to...", "can you...", "could you...", "in this folder...", "this project requires...", "we have to...", "the build broke", "the app crashes when...", "yesterday I took this folder and asked for..."
+- **Spanish**: "me ayudas con...", "puedes ayudarme a...", "como puedo...", "como hago para...", "en esta carpeta...", "este proyecto necesita...", "tenemos que...", "se rompe cuando...", "no anda el...", "le pedi sobre un proyecto hacer alguna modificacion"
+- **Context signals**: any folder/project mention + "modification" / "cambio" / "nueva feature" / "new feature" / "agregar algo" / "implementar algo" → strong work signal
+
+### Meta-routing questions (also trigger)
+- "what agent should I use for X" / "which agent handles Y" / "que agente uso para..." / "cual es el agente que..."
+
+### When NOT to load
+- Pure Q&A without implementation intent: "what is X", "explain Y", "que es X", "como funciona Y"
+- User already named the agent explicitly: "run `code-reviewer`" / "usa `prd-agent`" / "load `code-architect`"
+- One-liner edit the primary can do directly (typo fix, single-line change)
+- User said "skip routing" or "just do it" in the current turn
+
 ## When to Activate
 
-- The user request implies work beyond pure Q&A (build, fix, review, plan, test, refactor, audit)
+- The user request implies work beyond pure Q&A (build, fix, review, plan, test, refactor, audit) — covers ALL action-verb requests, not just the ones that name an agent
+- The user describes a need in natural language without naming an agent/command ("I need to add X", "me ayudas con Y", "le pedi sobre el proyecto hacer Z") — STILL load, the catalog below maps the intent
 - The primary agent is unsure which subagent to dispatch
 - The request matches a known intent (auth bug, plan migration, review PR, etc.)
 - Parallel with `skill-router` — load both when the request could need knowledge (skill) + execution (agent)
