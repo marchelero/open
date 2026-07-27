@@ -88,7 +88,7 @@ Estos 9 comportamientos los hace el agent SIEMPRE, sin que el usuario lo pida. E
 
 Todas las respuestas en **caveman mode** por default para reducir ~75% el consumo de tokens. Patron: `[thing] [action] [reason]. [next step].` — drop articulos/filler/pleasantries/hedging. Fragments OK. Standard tech acronyms (DB/API/HTTP) OK. Preservar idioma del usuario.
 
-**Default: full**. Switch via `/caveman lite|full|ultra|wenyan-*`. **Auto-claridad** (salir de caveman): security warnings, confirmaciones irreversibles, multi-paso ambiguo, ambiguedad tecnica real, cuando el usuario pide clarificacion. Desactivar: "stop caveman" / "normal mode".
+**Defaults**: primary agent (responde al user) usa `full`. Sub-agents (reviewers, analyzers, fixers, build-resolvers) usan `lite` por default — sus outputs son intermediarios, el primary los sintetiza. Switch via `/caveman lite|full|ultra|wenyan-*`. **Auto-claridad** (salir de caveman): security warnings, confirmaciones irreversibles, multi-paso ambiguo, ambiguedad tecnica real, cuando el usuario pide clarificacion. Desactivar: "stop caveman" / "normal mode".
 
 ### 2. PRD-first (cualquier task no-trivial)
 

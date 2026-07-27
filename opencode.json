@@ -11,11 +11,12 @@
         "skill": "allow"
     },
     "tool_output": {
-        "max_lines": 200,
+        "max_lines": 150,
         "max_bytes": 8192
     },
     "compaction": {
-        "auto": true
+        "auto": true,
+        "tail_turns": 5
     },
     "mcp": {
         "context7": {
