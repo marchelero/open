@@ -1,7 +1,7 @@
 ---
 name: router
 description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 72-agent catalog AND the right skill from the 20-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
-triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check, crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto", "agent", "agents", "which agent", "what agent", "que agente", "subagent", "dispatch", "delegate", "skill", "skills", "route", "routing", "which skill", "what skill", "load", "knowledge"]
+triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check, explicar, explain, "show me", "muéstrame", "what is", "qué es", "how does", "cómo funciona", "what's in", "qué hay", list, lista, describe, describe, estructura, structure, overview, resumen, summary, crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto", "agent", "agents", "which agent", "what agent", "que agente", "subagent", "dispatch", "delegate", "skill", "skills", "route", "routing", "which skill", "what skill", "load", "knowledge"]
 ---
 
 # Router
@@ -32,6 +32,12 @@ Decide which **subagent** to invoke and/or which **knowledge skill** to load for
 - User already named the agent or skill explicitly ("run `code-reviewer`", "load `api-design`")
 - One-liner edit the primary can do directly (typo fix, single-line change)
 - User said "skip routing" or "just do it" in the current turn
+
+### Anti-patterns (DO NOT skip routing for these reasons)
+- **"X is simple enough I can answer directly"** → WRONG. If the answer requires reading > 1 file, route. Reading = exploration = route.
+- **"I'll just write a meta-analysis about how the work would be done"** → WRONG. The user asked for the work, not for an analysis of how the work would be done.
+- **"The verb is 'analyze' / 'explore' / 'overview' so it must be Q&A"** → WRONG. These are non-Q&A — they imply reading files and producing a report. Route to `explore` or `code-explorer`.
+- **"Duda si aplica o no"** → WRONG. If in doubt, route. The router skill decides; you don't.
 
 ## When to Activate
 
