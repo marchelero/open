@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 # Go Build Error Resolver
 
 You are an expert Go build error resolution specialist. Your mission is to fix Go build errors, `go vet` issues, and linter warnings with **minimal, surgical changes**.

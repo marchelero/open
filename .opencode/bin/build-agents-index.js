@@ -113,18 +113,35 @@ function renderMarkdown(agents) {
   lines.push('## See also');
   lines.push('');
 
-  // Auto-count skills and commands at index time
-  const skillsDir = path.join(__dirname, '..', '..', '.agents', 'skills');
-  const cmdsDir = path.join(__dirname, '..', 'commands');
-  const skillCount = fs.existsSync(skillsDir) ? fs.readdirSync(skillsDir).filter(f => {
-    try { return fs.statSync(path.join(skillsDir, f)).isDirectory(); } catch { return false; }
-  }).length : 0;
-  const cmdCount = fs.existsSync(cmdsDir) ? fs.readdirSync(cmdsDir).filter(f => f.endsWith('.md')).length : 0;
+  // Pull live counts from counts.js (single source of truth)
+  const countsPath = path.join(__dirname, 'counts.js');
+  let counts = null;
+  try { counts = require(countsPath).compute ? require(countsPath).compute() : null; } catch {}
+  const skillCount = counts ? counts.skills : 0;
+  const cmdCount = counts ? counts.commands : 0;
 
-  lines.push(`- [Skills index](../.agents/skills/) — ${skillCount} starter-pack skills (api-design, coding-standards, frontend-patterns, backend-patterns, error-handling, git-workflow, intent-driven-development, mcp-server-patterns, security-review, task-decomposition, tdd-workflow, verification-loop)`);
+  lines.push(`- [Skills index](../.agents/skills/) — ${skillCount} starter-pack skills (see \`.agents/skills/INDEX.md\` for the full list)`);
   lines.push(`- [Commands index](../.opencode/commands/) — ${cmdCount} starter-pack commands`);
   lines.push('- `/list-agents` — interactive catalog with filters');
   lines.push('');
+
+  // Counts block (auto-managed by counts.js) — see also .opencode/README.md + manual/README.md
+  if (counts) {
+    lines.push('---');
+    lines.push('');
+    lines.push('## Counts');
+    lines.push('');
+    lines.push('> Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.');
+    lines.push('> Regenerate: `node .opencode/bin/counts.js --update docs/AGENTS_INDEX.md`');
+    lines.push('');
+    lines.push(`- **${counts.agents}** agents (this file)`);
+    lines.push(`- **${counts.commands}** commands`);
+    lines.push(`- **${counts.skills}** skills`);
+    lines.push(`- **${counts.clis}** native CLIs`);
+    lines.push(`- **${counts.plugins_npm}** npm plugins + **${counts.plugins_local}** local plugin(s)`);
+    lines.push(`- **${counts.mcps_active}** active MCPs + **${counts.mcps_optional}** optional MCP(s)`);
+    lines.push('');
+  }
 
   return lines.join('\n');
 }

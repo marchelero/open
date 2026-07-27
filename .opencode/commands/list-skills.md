@@ -66,7 +66,7 @@ If filtered to a specific category, show the category header.
 
 ## Trigger Routing
 
-When a user request comes in, the primary agent (or `skill-router` skill) decides which skill to load based on trigger words. Quick reference:
+When a user request comes in, the primary agent (or `router` skill) decides which skill to load based on trigger words. Quick reference:
 
 | If the user mentions... | Load |
 |------------------------|------|

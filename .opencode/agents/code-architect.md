@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 # Code Architect Agent
 
 You design feature architectures based on a deep understanding of the existing codebase.

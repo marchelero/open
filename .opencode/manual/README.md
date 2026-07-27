@@ -4,14 +4,30 @@
 
 ## ¿Qué incluye?
 
-- **72 sub-agentes** en `.opencode/agents/` (revisores, planners, resolvers, especialistas por stack)
-- **20 skills portables** en `.agents/skills/` (patrones de API, TDD, seguridad, error handling, testing, refactoring, debugging, agent-router, etc.)
-- **72 slash commands** en `.opencode/commands/` (atajos recurrentes)
-- **2 servidores MCP** en `opencode.json`: `context7` (docs) + `playwright` (browser)
-- **3 plugins npm**: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
-- **1 plugin local** `.opencode/plugins/hookify.js` con 2 hooks (SecretBlocker + DestructiveWarner). Auto-cargado, zero install. Ver `.opencode/plugins/hookify.js` para detalles.
+<!-- COUNTS-START -->
+## Counts
+
+> Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
+> Regenerate: `node .opencode/bin/counts.js --update <files...>`
+
+- **72** agents (.opencode/agents)
+- **61** commands (.opencode/commands)
+- **20** skills (.agents/skills)
+- **10** native CLIs (.opencode/bin)
+- **3** npm plugins + **1** local plugin(s)
+- **2** active MCPs + **10** optional MCP(s)
+<!-- COUNTS-END -->
+
+Detalles:
+
+- Sub-agentes: revisores, planners, resolvers, especialistas por stack
+- Skills portables: patrones de API, TDD, seguridad, error handling, testing, refactoring, debugging, `router`, etc.
+- Slash commands: atajos recurrentes
+- MCPs activos: `context7` (docs) + `playwright` (browser)
+- Plugins npm: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
+- Plugin local: `.opencode/plugins/hookify.js` con 2 hooks (SecretBlocker + DestructiveWarner). Auto-cargado, zero install
 - **3 ejemplos downstream** en `.opencode/examples/` (node-api, python-data, react-app) — borrar tras grokking el pack
-- **10 CLIs nativos** en `.opencode/bin/` (cero dependencias, solo Node stdlib)
+- CLIs nativos: cero dependencias, solo Node stdlib (ver `node .opencode/bin/counts.js --json`)
 
 ## Instalación
 
@@ -39,7 +55,7 @@ cd /ruta/a/tu/proyecto && opencode .
 5. **Acciones destructivas requieren consentimiento explícito** — `git commit` / `push` / `rm -rf` / `DROP TABLE` necesitan verbo explícito en ESE turno.
 6. **Report + Audit (trazabilidad)** — flujos con agentes dejan artefactos en `docs/reports/` + `docs/audits/`. No se ejecutan agentes en el vacío.
 7. **Flow suggestions (primary proactivo)** — si tu request matchea `/flow-feature` / `/flow-bugfix` / `/flow-refactor` / `/flow-security`, el primary lo ofrece antes de implementar.
-8. **Mandatory Routing Protocol** — el primary auto-clasifica el request, carga `agent-router` + `skill-router` skills, y dispatcha 1-3 sub-agentes + 1-2 skills antes de responder, salvo pure Q&A.
+8. **Mandatory Routing Protocol** — el primary auto-clasifica el request, carga el `router` skill (merged agent + skill), y dispatcha 1-3 sub-agentes + 1-2 skills antes de responder, salvo pure Q&A.
 9. **Always-On Project Context** — el primary garantiza que `docs/PROJECT.md` esté vigente antes de cualquier task no-trivial. Auto-busca si falta, auto-refresca si stale (>7d).
 
 ## 9 comandos principales
@@ -101,7 +117,7 @@ node .opencode/bin/refresh-project.js --status
 
 ## Documentación adicional
 
-- **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención (legacy; el agent-router skill es la nueva forma automática)
+- **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención (legacy; el `router` skill es la nueva forma automática)
 - **[COMMANDS.md](./COMMANDS.md)** — los 72 slash commands agrupados por intención
 - **[EXAMPLES.md](./EXAMPLES.md)** — 6 flujos completos de proyectos reales
 - **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos

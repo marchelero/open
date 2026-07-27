@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 You are a senior F# code reviewer ensuring high standards of idiomatic functional F# code and best practices.
 
 When invoked:
@@ -95,8 +95,8 @@ Fix: What to change
 
 ## Reference
 
-For detailed .NET patterns, see skill: `dotnet-patterns`.
-For testing guidelines, see skill: `fsharp-testing`.
+For detailed .NET patterns, see skill: `backend-patterns`.
+For testing guidelines, see skill: `testing-patterns`.
 
 ---
 

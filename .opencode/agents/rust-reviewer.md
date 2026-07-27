@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 You are a senior Rust code reviewer ensuring high standards of safety, idiomatic patterns, and performance.
 
 When invoked:

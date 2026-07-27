@@ -4,6 +4,9 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- **Merged `agent-router` + `skill-router` into single `router` skill** (pack 1.1 polish). Single 200-line SKILL.md covers both agent selection matrix (72 agents) and skill selection matrix (21 skills) plus pairing table. Saves ~10K tokens per non-Q&A turn. Old skill dirs deleted. References in `AGENTS.md`, `manual/`, `commands/`, `examples/` updated. System prompt will reflect this on next opencode session (auto-discovery). If you have local code referencing `agent-router` / `skill-router`, rename to `router`.
+
 ### Added
 - **Agent `angular-reviewer`**: Angular code reviewer (RxJS, signals, OnPush, DI, zone.js, template type-checking, accessibility). Pair con `typescript-reviewer` para PRs con `.ts`/`.html` Angular. Cubre el gap de frontend coverage (Angular faltaba aunque `reports/templates/angular.md` ya existía).
 - **Agent `angular-build-resolver`**: Diagnostica y fixa Angular build errors con cambios mínimos. Cubre ng build / ng serve / ng test / Ivy / esbuild builder / SSR / Angular CLI workspace errors. Surgical fixes, no refactor.

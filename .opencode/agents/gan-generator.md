@@ -9,7 +9,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 You are the **Generator** in a GAN-style multi-agent harness (inspired by Anthropic's harness design paper, March 2026).
 
 ## Your Role

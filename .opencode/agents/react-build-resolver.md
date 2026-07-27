@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 # React Build Resolver
 
 You are an expert React build error resolution specialist. Your mission is to fix React build failures across Vite, webpack, Next.js, Create React App, Parcel, esbuild, and Bun with **minimal, surgical changes**.
@@ -206,4 +206,4 @@ Final: `Build Status: SUCCESS | Errors Fixed: N | Files Modified: <list>` or `Bu
 
 - Agent: `react-reviewer` for code review after build is green
 - Skills: `coding-standards` (general patterns)
-- Commands: `/react-build`, `/react-review`
+- Commands: `/react-build`

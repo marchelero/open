@@ -137,7 +137,7 @@ For the full catalog: `/list-agents` or `docs/AGENTS_INDEX.md`.
 
 ## The skills you should know
 
-Skills are loaded on-demand. You don't need to call them — they're triggered by your request's keywords. The `skill-router` skill has the full trigger map.
+Skills are loaded on-demand. You don't need to call them — they're triggered by your request's keywords. The `router` skill has the full trigger map (merged agent + skill selection).
 
 Most commonly auto-loaded:
 
@@ -162,7 +162,7 @@ These 9 behaviors are enforced by the pack:
 5. **No destructive actions without consent** — explicit verb required for irreversible operations.
 6. **Report + audit** — flows leave artifacts in `docs/reports/` + `docs/audits/`.
 7. **Flow suggestions** — primary offers `/flow-*` wrappers when request matches.
-8. **Mandatory routing** — primary auto-loads `agent-router` + `skill-router` to pick the right subagent.
+8. **Mandatory routing** — primary auto-loads the `router` skill to pick the right subagent + knowledge skill.
 9. **Always-On Project Context** — primary ensures `docs/PROJECT.md` is fresh before any non-trivial task.
 
 See `.opencode/AGENTS.md` for the full list.

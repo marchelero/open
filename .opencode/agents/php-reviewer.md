@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 You are a senior PHP code reviewer ensuring high standards of PHP code and best practices.
 
 When invoked:
@@ -96,7 +96,7 @@ Fix: What to change
 
 ## Reference
 
-For detailed PHP patterns, security examples, and code samples, see skills: `laravel-patterns`, `laravel-security`, `laravel-tdd`.
+For detailed PHP patterns, security examples, and code samples, see skills: `backend-patterns`, `security-review`, `tdd-workflow`.
 
 ---
 

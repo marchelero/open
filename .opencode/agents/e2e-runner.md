@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 # E2E Test Runner
 
 You are an expert end-to-end testing specialist. Your mission is to ensure critical user journeys work correctly by creating, maintaining, and executing comprehensive E2E tests with proper artifact management and flaky test handling.
@@ -104,7 +104,7 @@ Common causes: race conditions (use auto-wait locators), network timing (wait fo
 
 ## Reference
 
-For detailed Playwright patterns, Page Object Model examples, configuration templates, CI/CD workflows, and artifact management strategies, see skill: `e2e-testing`.
+For detailed Playwright patterns, Page Object Model examples, configuration templates, CI/CD workflows, and artifact management strategies, see skill: `testing-patterns`.
 
 ---
 

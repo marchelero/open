@@ -168,5 +168,5 @@ Then ask the user to clarify or pick.
 - `/help <section>` — for overview of commands/agents/skills
 - `/list-agents <keyword>` — for browsing agent catalog
 - `/list-skills <keyword>` — for browsing skill catalog
-- `skill-router` skill — for skill-only routing (use when the request clearly maps to one of 13 skills)
+- `router` skill — for skill-only routing (use when the request clearly maps to one skill and you don't need an agent)
 - This command is the superset of all of them.

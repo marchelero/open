@@ -5,7 +5,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 # Conversation Analyzer Agent
 
 You analyze conversation history to identify problematic Claude Code behaviors that should be prevented with hooks.

@@ -1,6 +1,6 @@
 # COMMANDS
 
-> 69 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
+> 61 slash commands, agrupados por intención. Igual que `ROUTE.md` pero para comandos.
 > El archivo vive en `.opencode/commands/<nombre>.md` con frontmatter `description` y `agent`.
 
 ## "Quiero clarificar antes de implementar"
@@ -37,17 +37,8 @@
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
-| `/react-review` | Revisa código React/JSX. | react-reviewer |
 | `/react-build` | Arregla errores de build de React. | react-build-resolver |
 | `/react-test` | Ejecuta tests de React. | tdd-guide |
-
-### Flutter/Dart
-
-| Comando | Qué hace | Agent |
-|---------|----------|-------|
-| `/flutter-review` | Revisa código Flutter/Dart. | flutter-reviewer |
-| `/flutter-build` | Arregla errores de build de Flutter. | dart-build-resolver |
-| `/flutter-test` | Ejecuta tests de Flutter. | tdd-guide |
 
 ### Go
 
@@ -69,23 +60,19 @@
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
-| `/cpp-review` | Revisa código C++. | cpp-reviewer |
-| `/cpp-build` | Arregla errores de build de C++. | cpp-build-resolver |
-| `/cpp-test` | Ejecuta tests de C++. | tdd-guide |
+| _(removed in 1.1: cpp-review/cpp-build/cpp-test eran 5-line aliases del router; el `cpp-*-resolver` agent se dispatcha via /route o "fix C++ build error")_ |
 
 ### Kotlin
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
-| `/kotlin-review` | Revisa código Kotlin. | kotlin-reviewer |
-| `/kotlin-build` | Arregla errores de build de Kotlin/Gradle. | kotlin-build-resolver |
-| `/kotlin-test` | Ejecuta tests de Kotlin. | tdd-guide |
+| _(removed in 1.1: kotlin-review/kotlin-build/kotlin-test eran 5-line aliases del router)_ |
 
 ### Python
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
-| `/python-review` | Revisa código Python. | python-reviewer |
+| _(removed in 1.1: python-review era 5-line alias del router; el `python-reviewer` agent se dispatcha via /route)_ |
 
 ### Build genérico
 
@@ -140,8 +127,8 @@
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
 | `/help` | Overview del pack: comandos principales, agentes, skills, convenciones. | build |
-| `/list-agents` | Lista los 69 agents con descripción y triggers. Filtros: keyword, categoría. | build |
-| `/list-skills` | Lista las 16 skills con descripción y triggers. Filtros: keyword. | build |
+| `/list-agents` | Lista los 72 agents con descripción y triggers. Filtros: keyword, categoría. | build |
+| `/list-skills` | Lista las 20 skills con descripción y triggers. Filtros: keyword. | build |
 | `/route` | Sugiere el mejor sub-agente + skills para un request libre. Útil como consulta antes de dispatchar. | build |
 | `/pack-doctor` | Diagnostica la salud del pack (10 checks: frontmatter, duplicados, permalinks, etc). | build |
 

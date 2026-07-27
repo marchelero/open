@@ -115,6 +115,18 @@ function listOptionals(template) {
   }))
 }
 
+function getMcpType(mcpDef, template) {
+  return mcpDef.type || template?._meta?.defaults?.type || "local";
+}
+
+function categorize(mcpName, template) {
+  const cats = template?._meta?.categories || {};
+  for (const [cat, members] of Object.entries(cats)) {
+    if (members.includes(mcpName)) return cat;
+  }
+  return "other";
+}
+
 function listActive(opencode) {
   const active = opencode?.mcp || {}
   return Object.keys(active).map((name) => ({
@@ -131,10 +143,21 @@ function showList(template) {
     return
   }
   console.log("\n  Available optional MCPs:\n")
+  // group by category for nicer UX
+  const byCat = new Map()
   for (const m of optionals) {
-    console.log(`  • ${m.name}`)
-    console.log(`    ${m.description}`)
-    console.log(`    Use when: ${m.useWhen}\n`)
+    const cat = categorize(m.name, template)
+    if (!byCat.has(cat)) byCat.set(cat, [])
+    byCat.get(cat).push(m)
+  }
+  for (const [cat, list] of byCat) {
+    console.log(`  [${cat}]`)
+    for (const m of list) {
+      console.log(`    - ${m.name}`)
+      console.log(`      ${m.description}`)
+      console.log(`      Use when: ${m.useWhen}`)
+    }
+    console.log()
   }
   console.log("  Activate with: /setup-mcp <name>  (or `node .opencode/bin/setup-mcp.js activate <name>`)\n")
 }
@@ -145,12 +168,22 @@ function showStatus(opencode, template) {
   console.log("\n  === MCP Status ===\n")
   console.log(`  Active MCPs (${active.length}):`)
   for (const a of active) {
-    console.log(`    • ${a.name}  (${a.type})`)
+    console.log(`    - ${a.name}  (${a.type})`)
   }
   console.log(`\n  Optional MCPs (${optionals.length}):`)
+  // group by category
+  const byCat = new Map()
   for (const o of optionals) {
-    const isActive = active.some((a) => a.name === o.name)
-    console.log(`    ${isActive ? "[x]" : "[ ]"}  ${o.name}`)
+    const cat = categorize(o.name, template)
+    if (!byCat.has(cat)) byCat.set(cat, [])
+    byCat.get(cat).push(o)
+  }
+  for (const [cat, list] of byCat) {
+    console.log(`  [${cat}]`)
+    for (const o of list) {
+      const isActive = active.some((a) => a.name === o.name)
+      console.log(`    ${isActive ? "[x]" : "[ ]"}  ${o.name}`)
+    }
   }
   console.log("")
 }
@@ -199,7 +232,7 @@ async function activate(name, template, opencode) {
   const bak = backup(OPENCODE_JSON)
   if (!opencode.mcp) opencode.mcp = {}
   opencode.mcp[name] = {
-    type: mcpDef.type,
+    type: getMcpType(mcpDef, template),
     command,
     ...(Object.keys(env).length > 0 ? { env } : {})
   }
@@ -252,7 +285,24 @@ async function interactive(template, opencode) {
   }
 
   console.log("\n  Optional MCPs available to activate:\n")
-  inactive.forEach((m, i) => console.log(`  ${i + 1}) ${m.name}  —  ${m.description}`))
+  // group by category
+  const byCat = new Map()
+  inactive.forEach((m, i) => {
+    const cat = categorize(m.name, template)
+    if (!byCat.has(cat)) byCat.set(cat, [])
+    byCat.get(cat).push({ m, i })
+  })
+  let n = 0
+  const flatIndex = new Map()
+  for (const [cat, list] of byCat) {
+    console.log(`  [${cat}]`)
+    for (const { m, i } of list) {
+      n++
+      flatIndex.set(n, { m, originalIndex: i })
+      console.log(`    ${n}) ${m.name}  —  ${m.description}`)
+    }
+    console.log()
+  }
   console.log(`  d) disable an active one`)
   console.log(`  q) quit\n`)
 
@@ -280,11 +330,12 @@ async function interactive(template, opencode) {
   }
 
   const idx = parseInt(choice, 10) - 1
-  if (Number.isNaN(idx) || idx < 0 || idx >= inactive.length) {
+  const picked = flatIndex.get(idx + 1)
+  if (!picked) {
     console.log("  invalid choice. no changes.\n")
     return
   }
-  await activate(inactive[idx].name, template, opencode)
+  await activate(picked.m.name, template, opencode)
 }
 
 // ---------- entrypoint ----------

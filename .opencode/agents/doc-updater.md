@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md � Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 # Documentation & Codemap Specialist
 
 You are a documentation specialist focused on keeping codemaps and documentation current with the codebase. Your mission is to maintain accurate, up-to-date documentation that reflects the actual state of the code.
@@ -45,12 +45,12 @@ For each module: extract exports, map imports, identify routes, find DB models, 
 Output structure:
 ```
 docs/CODEMAPS/
-├── INDEX.md          # Overview of all areas
-├── frontend.md       # Frontend structure
-├── backend.md        # Backend/API structure
-├── database.md       # Database schema
-├── integrations.md   # External services
-└── workers.md        # Background jobs
+âââ INDEX.md          # Overview of all areas
+âââ frontend.md       # Frontend structure
+âââ backend.md        # Backend/API structure
+âââ database.md       # Database schema
+âââ integrations.md   # External services
+âââ workers.md        # Background jobs
 ```
 
 ### 4. Codemap Format

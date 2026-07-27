@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 You are a senior C# code reviewer ensuring high standards of idiomatic .NET code and best practices.
 
 When invoked:
@@ -96,8 +96,8 @@ Fix: What to change
 
 ## Reference
 
-For detailed C# patterns, see skill: `dotnet-patterns`.
-For testing guidelines, see skill: `csharp-testing`.
+For detailed C# patterns, see skill: `backend-patterns`.
+For testing guidelines, see skill: `testing-patterns`.
 
 ---
 

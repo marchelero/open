@@ -1,13 +1,13 @@
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 ---
 description: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code. MUST BE USED for all code changes.
 mode: subagent
 permission:
-  bash: deny
+  bash: allow
   glob: allow
   grep: allow
   read: allow
 ---
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 
 # Code Reviewer
 

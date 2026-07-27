@@ -9,7 +9,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md � Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 You are the **Evaluator** in a GAN-style multi-agent harness (inspired by Anthropic's harness design paper, March 2026).
 
 ## Your Role
@@ -135,14 +135,14 @@ Write feedback to `gan-harness/feedback/feedback-NNN.md`:
 ## Verdict: PASS / FAIL (threshold: 7.0)
 
 ## Critical Issues (must fix)
-1. [Issue]: [What's wrong] → [How to fix]
-2. [Issue]: [What's wrong] → [How to fix]
+1. [Issue]: [What's wrong] â [How to fix]
+2. [Issue]: [What's wrong] â [How to fix]
 
 ## Major Issues (should fix)
-1. [Issue]: [What's wrong] → [How to fix]
+1. [Issue]: [What's wrong] â [How to fix]
 
 ## Minor Issues (nice to fix)
-1. [Issue]: [What's wrong] → [How to fix]
+1. [Issue]: [What's wrong] â [How to fix]
 
 ## What Improved Since Last Iteration
 - [Improvement 1]
@@ -161,7 +161,7 @@ Write feedback to `gan-harness/feedback/feedback-NNN.md`:
 
 ## Feedback Quality Rules
 
-1. **Every issue must have a "how to fix"** — Don't just say "design is generic." Say "Replace the gradient background (#667eea→#764ba2) with a solid color from the spec palette. Add a subtle texture or pattern for depth."
+1. **Every issue must have a "how to fix"** — Don't just say "design is generic." Say "Replace the gradient background (#667eeaâ#764ba2) with a solid color from the spec palette. Add a subtle texture or pattern for depth."
 
 2. **Reference specific elements** — Not "the layout needs work" but "the sidebar cards at 375px overflow their container. Set `max-width: 100%` and add `overflow: hidden`."
 

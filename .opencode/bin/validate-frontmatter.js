@@ -312,6 +312,59 @@ function validateCrossRefs() {
   if (checked > 0) log('ok', `cross-refs (${checked} checked)`);
 }
 
+function validateBodySkillRefs() {
+  // Build the catalog of known skill names from .agents/skills/
+  const skillNames = listDirs(SKILLS_DIR).map(d => path.basename(d));
+  const skillSet = new Set(skillNames);
+  // Find positions of "skill:" / "skills:" (with optional preceding word
+  // like "Reference", "see", "See also", "Use"). Then within the rest of
+  // the line, extract any backticked lowercase-hyphenated names and check
+  // each against the skill catalog. Handles comma-separated lists AND
+  // "X and Y" / "X or Y" patterns.
+  const skillKeywordPattern = /\b(?:[A-Za-z]+\s+)?[Ss]kills?\s*:/g;
+  const nameInBackticks = /`([a-z][a-z0-9-]+)`/g;
+  let checked = 0, valid = 0;
+  const agentFiles = listFiles(AGENTS_DIR, '.md');
+  for (const file of agentFiles) {
+    const base = path.basename(file, '.md');
+    if (base === 'INDEX') continue;
+    const content = readFile(file);
+    if (!content) continue;
+    // Extract body (after frontmatter close `---` on its own line)
+    const stripped = content.replace(/^(?:<!--[^-]*(?:-[^-]+)*-->\s*\n)+\s*/, '');
+    const fmEnd = stripped.indexOf('\n---', 3);
+    if (fmEnd === -1) continue;
+    let body = stripped.substring(fmEnd + 4);
+    // Strip only fenced code blocks (keep inline backticks — our regex needs them)
+    body = body.replace(/```[\s\S]*?```/g, '');
+    let m;
+    skillKeywordPattern.lastIndex = 0;
+    const seen = new Set();
+    while ((m = skillKeywordPattern.exec(body)) !== null) {
+      // After "skill(s):", look at the rest of the line
+      const after = m.index + m[0].length;
+      const lineEnd = body.indexOf('\n', after);
+      const slice = body.substring(after, lineEnd === -1 ? after + 500 : lineEnd);
+      let nm;
+      nameInBackticks.lastIndex = 0;
+      while ((nm = nameInBackticks.exec(slice)) !== null) {
+        const name = nm[1];
+        if (seen.has(name)) continue;
+        seen.add(name);
+        checked++;
+        if (skillSet.has(name)) {
+          valid++;
+        } else {
+          log('warn', `body-ref/${base}`, `references missing skill \`${name}\``);
+        }
+      }
+    }
+  }
+  if (checked > 0) {
+    log('ok', `body-refs`, `(${checked} skill refs checked, ${valid} valid, ${checked - valid} missing)`);
+  }
+}
+
 function main() {
   console.log('Frontmatter Validation');
   console.log('======================\n');
@@ -337,6 +390,10 @@ function main() {
 
   console.log('[Cross-references]');
   validateCrossRefs();
+  console.log('');
+
+  console.log('[Body skill refs]');
+  validateBodySkillRefs();
   console.log('');
 
   console.log('Summary');

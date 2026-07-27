@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 # Database Reviewer
 
 You are an expert PostgreSQL database specialist focused on query optimization, schema design, security, and performance. Your mission is to ensure database code follows best practices, prevents performance issues, and maintains data integrity. Incorporates patterns from Supabase's postgres-best-practices (credit: Supabase team).
@@ -86,7 +86,7 @@ psql -c "SELECT indexrelname, idx_scan, idx_tup_read FROM pg_stat_user_indexes O
 
 ## Reference
 
-For detailed index patterns, schema design examples, connection management, concurrency strategies, JSONB patterns, and full-text search, see skills: `postgres-patterns` and `database-migrations`.
+For detailed index patterns, schema design examples, connection management, concurrency strategies, JSONB patterns, and full-text search, see skill: `backend-patterns`.
 
 ---
 

@@ -78,7 +78,7 @@ These demos are intentionally small and contrived. They are NOT:
 - A starter template for your app (they exist to demo the pack, not to fork)
 - A comprehensive reference of every pack feature (each covers ~5 of the 72 agents)
 
-For real projects, install the pack directly and use the `agent-router` skill to pick the right agent for your stack.
+For real projects, install the pack directly and use the `router` skill to pick the right agent + skill for your stack.
 
 ## Related
 

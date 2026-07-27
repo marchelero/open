@@ -144,10 +144,31 @@ function renderMarkdown(skills) {
   lines.push('');
   lines.push('## See also');
   lines.push('');
-  lines.push('- [Agents index](../../docs/AGENTS_INDEX.md) — 69 starter-pack agents');
-  lines.push('- [Commands index](../../.opencode/commands/) — 63 starter-pack commands');
+  lines.push('- [Agents index](../../docs/AGENTS_INDEX.md) — auto-generated full index of all agents');
+  lines.push('- [Commands index](../../.opencode/commands/) — slash commands by intent');
   lines.push('- `/list-skills` — interactive catalog with filters');
   lines.push('');
+
+  // Counts block (auto-managed by counts.js) — see also .opencode/README.md + manual/README.md
+  const countsPath = path.join(__dirname, 'counts.js');
+  let counts = null;
+  try { counts = require(countsPath).compute ? require(countsPath).compute() : null; } catch {}
+  if (counts) {
+    lines.push('---');
+    lines.push('');
+    lines.push('## Counts');
+    lines.push('');
+    lines.push('> Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.');
+    lines.push('> Regenerate: `node .opencode/bin/counts.js --update .agents/skills/INDEX.md`');
+    lines.push('');
+    lines.push(`- **${counts.agents}** agents`);
+    lines.push(`- **${counts.commands}** commands`);
+    lines.push(`- **${counts.skills}** skills (this file)`);
+    lines.push(`- **${counts.clis}** native CLIs`);
+    lines.push(`- **${counts.plugins_npm}** npm plugins + **${counts.plugins_local}** local plugin(s)`);
+    lines.push(`- **${counts.mcps_active}** active MCPs + **${counts.mcps_optional}** optional MCP(s)`);
+    lines.push('');
+  }
 
   return lines.join('\n');
 }

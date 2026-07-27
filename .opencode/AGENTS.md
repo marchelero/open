@@ -96,7 +96,7 @@ commiteo? (s/n)
 **Protocolo (6 pasos, obligatorio)**:
 1. **Classify intent**: extraer (action verb, domain noun, stack hint, stage, risk). Una linea.
 2. **Decide skip-or-route**: pure Q&A → responder. Sino, continuar.
-3. **Load routers**: cargar `agent-router` + `skill-router` skills (viven en `<available_skills>`, primary los activa on-demand).
+3. **Load routers**: cargar `router` skill (vive en `<available_skills>`, primary los activa on-demand). Cubre agent + skill selection en un solo load.
 4. **Pick matches**: 1 primary agent + 1-2 alternates; 1-2 skills max.
 5. **State + invoke**: anunciar routing brevemente (1-2 lineas) y dispatchar.
 6. **Skip naming ceremony** si el user ya sabe (pidio explicitamente).
@@ -107,7 +107,7 @@ commiteo? (s/n)
 
 **Pairing tipico**: `{stack}-reviewer` → `coding-standards`/`error-handling` · `security-reviewer` → `security-review`/`backend-patterns` · `tdd-guide` → `tdd-workflow` · `planner` → `intent-driven-development`/`task-decomposition` · `prd-agent` → `intent-driven-development` · `code-architect` → `frontend-patterns`/`backend-patterns` · `refactor-cleaner` → `coding-standards` · `docs-lookup` → (Context7 MCP, no skill).
 
-**Integration con #7 (flows)**: routing decide agent/skill primero, flow suggestions decide el wrapper `/flow-*` despues. No compiten. Tables completas en `agent-router` + `skill-router` skills. Superset cross-surface: `/route <request>` command.
+**Integration con #7 (flows)**: routing decide agent/skill primero, flow suggestions decide el wrapper `/flow-*` despues. No compiten. Tables completas en `router` skill. Superset cross-surface: `/route <request>` command.
 
 ### 9. Always-On Project Context (PROJECT.md as bootstrap gate)
 

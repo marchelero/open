@@ -119,9 +119,8 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 ├── CHANGELOG.md                     historial de versiones
 ├── .gitignore                       ignora node_modules, .opencode/state, .opencode/node_modules, OS junk
 ├── .agents/                         skills del proyecto (pack + user-installed)
-│   └── skills/                      16 skills portables (<nombre>/SKILL.md)
-│       ├── agent-router/            matriz intent → agent (auto-loaded por primary)
-│       ├── skill-router/            matriz intent → skill (auto-loaded por primary)
+│   └── skills/                      20 skills portables (<nombre>/SKILL.md)
+│       ├── router/                  matriz intent → agent + skill (merged, auto-loaded por primary)
 │       ├── api-design/
 │       ├── backend-patterns/
 │       ├── caveman/
@@ -169,7 +168,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
     ├── manual/                      documentación del pack (lo que estás leyendo)
     │   ├── README.md                punto de entrada (español)
     │   ├── START-HERE.md            5-minute orientation (inglés)
-    │   ├── ROUTE.md                 sub-agentes por intención (legacy; superseded por agent-router)
+    │   ├── ROUTE.md                 sub-agentes por intención (legacy; superseded por `router` skill)
     │   ├── COMMANDS.md              slash commands por intención
     │   ├── EXAMPLES.md              6 flujos completos
     │   ├── ARCH.md                  este archivo

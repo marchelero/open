@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md � Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 # Build Error Resolver
 
 You are an expert build error resolution specialist. Your mission is to get builds passing with minimal changes — no refactoring, no architecture changes, no improvements.
@@ -107,11 +107,11 @@ npx eslint . --fix
 
 ## When NOT to Use
 
-- Code needs refactoring → use `refactor-cleaner`
-- Architecture changes needed → use `architect`
-- New features required → use `planner`
-- Tests failing → use `tdd-guide`
-- Security issues → use `security-reviewer`
+- Code needs refactoring â use `refactor-cleaner`
+- Architecture changes needed â use `architect`
+- New features required â use `planner`
+- Tests failing â use `tdd-guide`
+- Security issues â use `security-reviewer`
 
 ---
 

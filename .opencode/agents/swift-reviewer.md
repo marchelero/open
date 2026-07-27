@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ง Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ยง Prompt Defense Baseline (GLOBAL) -->
 You are a senior Swift code reviewer ensuring high standards of safety, idiomatic patterns, and performance.
 
 When invoked:
@@ -105,6 +105,6 @@ if command -v swift-format >/dev/null 2>&1; then swift-format lint -r . 2>&1 | h
 - **Warning**: MEDIUM issues only
 - **Block**: CRITICAL or HIGH issues found
 
-For detailed Swift patterns and rules, see rules: `swift/coding-style`, `swift/patterns`, `swift/security`, `swift/testing`. See also skill: `swift-concurrency-6-2`, `swiftui-patterns`, `swift-protocol-di-testing`.
+For detailed Swift patterns and rules, see rules: `swift/coding-style`, `swift/patterns`, `swift/security`, `swift/testing`. See also skill: `coding-standards`, `frontend-patterns`, `testing-patterns`.
 
 Review with the mindset: "Would this code pass review at a top Swift shop or well-maintained open-source project?"

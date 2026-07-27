@@ -1,15 +1,25 @@
 {
   "_meta": {
     "description": "Optional MCPs (NOT loaded by default). Run `/setup-mcp` to activate any of these. Activation patches `opencode.json` and restarts opencode to take effect.",
-    "rationale": "100% value when needed, 0% cost (no boot slowdown, no leaked tokens) when not. The active MCPs (context7, playwright) stay loaded for everyone; these opt-ins are user-triggered.",
-    "discoverable_via": "/setup-mcp --list"
+    "rationale": "100% value when needed, 0% cost (no boot slowdown, no leaked tokens) when not. The active MCPs (context7, playwright) stay loaded for everyone; these opt-ins are user-triggered. This file is only read by `node .opencode/bin/setup-mcp.js` (manual command); opencode itself never parses it.",
+    "schema_version": 2,
+    "discoverable_via": "/setup-mcp --list",
+    "categories": {
+      "code-hosting": ["github", "gitlab"],
+      "data":         ["postgres", "filesystem"],
+      "observability":["sentry"],
+      "productivity": ["linear", "notion", "slack"],
+      "web":          ["brave-search", "fetch"]
+    },
+    "defaults": {
+      "type": "local"
+    }
   },
   "optional_mcps": [
     {
       "name": "github",
       "description": "Read GitHub issues, PRs, code search, repo metadata directly from the agent. Replaces manual `gh` CLI invocations with structured MCP tools (list_issues, get_pull_request, search_code, etc).",
       "package": "@modelcontextprotocol/server-github",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -28,7 +38,6 @@
       "name": "postgres",
       "description": "Read-only SQL queries against a PostgreSQL database. Useful for debugging production issues, validating schema, running ad-hoc analytics. By default the connection is read-only (separate role recommended).",
       "package": "@modelcontextprotocol/server-postgres",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -48,7 +57,6 @@
       "name": "filesystem",
       "description": "Read/write/search files and directories on the local filesystem, with allowlist of permitted paths. Useful when the agent needs to operate outside the project root (e.g. /tmp, a sibling monorepo, a shared docs dir).",
       "package": "@modelcontextprotocol/server-filesystem",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -68,7 +76,6 @@
       "name": "sentry",
       "description": "Query Sentry for unresolved issues, error frequency, stack traces, and recent events. Triage production incidents without leaving the agent.",
       "package": "@modelcontextprotocol/server-sentry",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -89,7 +96,6 @@
       "name": "linear",
       "description": "Read and update Linear issues, projects, cycles, and teams. Useful for agents that need to track work alongside the user (creating follow-up issues from PR review, updating ticket status, fetching acceptance criteria).",
       "package": "@modelcontextprotocol/server-linear",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -110,7 +116,6 @@
       "name": "notion",
       "description": "Read and search Notion pages, databases, and blocks. Useful for grounding the agent in team docs, design specs, runbooks, or product requirements.",
       "package": "@modelcontextprotocol/server-notion",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -131,7 +136,6 @@
       "name": "slack",
       "description": "Read Slack channels, threads, and direct messages. Post messages on behalf of the user. Useful for triaging notifications, searching history, and posting incident updates.",
       "package": "@modelcontextprotocol/server-slack",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -152,7 +156,6 @@
       "name": "brave-search",
       "description": "Web search via Brave. Useful for up-to-date information that isn't in the agent's training data (recent CVEs, latest library versions, breaking changes, current best practices).",
       "package": "@modelcontextprotocol/server-brave-search",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -173,7 +176,6 @@
       "name": "fetch",
       "description": "Fetch any URL and return its content as markdown. Generic HTTP fetcher with HTML-to-markdown conversion. Useful for reading arbitrary web pages, API docs not in Context7, blog posts, RFCs.",
       "package": "@modelcontextprotocol/server-fetch",
-      "type": "local",
       "command": [
         "npx",
         "-y",
@@ -186,7 +188,6 @@
       "name": "gitlab",
       "description": "Read GitLab issues, MRs, code search, project metadata. Same shape as the GitHub MCP but for self-hosted or gitlab.com projects. Useful for teams on GitLab instead of GitHub.",
       "package": "@modelcontextprotocol/server-gitlab",
-      "type": "local",
       "command": [
         "npx",
         "-y",
