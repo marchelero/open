@@ -119,18 +119,22 @@ const MANIFEST_FILES = [
   { name: '*.csproj',      type: 'csproj' },
 ];
 
-function detectManifest() {
+function detectManifest(isPack) {
   for (const m of MANIFEST_FILES) {
     if (m.name.includes('*')) {
-      // glob-ish: list ./*.csproj
+      // glob-ish: list ./*.csproj (root only — never look inside .opencode/ for app manifests)
       const matches = listDir(ROOT, f => f.endsWith('.csproj'));
       if (matches.length > 0) {
         return { type: m.type, file: matches[0], data: readJson(path.join(ROOT, matches[0])) || {} };
       }
     } else {
-      // Check both root and .opencode/ (opencode pack convention)
-      const roots = [ROOT];
-      if (fs.existsSync(path.join(ROOT, '.opencode'))) roots.push(path.join(ROOT, '.opencode'));
+      // If this IS the opencode pack itself, check root first then .opencode/ (so the pack's
+      // own .opencode/package.json is found). If this is a user project with the pack installed,
+      // check root ONLY — never look inside .opencode/ for the user's app manifest, because
+      // .opencode/ contains the installed PACK, not the user's app.
+      const roots = isPack
+        ? [ROOT, path.join(ROOT, '.opencode')]
+        : [ROOT];
       for (const r of roots) {
         const p = path.join(r, m.name);
         if (fs.existsSync(p)) {
@@ -157,8 +161,8 @@ function detectOpencodePack() {
 }
 
 function detect() {
-  const manifest = detectManifest();
   const isPack = detectOpencodePack();
+  const manifest = detectManifest(isPack);
 
   const data = {
     name: null,
@@ -288,6 +292,30 @@ function detect() {
     if (nameMatch) data.name = nameMatch[1].split('/').pop();
     data.stack.runtime = 'go';
     data.stack.packageManager = 'go mod';
+  } else if (manifest && manifest.type === 'pubspec') {
+    // Flutter / Dart project (pubspec.yaml is at root, not .opencode/)
+    const ps = manifest.data;
+    const nameMatch = ps.match(/^name\s*:\s*(\S+)/m);
+    if (nameMatch) data.name = nameMatch[1];
+    const descMatch = ps.match(/^description\s*:\s*(.+)$/m);
+    if (descMatch) data.description = descMatch[1].replace(/^["']|["']$/g, '');
+    const hasFlutter = /^\s*flutter\s*:\s*$/m.test(ps) && /sdk:\s*flutter/.test(ps);
+    const hasDart = /^\s*dart\s*:/m.test(ps) || /^\s*sdk\s*:\s*["']dart/.test(ps);
+    if (hasFlutter) {
+      data.primaryLanguage = 'Dart';
+      data.type = 'mobile';
+      data.stack.language = 'Dart';
+      data.stack.framework = 'Flutter';
+      data.stack.runtime = 'Dart SDK (managed by flutter)';
+      data.stack.packageManager = 'flutter pub';
+    } else if (hasDart) {
+      data.primaryLanguage = 'Dart';
+      data.type = 'cli';
+      data.stack.language = 'Dart';
+      data.stack.framework = 'Dart';
+      data.stack.runtime = 'Dart SDK';
+      data.stack.packageManager = 'dart pub';
+    }
   }
 
   // env vars
