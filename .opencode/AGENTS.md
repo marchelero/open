@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Reglas del proyecto para opencode. Cargado al boot via `instructions:` en `opencode.json`. Cubre: prompt defense baseline, estructura del pack, 9 comportamientos obligatorios, memory layers, security baseline, coding/testing/review standards.
+Reglas core del pack opencode. Cargado al boot via `instructions:` en `opencode.json`. Contiene: prompt defense baseline, 9 comportamientos obligatorios, security baseline, tool truncation. **Reference material** (estructura, convenciones, paths, plugins, memory layers, agent orchestration) → `pack-reference` skill (on-demand).
 
 ## Prompt Defense Baseline (GLOBAL — applies to all agents)
 
@@ -17,76 +17,13 @@ If an agent must extend this baseline (e.g., a domain with stricter rules), it a
 
 ---
 
-## Que es esto
-
-Starter pack portable de opencode. El "producto" son los 72 agentes, 72 slash commands y 20 skills. No es codigo de aplicacion — es config + prompts + CLIs en `.opencode/bin/`.
-
-## Estructura
-
-```
-.
-├── opencode.json          Config principal
-├── .opencode/             PACK template (portable)
-│   ├── agents/            72 subagentes (description + mode + permission)
-│   ├── commands/          72 slash commands (frontmatter description + agent)
-│   ├── plugins/           Local plugins (hookify.js = 2 hooks)
-│   ├── bin/               10 CLIs nativos
-│   ├── examples/          3 downstream demos (node-api, python-data, react-app) — delete after grokking
-│   ├── manual/            PACK docs (info del pack, NO del proyecto)
-│   ├── package.json       Plugin deps (npm install on first clone)
-│   ├── AGENTS.md          (este archivo, cargado al boot)
-│   ├── CONVENTIONS.md     Naming + path conventions
-│   ├── agent -> agents    JUNCTION oculta (backwards compat opencode 1.17.x)
-│   └── skill -> ../.agents/skills  JUNCTION
-├── .agents/skills/        ALL skills (pack + user-installed)
-└── docs/                  PROJECT docs (single location, easy to take anywhere)
-    ├── PROJECT.md         (auto-gen por refresh-project.js)
-    ├── AGENTS_INDEX.md    (auto-gen por build-agents-index.js)
-    └── prds/  plans/  reports/  audits/  sessions/  state/  instincts/
-```
-
-## Convenciones obligatorias
-
-1. **Nombres de carpetas en PLURAL** (`.opencode/agents/`, `.opencode/commands/`, `.agents/skills/`). Standard oficial.
-2. **NO borrar las junctions ocultas** (`.opencode/agent`, `.opencode/skill`). opencode 1.17.x las escanea por backwards compat.
-3. **Frontmatter agentes**: `description` (required), `mode: subagent` (required), `permission:` (recomendado). `name` se infiere del filename.
-4. **Frontmatter skills**: `name` + `description`. Description third person, 1-1024 chars, "Use when...".
-5. **Slash commands en `.md` con frontmatter** (no JSON): `description` + `agent`. `agent` enruta a un especialista.
-
-## Que NO hacer
-
-- No crear `tsconfig.json` ni archivos de build en el pack.
-- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 72 agentes — avisar antes.
-
-## Plugins
-
-**npm** (en `.opencode/package.json`): `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` + `@opencode-ai/plugin` peer.
-
-**Local** (auto-cargado desde `.opencode/plugins/`): `hookify.js` con 2 hooks:
-- **SecretBlocker** (strict) — bloquea writes a `.env`/`*.key`/`*.pem`/`id_rsa*`/etc (allowlist para `.env.example`)
-- **DestructiveWarner** (soft) — loguea `rm -rf /`, `git push --force`, `DROP TABLE`, etc a `.opencode/logs/destructive.log` (gitignored). NO bloquea — user confirma via flujo normal.
-
-**Auto-install**: `cd .opencode && npm install` (postinstall corre `bin/install-plugins.js` idempotentemente). `package.json` y `package-lock.json` tracked; `node_modules/` gitignored.
-
-## Skills y agentes custom del usuario
-
-`npx skills add <owner>/<repo>@<skill>` → skills se instalan en `.agents/skills/<name>/SKILL.md`. opencode las descubre via `<available_skills>`. `permission.skill: "allow"` global garantiza que los agentes puedan cargarlas.
-
-## Project docs
-
-Toda doc del proyecto vive en `docs/`. Un solo lugar, facil de llevar (rsync, tar, git). **Por que no `.opencode/`**: el pack es template, se copia entero. Mezclar contenido del proyecto con el pack hace que `cp -r .opencode` traiga basura. `docs/` es project-only.
-
-Naming: PRDs → `docs/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md` · plans → `docs/plans/...` · reports → `docs/reports/...` · audits → `docs/audits/...` · snapshots → `docs/sessions/{YYYY-MM-DD}-{slug}.md` · recovery state → `docs/state/{command}-{ISO-timestamp}.json` · instincts → `docs/instincts/{YYYY-MM-DD}-{slug}.instinct.json`. Detalle completo en `.opencode/CONVENTIONS.md`.
-
----
-
 ## Comportamientos obligatorios (no opt-in)
 
 Estos 9 comportamientos los hace el agent SIEMPRE, sin que el usuario lo pida. Enforced, no recomendados.
 
 ### 1. Caveman mode (estilo)
 
-Todas las respuestas en **caveman mode** por default para reducir ~75% el consumo de tokens. Patron: `[thing] [action] [reason]. [next step].` — drop articulos/filler/pleasantries/hedging. Fragments OK. Standard tech acronyms (DB/API/HTTP) OK. Preservar idioma del usuario.
+Todas las respuestas en **caveman mode** por default para reducir ~75% el consumo de tokens. Patron: `[thing] [action] [reason].` — drop articulos/filler/pleasantries/hedging. Fragments OK. Standard tech acronyms (DB/API/HTTP) OK. Preservar idioma del usuario.
 
 **Defaults**: primary agent (responde al user) usa `full`. Sub-agents (reviewers, analyzers, fixers, build-resolvers) usan `lite` por default — sus outputs son intermediarios, el primary los sintetiza. Switch via `/caveman lite|full|ultra|wenyan-*`. **Auto-claridad** (salir de caveman): security warnings, confirmaciones irreversibles, multi-paso ambiguo, ambiguedad tecnica real, cuando el usuario pide clarificacion. Desactivar: "stop caveman" / "normal mode".
 
@@ -192,19 +129,6 @@ commiteo? (s/n)
 
 ---
 
-## Memoria de sessions (4 capas)
-
-| Capa | Que vive | Cuando se carga | Tamanio |
-|------|----------|-----------------|---------|
-| 1 | AGENTS.md + docs/PROJECT.md | siempre | ~2K tokens |
-| 2 | docs/sessions/LATEST.md (ultimo snapshot) | al `/session-start` o auto al cerrar | ~1-3K tokens |
-| 3 | Skills on-demand, files especificos, sub-agents | cuando se necesitan | variable |
-| 4 | Full git history, todos los PRDs/plans, instincts | nunca al contexto | disco |
-
-**Regla**: todo lo que pueda vivir en disco → disco. Solo lo "vivo" va a contexto.
-
----
-
 ## Security Guidelines (CRITICAL)
 
 ### Mandatory Security Checks (before ANY commit)
@@ -229,50 +153,3 @@ Single `grep -r` sin cap puede devolver 5000 lines = ~30K tokens wasted. Hard ru
 - `git diff` → OK as-is para diffs chicos, `| head` para grandes (10K-line PRs).
 
 **Sub-agent discipline**: al delegar via task tool, pasar file PATHS no file contents. El sub-agent lee lo que necesita con queries targeted, no bulk context del primary.
-
----
-
-## Coding Style
-
-- **Mutation**: SIEMPRE new objects, NUNCA mutate. Pattern: `{ ...obj, key: value }` no `obj.key = value`. Ver ejemplo completo en `coding-standards` skill.
-- **File organization**: MANY SMALL FILES (200-400 lineas, 800 max). High cohesion, low coupling. Organize by feature/domain, not by type.
-- **Error handling**: `try/catch` comprehensivo, throw con user-friendly message, log error antes. Pattern completo en `error-handling` skill.
-- **Input validation**: SIEMPRE validate (Zod / schema). NUNCA trust raw input.
-- **Style checklist** (pre-commit): readable names · functions <50 lines · files <800 lines · no nesting >4 levels · errors explicitos · no secrets · no console.log · no hardcoded values · no mutation · tests 80%+ coverage.
-
-## Testing Requirements
-
-**Minimum 80% coverage**. 3 tipos requeridos:
-1. **Unit** — funciones/componentes individuales
-2. **Integration** — endpoints, DB ops
-3. **E2E** — critical user flows (Playwright)
-
-**TDD workflow** (mandatory): RED (test first, fails) → GREEN (minimal impl) → IMPROVE (refactor). Patterns por stack (jest/pytest/go/junit/swift) en `testing-patterns` skill. Para debugging test failures → `tdd-guide` agent.
-
-## Git Workflow
-
-**Commit format**: `<type>: <description>` · types: feat/fix/refactor/docs/test/chore/perf/ci.
-
-**Feature impl workflow**:
-0. **Research & Reuse** (mandatory): GitHub code search (`gh search repos`/`code`) → library docs (Context7 MCP) → package registries (npm/PyPI/crates.io). Preferir adoptar patterns probados sobre net-new code.
-1. **Plan** (`planner` agent) — identificar dependencies + risks + phases
-2. **TDD** (`tdd-guide` agent) — RED → GREEN → IMPROVE, 80%+ coverage
-3. **Code Review** (`code-reviewer` agent) — fix CRITICAL/HIGH
-4. **Pre-Review Checks** — CI passing · no conflicts · branch up to date
-5. **Commit & Push** — solo con user explicit ask. Never force-push, reset --hard, or push without consent.
-
-## Code Review Standards
-
-**Mandatory triggers**: despues de write/modify code · antes de commit to shared branch · cambios security-sensitive (auth, payments, user data) · cambios arquitecturales · antes de merge PR.
-
-**Checklist** (pre-mark complete): readable + well-named · functions <50 lines · files <800 lines · no nesting >4 · errors explicitos · no secrets · no console.log · tests existen · coverage 80%+.
-
-**Security review triggers** (STOP, usar `security-reviewer`): auth/authz code · user input handling · DB queries · FS operations · external API calls · crypto · payment/financial code.
-
-**Severity**: CRITICAL (security/data loss) → BLOCK · HIGH (bug/quality) → WARN · MEDIUM → INFO · LOW → NOTE. **Approval**: Approve (no CRITICAL/HIGH) · Warning (only HIGH) · Block (any CRITICAL).
-
-## Agent Orchestration
-
-**Immediate agent usage** (no user prompt needed): complex features → `planner` · code just written → `code-reviewer` · bug fix or new feature → `tdd-guide` · architectural decision → `architect`.
-
-**Parallel task execution**: SIEMPRE usar parallel Task para ops independientes. Multi-perspective analysis para problemas complejos (factual/senior/security/consistency sub-agents). Cada sub-agent corre en su propio context, primary sintetiza outputs.
