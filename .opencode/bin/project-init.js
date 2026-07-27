@@ -149,11 +149,31 @@ function detectManifest(isPack) {
   return null;
 }
 
+function hasUserManifest() {
+  // A project is a USER project (not the opencode pack itself) if it has its own
+  // app manifest at ROOT. .opencode/ may be installed for tooling, but that doesn't
+  // make the project "the pack". Detection priority: pubspec.yaml > package.json
+  // (root only) > pyproject > cargo > go.mod > pom > gradle > csproj.
+  for (const m of MANIFEST_FILES) {
+    if (m.name.includes('*')) {
+      const matches = listDir(ROOT, f => f.endsWith('.csproj'));
+      if (matches.length > 0) return true;
+    } else {
+      if (fs.existsSync(path.join(ROOT, m.name))) return true;
+    }
+  }
+  return false;
+}
+
 function detectOpencodePack() {
   // Heuristic: .opencode/ + .agents/ + opencode.json + (AGENTS.md or opencode.jsonc)
   if (!fs.existsSync(path.join(ROOT, '.opencode'))) return false;
   if (!fs.existsSync(path.join(ROOT, '.agents'))) return false;
   if (!readIfExists(path.join(ROOT, 'opencode.json'))) return false;
+  // If the project has its own user manifest, it's a USER project with the pack
+  // installed — NOT the opencode pack itself. .opencode/ being present is not
+  // enough signal: every project that installed the pack will have it.
+  if (hasUserManifest()) return false;
   // At least one pack artifact
   return listDir(AGENTS_DIR, f => f.endsWith('.md')).length > 0
       || listDir(COMMANDS_DIR, f => f.endsWith('.md')).length > 0
