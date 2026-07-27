@@ -13,6 +13,7 @@
  *   node .opencode/bin/project-init.js --refresh      # re-detect, keep manual sections
  *   node .opencode/bin/project-init.js --status       # show freshness, no write
  *   node .opencode/bin/project-init.js --check        # exit 1 if stale/missing
+ *   node .opencode/bin/project-init.js --sparse-check # exit 0 if PROJECT.md is sparse (>50% placeholders)
  *   node .opencode/bin/project-init.js --ensure       # check + bootstrap if needed (auto-run)
  *   node .opencode/bin/project-init.js --dry-run      # print to stdout, no write
  *   node .opencode/bin/project-init.js --append-event TYPE NAME [meta]
@@ -51,6 +52,7 @@ function parseArgs(argv) {
     else if (a === '--refresh') out.mode = 'refresh';
     else if (a === '--status') out.mode = 'status';
     else if (a === '--check') out.mode = 'check';
+    else if (a === '--sparse-check') out.mode = 'sparse-check';
     else if (a === '--ensure') out.mode = 'ensure';
     else if (a === '--dry-run') out.dryRun = true;
     else if (a === '--force' || a === '-f') out.force = true;
@@ -680,6 +682,38 @@ function statusIndicator(existing) {
   return { emoji, label, age: ageText };
 }
 
+// Heuristic: count "meaningful" sections vs placeholder/empty sections.
+// A section is "placeholder" if its body is dominated by:
+//   - dash bullets ("- **Foo**: —")
+//   - empty code fences ("```")
+//   - explicit TBD / N/A / WIP / ? / TBA tokens
+// Returns { total, filled, pct } where pct = filled/total * 100.
+function sparseStats(existing) {
+  if (!existing) return { total: 0, filled: 0, pct: 0 };
+  const sections = existing.split(/^##\s+/m).slice(1); // drop preamble
+  const placeholderRe = /—|\?\?\?|TBD|TBA|N\/A|WIP|^```$/i;
+  let total = 0, filled = 0;
+  for (const sec of sections) {
+    // First line is the heading; rest is body
+    const body = sec.split('\n').slice(1).join('\n').trim();
+    if (!body) continue;
+    total++;
+    // A section is "filled" if it has at least one non-trivial line
+    // (more than just dashes, question marks, or empty code fences).
+    const lines = body.split('\n').filter(l => l.trim() && !l.match(/^```$/));
+    if (lines.length < 2) continue;
+    // Count meaningful lines (not just dash bullets with em-dash)
+    const meaningful = lines.filter(l =>
+      !l.match(/^-\s+\*\*[^*]+\*\*:\s*—\s*$/) &&   // "- **Foo**: —"
+      !l.match(/^-\s+—\s*$/) &&                      // "- —"
+      !l.match(/^-\s+\?\s*$/) &&                     // "- ?"
+      !l.match(/^[-*]\s*\{\w+\}\s*[:：]/)             // template placeholders "- {term}:"
+    );
+    if (meaningful.length >= 1) filled++;
+  }
+  return { total, filled, pct: total ? Math.round(filled / total * 100) : 0 };
+}
+
 // Extract manual sections from existing PROJECT.md: content between
 // "## Section" heading and the next "## " heading.
 function extractManualSections(existing) {
@@ -963,6 +997,16 @@ function main() {
     if (s.label === 'stale') { process.stderr.write(`STALE: ${s.age}\n`); process.exit(1); }
     process.stdout.write(`OK: ${s.emoji} ${s.label} (${s.age})\n`);
     return;
+  }
+
+  if (args.mode === 'sparse-check') {
+    if (!existing) {
+      process.stderr.write('SPARSE: PROJECT.md missing (will trigger code-explorer if --ensure)\n');
+      process.exit(0); // 0 = sparse (trigger)
+    }
+    const stats = sparseStats(existing);
+    process.stdout.write(`[sparse-check] ${stats.filled}/${stats.total} sections filled (${stats.pct}% complete)\n`);
+    process.exit(stats.pct >= 50 ? 1 : 0); // 0 = sparse, 1 = rich
   }
 
   if (args.mode === 'ensure') {
