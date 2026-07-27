@@ -29,7 +29,7 @@ El agent SIEMPRE los hace sin que el usuario lo pida. Cada uno = 1 regla canóni
 6. **Report + Audit (trazabilidad)** — flujos con agentes DEJAN artefactos en `docs/reports/` + `docs/audits/`. Reports obligatorios: `/orchestrate`, `/verify`, `/code-review`, `/security`, `/plan`, `/tdd`, `/flow-*`. NO en: pure Q&A, one-liner, user cancelo. Detalle: `verification-loop` skill + `commands/audit-report.md`.
 7. **Flow suggestions (primary proactivo)** — si request matchea `/flow-feature` / `/flow-bugfix` / `/flow-refactor` / `/flow-security`, primary lo ofrece antes de implementar. Ofrecer UNA vez, no insistir si user rechaza. Detalle: match table en `router` skill.
 8. **Mandatory Routing Protocol** — primary auto-clasifica request, carga `router` skill, dispatcha 1-3 sub-agentes + 1-2 skills antes de responder, salvo pure Q&A. Skip si user ya nombro agent/comando, one-liner trivial, "skip routing". Anti-patterns y pairing en `router` skill.
-9. **Always-On Project Context** — primary garantiza `docs/PROJECT.md` vigente antes de task no-trivial. Si missing corre `refresh-project.js --auto` silent; stale (>7d) corre + muestra summary. Sub-agents leen `PROJECT.md` antes de task non-trivial. Detalle: `task-decomposition` skill + `refresh-project.js` CLI.
+9. **Always-On Project Context** — primary garantiza `docs/PROJECT.md` vigente antes de task no-trivial. Si missing/stale corre `node .opencode/bin/project-init.js --ensure` silent; si fresh, no-op. Sub-agents leen `PROJECT.md` antes de task non-trivial. Detalle: `task-decomposition` skill + `project-init.js` CLI (`/project-init` command).
 
 ---
 

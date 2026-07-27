@@ -4,6 +4,28 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-07-28
+
+PROJECT.md workflow: pack-resident template + CLI with auto-bootstrap. Closes the gap where AGENTS.md behavior #9 ("Always-On Project Context") was documented but not auto-wired.
+
+### Added
+- **`.opencode/templates/PROJECT.md.template` v2.1** — 16 sections (13 always + 3 conditional: Data Model, API Surface, Dependencies), 5 marker types (`auto`, `manual`, `auto-managed`, `auto+manual`, `conditional:KEY`), header status indicator (`{STATUS_EMOJI} {STATUS_LABEL} ({AGE_TEXT})` — 🟢/🟡/🔴/⚪), Recent Activity with file links, Build & Run section auto-detected from package.json/Makefile/justfile, Glossary section for domain terms. Source of truth for `docs/PROJECT.md` regeneration.
+- **`.opencode/bin/project-init.js`** — template-driven PROJECT.md generator (~430 lines, zero deps, CommonJS, cross-platform). Detects from 5 sources: project files (package.json, pyproject.toml, Cargo.toml, go.mod, pubspec.yaml), git (remote + conventional commits), `docs/` (PRDs/plans/audits/sessions for Recent Activity), pack catalog (for opencode-pack detection), and an opencode-pack heuristic (`.opencode/` + `.agents/` + `opencode.json` + pack artifacts). Special handling for opencode packs: uses directory basename as Name, prefixes description with "opencode starter pack — ...", sets Framework = "opencode", includes live counts in Directory Layout.
+- **`--ensure` mode** — auto-bootstrap mode for AGENTS.md behavior #9. Runs `--check`; if `PROJECT.md` is missing → runs `--init`; if stale (>7d) → runs `--refresh`; if fresh → no-op (exit 0). All output to stderr so it doesn't pollute agent stdout. The trigger point for the primary agent's "always-on project context" guarantee.
+- **`/project-init` command** — thin slash command wrapper around `project-init.js` with a mode-detection table. Default is `--ensure` (auto-bootstrap). Explicit modes: `init`, `init --force`, `refresh`, `status`, `check`, `dry-run`, `event <type> <name> [meta]`.
+
+### Changed
+- **AGENTS.md behavior #9** now points to `node .opencode/bin/project-init.js --ensure` (was: `refresh-project.js --auto`). The old `refresh-project.js` is preserved but deprecated for this purpose. Manual sections preserved across `--refresh` / `--ensure`: Non-Negotiables, Architecture Notes, Open Questions, Glossary, plus Build & Run / Conventions overrides after `<!-- Override -->`.
+
+### Applied to this pack
+- `node .opencode/bin/project-init.js --refresh` ran successfully: wrote 5318 bytes to `docs/PROJECT.md`, 4 Recent Activity entries detected (2 plans, 2 audits), manual sections preserved (Non-Negotiables: License, Open Questions: "(none — starter context)"), Architecture Notes cleaned (was ` ``` ` placeholder, now template placeholder).
+
+### Gates final
+- smoke-test: 20 PASSED, 0 WARN, 0 FAIL
+- validate-frontmatter: 388 PASSED, 0 WARN, 0 FAIL (was 386: +1 new command, +1 new CLI frontmatter)
+- project-init --status: `🟢 fresh (19h ago)`
+- project-init --ensure: exits 0 in all 3 cases (fresh, missing, stale)
+
 ## [1.1.0] — 2026-07-27
 
 Pack 1.1 polish: bug fixes, drift cleanup, scaffolding. **+1 primary, -11 trivial commands, -2 +1 skills (router merge), +4 CLIs, ~62% lighter boot-time `AGENTS.md`.** Full plan: `docs/plans/2026-07-27_1122-pack-1.1-polish.plan.md`. Gates final: `smoke-test.js` 20/0/0, `validate-frontmatter.js` 386/0/0.
