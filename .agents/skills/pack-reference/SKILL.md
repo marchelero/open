@@ -17,7 +17,7 @@ Quick reference for opencode pack structure, conventions, and standards. Loaded 
 
 ## Que es esto
 
-Starter pack portable de opencode. El "producto" son los 72 agentes, 72 slash commands y 20 skills. No es codigo de aplicacion — es config + prompts + CLIs en `.opencode/bin/`.
+Starter pack portable de opencode. El "producto" son los 72 agentes, 64 slash commands y 20 skills. No es codigo de aplicacion — es config + prompts + CLIs en `.opencode/bin/`.
 
 ## Estructura
 
@@ -26,7 +26,7 @@ Starter pack portable de opencode. El "producto" son los 72 agentes, 72 slash co
 ├── opencode.json          Config principal
 ├── .opencode/             PACK template (portable)
 │   ├── agents/            72 subagentes (description + mode + permission)
-│   ├── commands/          72 slash commands
+│   ├── commands/          64 slash commands
 │   ├── plugins/           Local plugins (hookify.js = 2 hooks)
 │   ├── bin/               10 CLIs nativos
 │   ├── examples/          3 downstream demos (node-api, python-data, react-app)

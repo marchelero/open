@@ -119,7 +119,7 @@ find docs/prds -name "*.md" -mtime +7 -exec grep -l "Status.*DRAFT" {} \;
 [5/10] Commands huerfanos    PASS
 [6/10] Permalinks rotos      WARN: 2 paths posiblemente rotos
 [7/10] Tamanio archivos      PASS
-[8/10] Stats                 72 agents, 17 skills, 69 commands, 3 PRDs, 7 reports, 0 audits
+[8/10] Stats                 72 agents, 20 skills, 64 commands, 3 PRDs, 7 reports, 0 audits
 [9/10] PRDs huerfanos        WARN: 1 PRD en DRAFT >7d (ex006-csv-import)
 [10/10] Junctions            PASS
 

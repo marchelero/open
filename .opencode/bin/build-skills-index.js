@@ -119,7 +119,7 @@ function renderMarkdown(skills) {
   lines.push('');
   lines.push('## Trigger Routing');
   lines.push('');
-  lines.push('When a user request comes in, the primary agent loads the right skill based on trigger words. Use `skill-router` for the full map.');
+  lines.push('When a user request comes in, the primary agent loads the right skill based on trigger words. Use `router` for the full map.');
   lines.push('');
 
   const allTriggers = new Map();

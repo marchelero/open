@@ -138,7 +138,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 ├── docs/                            project docs (UN solo lugar, fácil de llevar con rsync/tar)
 │   ├── README.md                    index de docs/ (qué vive dónde)
 │   ├── PROJECT.md                   capa 1: stack/conventions del proyecto (auto-gen)
-│   ├── AGENTS_INDEX.md              índice de los 69 agents (auto-gen)
+│   ├── AGENTS_INDEX.md              índice de los 72 agents (auto-gen)
 │   ├── prds/                        artefactos PRD (YYYY-MM-DD_HHMM-{slug}.prd.md)
 │   ├── plans/                       planes de implementación (YYYY-MM-DD_HHMM-{slug}.plan.md)
 │   ├── reports/                     reportes de ejecución (YYYY-MM-DD_HHMM-{slug}.report.md)

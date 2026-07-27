@@ -47,6 +47,6 @@ node .opencode/bin/scaffold-new-skill.js <name> --triggers "t1,t2,t3" --descript
 ## Next steps
 
 1. Replace the `TODO` sections in the scaffolded `SKILL.md`
-2. Refine the `description` and `triggers` in the frontmatter (these drive `agent-router` matching)
+2. Refine the `description` and `triggers` in the frontmatter (these drive `router` matching)
 3. Run `node .opencode/bin/validate-frontmatter.js` to verify the frontmatter
 4. Run `node .opencode/bin/build-skills-index.js` to refresh `.agents/skills/INDEX.md`

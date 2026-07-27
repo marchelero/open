@@ -22,7 +22,7 @@ node .opencode/bin/scaffold-new-agent.js <name> --description "..."
 | `<name>` (positional, required) | Agent name (lowercase, hyphens, no dots) |
 | `--mode MODE` | `subagent` (default) or `primary` |
 | `--permission "bash: allow, ..."` | Permission block (default: all allow) |
-| `--description "..."` | Description line (this drives `agent-router` matching) |
+| `--description "..."` | Description line (this drives `router` matching) |
 | `--force` | Overwrite existing agent |
 | `--dry-run` | Show what would be created, don't write |
 
@@ -50,7 +50,7 @@ node .opencode/bin/scaffold-new-agent.js <name> --description "..."
 ## Next steps
 
 1. Replace the `TODO` sections in the scaffolded `.md`
-2. Refine the `description` (this drives `agent-router` matching — the trigger skill matches the description text)
+2. Refine the `description` (this drives `router` matching — the trigger skill matches the description text)
 3. Tighten the `permission:` block (deny what the agent should NOT do)
 4. Run `node .opencode/bin/validate-frontmatter.js` to verify the frontmatter
 5. Run `node .opencode/bin/build-agents-index.js` to refresh `docs/AGENTS_INDEX.md`

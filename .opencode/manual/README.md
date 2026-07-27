@@ -123,7 +123,7 @@ node .opencode/bin/refresh-project.js --status
 ## Documentación adicional
 
 - **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención (legacy; el `router` skill es la nueva forma automática)
-- **[COMMANDS.md](./COMMANDS.md)** — los 72 slash commands agrupados por intención
+- **[COMMANDS.md](./COMMANDS.md)** — los 64 slash commands agrupados por intención
 - **[EXAMPLES.md](./EXAMPLES.md)** — 6 flujos completos de proyectos reales
 - **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
 - **[SURFACES.md](./SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI

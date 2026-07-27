@@ -59,7 +59,7 @@
 
 ## Trigger Routing
 
-When a user request comes in, the primary agent loads the right skill based on trigger words. Use `skill-router` for the full map.
+When a user request comes in, the primary agent loads the right skill based on trigger words. Use `router` for the full map.
 
 | Trigger | Skill |
 |---------|-------|
@@ -141,8 +141,8 @@ When a user request comes in, the primary agent loads the right skill based on t
 > Regenerate: `node .opencode/bin/counts.js --update .agents/skills/INDEX.md`
 
 - **72** agents
-- **72** commands
+- **64** commands
 - **20** skills (this file)
-- **10** native CLIs
+- **13** native CLIs
 - **3** npm plugins + **1** local plugin(s)
 - **2** active MCPs + **10** optional MCP(s)
