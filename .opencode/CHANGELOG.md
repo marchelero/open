@@ -4,8 +4,46 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-07-27
+
+Pack 1.1 polish: bug fixes, drift cleanup, scaffolding. **+1 primary, -11 trivial commands, -2 +1 skills (router merge), +4 CLIs, ~62% lighter boot-time `AGENTS.md`.** Full plan: `docs/plans/2026-07-27_1122-pack-1.1-polish.plan.md`. Gates final: `smoke-test.js` 20/0/0, `validate-frontmatter.js` 386/0/0.
+
 ### Changed
-- **Merged `agent-router` + `skill-router` into single `router` skill** (pack 1.1 polish). Single 200-line SKILL.md covers both agent selection matrix (72 agents) and skill selection matrix (21 skills) plus pairing table. Saves ~10K tokens per non-Q&A turn. Old skill dirs deleted. References in `AGENTS.md`, `manual/`, `commands/`, `examples/` updated. System prompt will reflect this on next opencode session (auto-discovery). If you have local code referencing `agent-router` / `skill-router`, rename to `router`.
+- **Merged `agent-router` + `skill-router` into single `router` skill** (pack 1.1 polish). Single 240-line SKILL.md covers both agent selection matrix (72 agents) and skill selection matrix (20 skills) plus pairing table. Saves ~10K tokens per non-Q&A turn. Old skill dirs deleted. References in `AGENTS.md`, `manual/`, `commands/`, `examples/` updated. System prompt will reflect this on next opencode session (auto-discovery). If you have local code referencing `agent-router` / `skill-router`, rename to `router`.
+- **Converted `build.md` from marker to real primary agent** (M1). Previously a no-op marker file referenced by 40 slash commands as `agent: build` — the file had `permission: deny` on every tool. Now `mode: primary` with full tool access + a 30-line body describing what the primary does (routes requests, executes meta-workflows, enforces 9 mandatory behaviors). Affects 39 commands that were implicitly falling back to the system default — they now route to this explicit primary with documented behavior. Only `/prd` was re-pointed to `prd-agent` (the one body that explicitly delegated).
+- **Slimmed `AGENTS.md` from 155 → 59 lines (-62%)** (M2). Each of the 9 mandatory behaviors is now a 1-line rule + pointer to the skill/cmd that holds the detail (`caveman`, `intent-driven-development`, `git-workflow`, `verification-loop`, `task-decomposition`, `router`). Saves ~1.2KB boot tokens. Kept inline: prompt-defense baseline (GLOBAL, can't move), security guidelines (CRITICAL), tool truncation (CRITICAL). Reference material that was mixed in is now in the `pack-reference` skill (on-demand).
+- **`.opencode/AGENTS.md` is now a marker comment + link** in some downstream contexts. Self-referential reference to itself in the marker is intentional and short-circuits the read.
+
+### Fixed
+- **Stale "33/65" numbers in `build.md` marker comment** (C1) — actual counts are 40/72. Replaced with auto-generated numbers via `counts.js`.
+- **`code-reviewer.md` had `bash: deny`** (L6) — reviewer agents need to run their own smoke tests, `git diff`, `tsc --noEmit`, etc. Changed to `bash: allow`.
+- **72 agent files had `§ Prompt Defense` line in 3 encodings** (C2): 50 were non-utf-8 with correct content, 13 were utf-8 with `·` or `�` instead of `§`, 1 (`report-auditor.md`) had no line at all. All 72 now have the canonical `§ Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL)` line in UTF-8. Plus 24 agent files had 284 double-encoded em-dash (`—`) characters and 1 had triple-encoded em-dash + Windows-1252 control chars — all cleaned.
+- **9 broken skill cross-references in agent bodies** (C3a): `python-patterns`, `mle-workflow`, `fsharp-testing`, `dotnet-patterns`, `csharp-testing`, `swift-concurrency-6-2`, `swiftui-patterns`, `swift-protocol-di-testing`, `swift-actor-persistence`, `e2e-testing`, `laravel-patterns`, `laravel-security`, `laravel-tdd`, `postgres-patterns`, `database-migrations`. All re-pointed to existing skills (`backend-patterns`, `coding-standards`, `testing-patterns`, `security-review`, `tdd-workflow`, `task-decomposition`, `frontend-patterns`). One ref in `typescript-reviewer.md` acknowledged it didn't ship; rewording applied.
+- **Added `validateBodySkillRefs()` to `validate-frontmatter.js`** (C3b). New check finds `skill(s):` keyword, extracts backticked names from rest-of-line, warns on missing skills against `.agents/skills/` catalog. Caught 5 more broken refs the original audit missed (laravel/postgres/db) and is now durable. Currently 25 body-refs, all valid.
+
+### Added
+- **`counts.js` — single source of truth for pack surface-area numbers** (H1). Scans filesystem for agents/commands/skills/CLIs/plugins/MCPs and emits JSON. `--update <files...>` injects/replaces a `## Counts` block (between `<!-- COUNTS-START -->` / `<!-- COUNTS-END -->` markers) in any markdown file. `--check` mode exits non-zero if any tracked file is stale. Both `build-agents-index.js` and `build-skills-index.js` now use `counts.compute()` for their footers — no more hardcoded numbers that drift.
+- **`.opencode/AGENTS.md` is now ~1.2KB lighter at boot** — see M2 above.
+- **3 scaffolders** (M3) for downstream extension without hand-writing frontmatter:
+  - `node .opencode/bin/scaffold-new-project.js <name>` + `/new-project` — creates `docs/{prds,plans,reports,audits,sessions,state,instincts}/` + `PROJECT.md` template + `docs/README.md` index
+  - `node .opencode/bin/scaffold-new-skill.js <name>` + `/new-skill` — creates `.agents/skills/<name>/SKILL.md` with frontmatter (name, description, triggers) + 8-section body template
+  - `node .opencode/bin/scaffold-new-agent.js <name>` + `/new-agent` — creates `.opencode/agents/<name>.md` with frontmatter (description, mode, permission block) + prompt-defense reference + body template
+  - All support `--help`, `--dry-run`, `--force`, validate names against `/^[a-z][a-z0-9-]*$/`, validate mode against `subagent|primary`, refuse to overwrite by default, print next steps.
+- **10 optional MCP templates** in `.opencode/mcp.optional.json` (was 2, +8). Grouped by 5 categories: `code-hosting` (github, gitlab), `data` (postgres, filesystem), `observability` (sentry), `productivity` (linear, notion, slack), `web` (brave-search, fetch). `setup-mcp.js` now groups display by category and defaults `type: local` from `_meta.defaults` (removed 10 redundant `"type": "local"` fields). `_meta.schema_version: 2`.
+
+### Removed
+- **11 trivial 5-line command wrappers** (H3): `cpp-build`, `cpp-review`, `cpp-test`, `flutter-build`, `flutter-review`, `flutter-test`, `kotlin-build`, `kotlin-review`, `kotlin-test`, `python-review`, `react-review`. Each was a 1-line dispatch alias to a resolver agent — the `router` skill already does this dynamically. Kept 4 useful dispatch wrappers: `model-route`, `quality-gate`, `react-build`, `react-test`. Commands: 72 → 61 → 64 (after +3 scaffolders).
+- **2 skills merged into 1**: `agent-router` and `skill-router` deleted (see "Changed"). Skills: 21 → 20.
+
+### Surface (1.1.0)
+```
+agents:         72  (unchanged)
+commands:       64  (was 72: -11 trivial, +3 scaffolders)
+skills:         20  (was 21: -1 from router merge)
+clis:           13  (was 9: +counts, +3 scaffolders)
+plugins:         4  (3 npm + 1 local, unchanged)
+mcps:           12  (2 active + 10 optional, optional was 2)
+```
 
 ### Added
 - **Agent `angular-reviewer`**: Angular code reviewer (RxJS, signals, OnPush, DI, zone.js, template type-checking, accessibility). Pair con `typescript-reviewer` para PRs con `.ts`/`.html` Angular. Cubre el gap de frontend coverage (Angular faltaba aunque `reports/templates/angular.md` ya existía).

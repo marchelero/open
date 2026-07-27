@@ -9,9 +9,9 @@ Pack portable de opencode. Cópialo a cualquier proyecto, reinicia opencode y em
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
 - **72** agents (.opencode/agents)
-- **61** commands (.opencode/commands)
+- **64** commands (.opencode/commands)
 - **20** skills (.agents/skills)
-- **10** native CLIs (.opencode/bin)
+- **13** native CLIs (.opencode/bin)
 - **3** npm plugins + **1** local plugin(s)
 - **2** active MCPs + **10** optional MCP(s)
 <!-- COUNTS-END -->
@@ -57,7 +57,7 @@ Toda la documentación del pack vive dentro de `.opencode/manual/`, así se copi
 
 - **[.opencode/manual/README.md](./.opencode/manual/README.md)** — punto de entrada, instalación, comandos principales
 - **[.opencode/manual/ROUTE.md](./.opencode/manual/ROUTE.md)** — qué sub-agente usar según la intención
-- **[.opencode/manual/COMMANDS.md](./.opencode/manual/COMMANDS.md)** — los 65 slash commands por intención
+- **[.opencode/manual/COMMANDS.md](./.opencode/manual/COMMANDS.md)** — los 64 slash commands por intención
 - **[.opencode/manual/EXAMPLES.md](./.opencode/manual/EXAMPLES.md)** — 5 flujos completos de proyectos reales
 - **[.opencode/manual/ARCH.md](./.opencode/manual/ARCH.md)** — 4 capas de memoria, flujo PRD, ciclo de instintos
 - **[.opencode/manual/SURFACES.md](./.opencode/manual/SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI

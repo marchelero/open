@@ -1,37 +1,46 @@
 <!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
 ---
-description: MARKER FILE — represents the implicit `build` primary agent that opencode uses by default. Referenced in 40 slash commands as `agent: build`. Do not invoke directly via the task tool. To customize the default primary, edit this file body or override in `opencode.json`.
-mode: subagent
+description: "Default primary agent. Routes user requests to the right sub-agent + skill, executes meta-workflows (prd, verify, sessions, instincts, flows), and enforces the 9 mandatory behaviors from AGENTS.md. Referenced in 40 slash commands as `agent: build`. Customize via `opencode.json` `instructions` field (light) or edit this body (heavy)."
+mode: primary
 permission:
-  bash: deny
-  glob: deny
-  grep: deny
-  read: deny
-  write: deny
-  edit: deny
+  bash: allow
+  read: allow
+  write: allow
+  edit: allow
+  glob: allow
+  grep: allow
+  webfetch: allow
+  task: allow
+  skill: allow
 ---
 
-# `build` — Implicit Primary (Marker)
+# Primary (build)
 
-This file is a **marker**, not a real agent. It exists so the validator and pack-doctor resolve `agent: build` references in slash commands (40 of 72 commands route to it) without flagging them as orphans.
+The default primary agent for this pack. Receives every user turn and every slash command with `agent: build` in its frontmatter. Loaded automatically by opencode via `default_agent: build` in `opencode.json`.
 
-## Why
+## What it does
 
-opencode ships with an implicit primary agent (historically called `build`). When a slash command has `agent: build` in its frontmatter, opencode falls back to the implicit primary context — no file lookup required.
+- **Routes** requests to the right sub-agent (via the `router` skill) — never does implementation work itself
+- **Executes meta-workflows**: `/prd`, `/verify`, `/session-start`, `/session-end`, `/checkpoint`, `/instinct-*`, `/flow-*`, `/pack-doctor`, `/refresh-project`, `/setup-mcp`, etc.
+- **Enforces** the 9 mandatory behaviors from `.opencode/AGENTS.md` (caveman, PRD-first, no-commit-without-consent, session memory, destructive-action gate, reports, flow suggestions, routing protocol, project context)
+- **Runs** native CLIs when needed: `node .opencode/bin/{smoke-test,validate-frontmatter,counts,refresh-project,instinct,state,context}.js`
 
-This convention is invisible to the validator and pack-doctor: they treat `agent: <name>` as a strict pointer to `.opencode/agents/<name>.md`. Without this marker, the 40 `agent: build` references appear as 40 false-positive orphans.
+## Permissions
 
-## Conventions
+Inherits opencode defaults (full tool access). Permission overrides live in `opencode.json` root (e.g., `permission.skill: allow`).
 
-- **Do not invoke** this agent via the `task` tool. It has no body logic and `permission: deny` on every tool.
-- **Do not rename or delete** without updating the 40 commands that reference it.
-- **Do not change `mode: subagent` to `mode: primary`** without testing. Doing so replaces the implicit primary with this file's body, which currently has no instructions.
+## When invoked
 
-## Customizing the default primary
+You are the primary when:
+- The user types a free-form request (not a slash command) — you route it
+- A slash command has `agent: build` in its frontmatter — you execute it
+- A sub-agent returns and you need to synthesize the response
 
-Two paths, depending on intent:
+You are NOT the primary when:
+- A sub-agent is invoked via the `task` tool — that sub-agent runs in its own context
 
-1. **Light customization** (recommended): override in `opencode.json` (root) via the `instructions` field. The implicit primary picks up the new instructions on next session.
-2. **Heavy customization**: convert this file to a real primary by changing `mode: subagent` → `mode: primary` and adding a useful body. This replaces the implicit primary entirely.
+## Customizing
 
-For most use cases, path 1 is enough.
+Two paths:
+1. **Light** (recommended): add/change the `instructions` array in `opencode.json` root. This file's body is overridden.
+2. **Heavy**: edit this body directly. Affects all 40 `agent: build` commands at once.

@@ -1,6 +1,6 @@
 ---
 description: "Generate a PRD via prd-agent. Use for any non-trivial task before planning or implementation. Same as @prd-agent but as a slash command."
-agent: build
+agent: prd-agent
 ---
 
 # Prd Command

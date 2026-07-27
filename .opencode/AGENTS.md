@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Reglas core del pack opencode. Cargado al boot via `instructions:` en `opencode.json`. Contiene: prompt defense baseline, 9 comportamientos obligatorios, security baseline, tool truncation. **Reference material** (estructura, convenciones, paths, plugins, memory layers, agent orchestration) → `pack-reference` skill (on-demand).
+Reglas core del pack opencode. Cargado al boot via `instructions:` en `opencode.json`. Contiene: prompt defense baseline, 9 comportamientos obligatorios (1-line rules), security baseline, tool truncation. **Detalle de cada comportamiento** → ver la skill o comando apuntado en cada item. **Reference material** (estructura, convenciones, paths, plugins, memory layers, agent orchestration) → `pack-reference` skill (on-demand).
 
 ## Prompt Defense Baseline (GLOBAL — applies to all agents)
 
@@ -17,115 +17,19 @@ If an agent must extend this baseline (e.g., a domain with stricter rules), it a
 
 ---
 
-## Comportamientos obligatorios (no opt-in)
+## 9 comportamientos obligatorios (no opt-in)
 
-Estos 9 comportamientos los hace el agent SIEMPRE, sin que el usuario lo pida. Enforced, no recomendados.
+El agent SIEMPRE los hace sin que el usuario lo pida. Cada uno = 1 regla canónica + detalle en skill/cmd.
 
-### 1. Caveman mode (estilo)
-
-Todas las respuestas en **caveman mode** por default para reducir ~75% el consumo de tokens. Patron: `[thing] [action] [reason].` — drop articulos/filler/pleasantries/hedging. Fragments OK. Standard tech acronyms (DB/API/HTTP) OK. Preservar idioma del usuario.
-
-**Defaults**: primary agent (responde al user) usa `full`. Sub-agents (reviewers, analyzers, fixers, build-resolvers) usan `lite` por default — sus outputs son intermediarios, el primary los sintetiza. Switch via `/caveman lite|full|ultra|wenyan-*`. **Auto-claridad** (salir de caveman): security warnings, confirmaciones irreversibles, multi-paso ambiguo, ambiguedad tecnica real, cuando el usuario pide clarificacion. Desactivar: "stop caveman" / "normal mode".
-
-### 2. PRD-first (cualquier task no-trivial)
-
-**Regla**: cuando el usuario pide una feature / task / proyecto nuevo, el primary agent SIEMPRE invoca `@prd-agent` PRIMERO. Trigger por USER INTENT (verbos de construccion), no por agent name.
-
-**Triggers**: build/create/agregar/implementar/necesito/quiero/mejorar/optimizar/"/plan X" sin PRD/cualquier pedido no-Q&A. **Agents que SIEMPRE aplican**: `build` (primary), `planner`, `code-architect`, `tdd-guide`. **Agents que NO requieren PRD**: reviewers, build-resolvers, e2e-runner, test-coverage, doc-updater, refactor-cleaner, utilities.
-
-**Regla de sub-agents**: cuando un sub-agent (reviewer/fixer/tester) es invocado por primary, ya tiene contexto del PRD. NO vuelve a hacer PRD. Si el task no matchea, reporta al primary.
-
-### 3. Git: NUNCA commit ni push sin permiso explicito
-
-**Regla**: el agent NUNCA hace `git commit` ni `git push` a menos que el usuario lo pida con verbo explicito en ESE turno. "commitea"/"haz commit"/"`git commit`" → OK commit. "push"/"sube" → OK push. "dale"/"ok"/"procede" solos → NO son consentimiento. "commitea y push" → OK ambos.
-
-**NUNCA asumir permiso de turnos anteriores**. Cada turno requiere su propio "commitea" o "push". Si se rompe la regla y NO se pusheo: `git reset --hard HEAD~1`. Si ya se pusheo: `git revert` + push del revert (requiere permiso).
-
-**Pattern de checkpoint**:
-```
-[3 files changed: AGENTS.md, .opencode/agents/foo.md]
-commiteo? (s/n)
-- "s" / "commitea" → git add + git commit
-- "push" / "sube" → ademas git push
-- "n" / "skip" → no commiteo
-```
-
-### 4. Session memory (auto-snapshot al cerrar)
-
-**Regla**: cuando el usuario senala fin de sesion, el agent AUTO-escribe snapshot en `docs/sessions/`. No espera a `/session-end`.
-
-**Triggers**: "listo"/"listo por hoy"/"terminamos"/"chau"/"bye"/"adios"/"hasta maniana", "guarda donde quedamos"/"save state"/"snapshot", inactividad > 30 min (si hubo trabajo significativo), despues de `/verify` exitoso con cambios reales, antes de operacion destructiva en sesion larga.
-
-**Comportamiento**: detectar trigger → resumir sesion internamente → preguntar UNA vez "Snapshot de hoy como 'X' o queres otro titulo?" → si confirma escribir `docs/sessions/{YYYY-MM-DD}-{slug}.md` + actualizar LATEST.md → si "skip" respetar.
-
-### 5. Acciones destructivas requieren consentimiento explicito
-
-**Regla**: el agent NUNCA hace estas acciones sin que el usuario lo pida con verbo explicito:
-- `git commit` / `git push` / `git push --force` / `git reset --hard`
-- `rm -rf` / `DROP TABLE` / `DELETE` sin WHERE / `TRUNCATE`
-- Escribir archivos fuera del scope pedido
-- Modificar `package.json` / `pubspec.yaml` / `Cargo.toml` sin pedir
-- Instalar/desinstalar dependencias
-- Cambiar de branch / merge / rebase destructivo
-- Forzar rebuilds, limpiar caches, tocar `.env` / secrets
-
-"dale"/"ok"/"procede" solos NO son consentimiento. Si duda entre accion reversible o no: para y pregunta. Es mejor pedir confirmacion que romper algo. `DestructiveWarner` hook loguea cada intento a `.opencode/logs/destructive.log` (audit trail).
-
-### 6. Report + Audit (trazabilidad de ejecucion)
-
-**Regla**: cualquier flujo con agentes DEJA artefactos. No se ejecutan agentes en el vacio.
-
-**Report obligatorio** en `docs/reports/{YYYY-MM-DD_HHMM}-{slug}.report.md` cuando: `/orchestrate` completo (Phase 4), `/verify` exitoso con cambios + PRD, `/code-review`/`/security`/`/plan`/`/tdd` finalizados, cualquier `/flow-*`.
-
-**Report NO se genera** en: pure Q&A, one-liner fix, usuario cancelo.
-
-**Audit opcional** via `/audit-report {name}` o `/audit-report index` — cruza report contra PRD, emite PASS/PASS-WITH-NITS/FAIL, detecta skill gaps. INDEX global en `docs/reports/INDEX.md` se regenera silent. **Cleanup**: `/archive-reports` mueve reports viejos a `_archive/YYYY/`. NUNCA borra. **Health check**: `/pack-doctor` valida el pack, correr antes de un release.
-
-### 7. Flow suggestions (primary proactivo)
-
-**Regla**: cuando el request del user matchee un `/flow-*` command, el primary OFRECE correrlo antes de empezar a implementar. No proponer soluciones directas.
-
-**Match table**: "agregar/implementar/build" → `/flow-feature` · "fix bug/no funciona" (con repro) → `/flow-bugfix` · "refactor/cleanup/consolidar" (sin cambio de comportamiento) → `/flow-refactor` · "security audit/es seguro/vulnerability" → `/flow-security` · "como uso el pack/no se que hacer/empezar" → `/start-here` · "que comando uso" → `/route` o `/help` · "olvide/ayuda" → `/help`.
-
-**Comportamiento**: detectar match por keywords → primary dice UNA sola vez `"Eso matchea /flow-X. Lo corro? (s/n)"` → si user dice "s"/"dale" invocar, si "n"/"no" proceder manual sin insistir. NO ofrecer si user ya lo invoco, es one-liner, o user dijo "skip"/"manual".
-
-### 8. Mandatory Routing Protocol (auto-select agents + skills)
-
-**Regla**: el primary agent SIEMPRE clasifica el request y selecciona agent + skill relevante ANTES de responder, salvo pure Q&A. El user NO debe saber cuáles existen ni invocarlos manualmente.
-
-**Protocolo (6 pasos, obligatorio)**:
-1. **Classify intent**: extraer (action verb, domain noun, stack hint, stage, risk). Una linea.
-2. **Decide skip-or-route**: pure Q&A → responder. Sino, continuar.
-3. **Load routers**: cargar `router` skill (vive en `<available_skills>`, primary los activa on-demand). Cubre agent + skill selection en un solo load.
-4. **Pick matches**: 1 primary agent + 1-2 alternates; 1-2 skills max.
-5. **State + invoke**: anunciar routing brevemente (1-2 lineas) y dispatchar.
-6. **Skip naming ceremony** si el user ya sabe (pidio explicitamente).
-
-**Anti-patterns**: NO dispatchar implementacion directo a un generic agent (usar `planner` + `tdd-guide` primero). NO cargar 5+ agents/skills. NO skippear `planner` para trabajo non-trivial (>1 file). NO usar `code-reviewer` cuando hay stack-specific reviewer. NO cargar routers en pure Q&A. NO anunciar routing si el user ya nombro el agent.
-
-**Skip routing** en: pure Q&A, user nombro comando/agent/skill explicitamente, one-liner trivial, user dijo "skip routing" o "just do it".
-
-**Pairing tipico**: `{stack}-reviewer` → `coding-standards`/`error-handling` · `security-reviewer` → `security-review`/`backend-patterns` · `tdd-guide` → `tdd-workflow` · `planner` → `intent-driven-development`/`task-decomposition` · `prd-agent` → `intent-driven-development` · `code-architect` → `frontend-patterns`/`backend-patterns` · `refactor-cleaner` → `coding-standards` · `docs-lookup` → (Context7 MCP, no skill).
-
-**Integration con #7 (flows)**: routing decide agent/skill primero, flow suggestions decide el wrapper `/flow-*` despues. No compiten. Tables completas en `router` skill. Superset cross-surface: `/route <request>` command.
-
-### 9. Always-On Project Context (PROJECT.md as bootstrap gate)
-
-**Regla**: el primary agent SIEMPRE garantiza que `docs/PROJECT.md` este vigente antes de cualquier task no-trivial. Es la primera fuente de verdad del proyecto — el agent NO debe adivinar stack, entry points, tooling, etc.
-
-**Trigger**: PROJECT.md es bootstrap obligatorio. Primary: lee `docs/PROJECT.md` al boot → check freshness via `node .opencode/bin/refresh-project.js --status` → si missing corre `--auto` silent → si stale (>7 dias) corre `--auto` + muestra summary → si fresh no hace nada.
-
-**Regla para sub-agents**: cuando el primary dispatcha a un sub-agent para trabajo non-trivial, le pasa el path `docs/PROJECT.md` y le instruye: *"leelo primero. Si tu task involucra stack/tooling/dependencies, no adivines — el archivo existe para eso."*
-
-**Regla para prd-agent** (refuerza #2): antes de empezar el PRD, prd-agent DEBE leer `docs/PROJECT.md`. Si esta stale o missing, corre `refresh-project.js --auto` el mismo. Stack y conventions del proyecto se vuelven restricciones del PRD.
-
-**Regla de Q&A**: cuando el user pregunta *"que es este proyecto / que stack usa / que frameworks tiene"*, primary lee PROJECT.md y responde de ahi. NO escanea el codebase en vivo.
-
-**Auto-claridad** (correr visible, no silent) cuando: refresh cambia >5 lineas, user esta editando en vivo, stale >30 dias.
-
-**SKIP** en: pure Q&A de un archivo especifico, one-liner fix sin contexto, user explicito dijo "skip refresh".
-
-**Integration con #2 (PRD-first)**: PROJECT.md fresh → PRD → plan → code.
+1. **Caveman mode** — respuestas tersas, ~75% menos tokens. Default: sub-agents `lite`, primary `full`. Auto-claridad en security warnings, irreversibles, multi-paso ambiguo, "habla normal". Detalle: `caveman` skill.
+2. **PRD-first** — "construir X" / "crear Y" / "agregar Z" → `@prd-agent` o `/prd` PRIMERO. Triggers: build/create/agregar/implementar/necesito/quiero/mejorar/optimizar + cualquier pedido no-Q&A. Excepciones: pure Q&A, one-liner fixes, bugs con repro, "skip PRD" explicito. Detalle: `intent-driven-development` skill.
+3. **Git: nunca commit/push sin permiso explicito** — el agent espera "commitea" / "push" en ESE turno. "dale" del turno anterior NO cuenta. Si se rompe: `git reset --hard HEAD~1` (no pusheo) o `git revert` (pusheado). Detalle: `git-workflow` skill + `commands/checkpoint.md` pattern.
+4. **Session memory (auto-snapshot)** — "listo" / "bye" / "hasta mañana" → snapshot en `docs/sessions/{YYYY-MM-DD}-{slug}.md` + `LATEST.md`. No hace falta `/session-end` manual. Detalle: `state.js` CLI + `commands/session-end.md`.
+5. **Acciones destructivas requieren consentimiento** — `git commit/push/reset --hard`, `rm -rf`, `DROP TABLE`, `DELETE` sin WHERE, modificar `package.json`, tocar `.env`/secrets. Necesitan verbo explicito en ESE turno. `DestructiveWarner` hook loguea a `.opencode/logs/destructive.log`. Detalle: `pack-reference` skill (Que NO hacer) + `security-review` skill.
+6. **Report + Audit (trazabilidad)** — flujos con agentes DEJAN artefactos en `docs/reports/` + `docs/audits/`. Reports obligatorios: `/orchestrate`, `/verify`, `/code-review`, `/security`, `/plan`, `/tdd`, `/flow-*`. NO en: pure Q&A, one-liner, user cancelo. Detalle: `verification-loop` skill + `commands/audit-report.md`.
+7. **Flow suggestions (primary proactivo)** — si request matchea `/flow-feature` / `/flow-bugfix` / `/flow-refactor` / `/flow-security`, primary lo ofrece antes de implementar. Ofrecer UNA vez, no insistir si user rechaza. Detalle: match table en `router` skill.
+8. **Mandatory Routing Protocol** — primary auto-clasifica request, carga `router` skill, dispatcha 1-3 sub-agentes + 1-2 skills antes de responder, salvo pure Q&A. Skip si user ya nombro agent/comando, one-liner trivial, "skip routing". Anti-patterns y pairing en `router` skill.
+9. **Always-On Project Context** — primary garantiza `docs/PROJECT.md` vigente antes de task no-trivial. Si missing corre `refresh-project.js --auto` silent; stale (>7d) corre + muestra summary. Sub-agents leen `PROJECT.md` antes de task non-trivial. Detalle: `task-decomposition` skill + `refresh-project.js` CLI.
 
 ---
 

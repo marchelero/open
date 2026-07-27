@@ -11,9 +11,9 @@
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
 - **72** agents (.opencode/agents)
-- **61** commands (.opencode/commands)
+- **64** commands (.opencode/commands)
 - **20** skills (.agents/skills)
-- **10** native CLIs (.opencode/bin)
+- **13** native CLIs (.opencode/bin)
 - **3** npm plugins + **1** local plugin(s)
 - **2** active MCPs + **10** optional MCP(s)
 <!-- COUNTS-END -->
@@ -74,17 +74,22 @@ cd /ruta/a/tu/proyecto && opencode .
 
 Lista completa: `node .opencode/bin/context.js` o explora `.opencode/commands/`.
 
-## 9 CLIs nativos (cero dependencias, solo Node stdlib)
+## 13 CLIs nativos (cero dependencias, solo Node stdlib)
 
 ```bash
 node .opencode/bin/smoke-test.js              # 20 comprobaciones estructurales
-node .opencode/bin/validate-frontmatter.js    # valida frontmatter de agentes/skills/comandos
+node .opencode/bin/validate-frontmatter.js    # valida frontmatter de agentes/skills/comandos (incluye body-refs check)
 node .opencode/bin/context.js                 # informe de presupuesto de contexto
+node .opencode/bin/counts.js                  # --json / --update <files> / --check  (single source of truth)
 node .opencode/bin/instinct.js                # add/status/projects/promote/evolve/export/import
 node .opencode/bin/refresh-project.js         # regenera docs/PROJECT.md (--status, --auto, --dry-run, --check)
-node .opencode/bin/build-agents-index.js       # regenera docs/AGENTS_INDEX.md
-node .opencode/bin/build-skills-index.js       # regenera .agents/skills/INDEX.md
+node .opencode/bin/build-agents-index.js      # regenera docs/AGENTS_INDEX.md
+node .opencode/bin/build-skills-index.js      # regenera .agents/skills/INDEX.md
 node .opencode/bin/state.js                   # recovery state por command
+node .opencode/bin/setup-mcp.js               # wizard interactivo para activar MCPs opcionales
+node .opencode/bin/scaffold-new-project.js    # scaffold <name>  (crea docs/{prds,plans,...} + PROJECT.md)
+node .opencode/bin/scaffold-new-skill.js      # scaffold <name>  (crea .agents/skills/<name>/SKILL.md)
+node .opencode/bin/scaffold-new-agent.js      # scaffold <name>  (crea .opencode/agents/<name>.md)
 node .opencode/bin/install-plugins.js         # postinstall npm (idempotente)
 ```
 

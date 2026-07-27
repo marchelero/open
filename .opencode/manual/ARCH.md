@@ -155,7 +155,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
     ├── .gitignore                   ignora node_modules y bun.lock
     ├── agents/                      69 sub-agentes (.md)
     ├── commands/                    67 slash commands (.md)
-    ├── bin/                         9 CLIs cero-deps (solo Node stdlib)
+    ├── bin/                         13 CLIs cero-deps (solo Node stdlib)
     │   ├── instinct.js
     │   ├── context.js
     │   ├── refresh-project.js       --status, --auto, --dry-run, --check

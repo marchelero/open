@@ -154,3 +154,11 @@
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
 | `/archive-reports` | Mueve reports viejos a `docs/reports/_archive/{YYYY}/`. NO borra. Default: COMPLETADO >30d. | build |
+
+## "Quiero scaffoldear (extender el pack)"
+
+| Comando | Qué hace | Agent |
+|---------|----------|-------|
+| `/new-project` | Scaffold de un proyecto nuevo: `docs/{prds,plans,reports,audits,sessions,state,instincts}/` + `PROJECT.md` template + `docs/README.md` index. Flags: `--help`, `--dry-run`, `--force`. | build |
+| `/new-skill` | Scaffold de un skill nuevo en `.agents/skills/<name>/SKILL.md`. Genera frontmatter (name, description, triggers) + 8 secciones de body template. Flags: `--help`, `--dry-run`, `--force`, `--triggers <csv>`. | build |
+| `/new-agent` | Scaffold de un agent nuevo en `.opencode/agents/<name>.md`. Genera frontmatter (description, mode, permission block) + prompt-defense reference + body template. Flags: `--help`, `--dry-run`, `--force`, `--mode <subagent|primary>`. | build |
