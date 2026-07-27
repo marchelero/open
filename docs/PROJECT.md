@@ -17,7 +17,7 @@
 -->
 # open — Project Context
 
-> **Status**: ⚪ no timestamp (—) · **Init**: 2026-07-27 · **Refresh**: 2026-07-27 · **Stale after**: 3 days
+> **Status**: 🟢 fresh (19h ago) · **Init**: 2026-07-27 · **Refresh**: 2026-07-27 · **Stale after**: 3 days
 > **Template**: `.opencode/templates/PROJECT.md.template` v2.1
 > Manual sections (preserved): Non-Negotiables · Architecture Notes · Open Questions · Glossary
 > Auto-managed (append-only): Recent Activity
@@ -115,15 +115,21 @@
 ## Glossary
 <!-- manual: domain-specific terms. Helps sub-agents disambiguate "user" vs "account" vs "tenant" without re-deriving. -->
 
+<!-- manual: domain-specific terms. Helps sub-agents disambiguate "user" vs "account" vs "tenant" without re-deriving. -->
+
 - **{term}**: {definition in this project's context}
 - **{term}**: {definition}
 
 ## Non-Negotiables
 <!-- manual: things that MUST stay true. Preserved across refreshes. -->
 
-- **License**: inherited from user project (no embedded license in starter)
+<!-- manual: things that MUST stay true. Preserved across refreshes. -->
+
+- **{constraint}**: {e.g. License: MIT, no telemetry, no third-party analytics, must run on Node 20+}
 
 ## Architecture Notes
+<!-- manual: ADRs, rationale, key decisions. Preserved across refreshes. -->
+
 <!-- manual: ADRs, rationale, key decisions. Preserved across refreshes. -->
 
 - **{decision}**: {rationale}
@@ -131,10 +137,14 @@
 ## Open Questions
 <!-- manual: things to resolve later. Preserved across refreshes. -->
 
-- (none — this is the starter's own context; downstream projects override)
+<!-- manual: things to resolve later. Preserved across refreshes. -->
+
+- [ ] {question}
+- [ ] {question}
 
 ## Recent Activity
 <!-- auto-managed: appended by project-init.js. Do not edit by hand. -->
+
 
 - 2026-07-27 — [plan](docs/plans/2026-07-27_1122-pack-1.1-polish.plan.md): "pack 1.1 polish.plan"
 - 2026-07-27 — [audit](docs/audits/2026-07-27_1530-pack-1.1-audit.audit.md): "pack 1.1 audit.audit"
