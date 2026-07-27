@@ -266,6 +266,6 @@ Most agent invocations benefit from a paired skill:
 - `/route <request>` — command-level superset (routes across commands, agents, AND skills)
 - `/list-agents <keyword>` — browse the full agent catalog
 - `/list-skills` — browse the full skill catalog
-- `docs/AGENTS_INDEX.md` — auto-generated full index of all agents (count via `node .opencode/bin/counts.js`)
+- `.opencode/AGENTS_INDEX.md` — auto-generated full index of all agents (count via `node .opencode/bin/counts.js`)
 - `.agents/skills/INDEX.md` — auto-generated full index of all skills
 - This skill replaced `agent-router` + `skill-router` (merged in pack 1.1 — see CHANGELOG)

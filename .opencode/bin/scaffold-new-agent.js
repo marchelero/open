@@ -141,4 +141,4 @@ console.log(`\nNext:`);
 console.log(`  1. Edit the description (this drives the router skill matching)`);
 console.log(`  2. Replace the TODO sections with the agent's actual workflow`);
 console.log(`  3. Run \`node .opencode/bin/validate-frontmatter.js\` to check the frontmatter`);
-console.log(`  4. Run \`node .opencode/bin/build-agents-index.js\` to refresh docs/AGENTS_INDEX.md`);
+console.log(`  4. Run \`node .opencode/bin/build-agents-index.js\` to refresh .opencode/AGENTS_INDEX.md`);

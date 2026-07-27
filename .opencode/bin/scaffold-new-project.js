@@ -113,8 +113,8 @@ Project documentation for **${NAME}**. Single location, easy to move with the pr
 
 | Doc | What |
 |-----|------|
-| [PROJECT.md](./PROJECT.md) | Stack, conventions, identity. Auto-refreshed by \`refresh-project.js\`. |
-| [AGENTS_INDEX.md](./AGENTS_INDEX.md) | Auto-generated catalog of all opencode agents |
+| [PROJECT.md](./PROJECT.md) | Stack, conventions, identity. Auto-refreshed by \`project-init.js\`. |
+| [.opencode/AGENTS_INDEX.md](../.opencode/AGENTS_INDEX.md) | Auto-generated catalog of all opencode agents (lives in pack) |
 | [prds/](./prds/) | Product Requirements Docs |
 | [plans/](./plans/) | Implementation plans |
 | [reports/](./reports/) | Agent run reports (orchestrate, verify, code-review) |

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build-agents-index.js - regenerate docs/AGENTS_INDEX.md
+ * build-agents-index.js - regenerate .opencode/AGENTS_INDEX.md
  *
  * Reads all agent .md files in .opencode/agents/, extracts the
  * description and mode from frontmatter, categorizes by filename
@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AGENTS_DIR = path.join(__dirname, '..', 'agents');
-const OUT_MD = path.join(__dirname, '..', '..', 'docs', 'AGENTS_INDEX.md');
+const OUT_MD = path.join(__dirname, '..', 'AGENTS_INDEX.md');
 
 const CATEGORIES = [
   { name: 'Build / Plan',       match: /^(build|prd-agent|planner|code-architect|code-explorer|architect|migration-planner)\.md$/ },
@@ -132,7 +132,7 @@ function renderMarkdown(agents) {
     lines.push('## Counts');
     lines.push('');
     lines.push('> Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.');
-    lines.push('> Regenerate: `node .opencode/bin/counts.js --update docs/AGENTS_INDEX.md`');
+    lines.push('> Regenerate: `node .opencode/bin/counts.js --update .opencode/AGENTS_INDEX.md`');
     lines.push('');
     lines.push(`- **${counts.agents}** agents (this file)`);
     lines.push(`- **${counts.commands}** commands`);

@@ -129,7 +129,7 @@ When a user request comes in, the primary agent loads the right skill based on t
 
 ## See also
 
-- [Agents index](../../docs/AGENTS_INDEX.md) — auto-generated full index of all agents
+- [Agents index](../../.opencode/AGENTS_INDEX.md) — auto-generated full index of all agents
 - [Commands index](../../.opencode/commands/) — slash commands by intent
 - `/list-skills` — interactive catalog with filters
 
@@ -141,8 +141,8 @@ When a user request comes in, the primary agent loads the right skill based on t
 > Regenerate: `node .opencode/bin/counts.js --update .agents/skills/INDEX.md`
 
 - **72** agents
-- **64** commands
+- **65** commands
 - **20** skills (this file)
-- **13** native CLIs
+- **14** native CLIs
 - **3** npm plugins + **1** local plugin(s)
 - **2** active MCPs + **10** optional MCP(s)

@@ -133,7 +133,7 @@ These are the agents you'll see most often. Each has a focused specialty and a s
 | `migration-planner` | DB/framework/monorepo migrations |
 | `report-auditor` | Cross-check a report against the source PRD |
 
-For the full catalog: `/list-agents` or `docs/AGENTS_INDEX.md`.
+For the full catalog: `/list-agents` or `.opencode/AGENTS_INDEX.md`.
 
 ## The skills you should know
 

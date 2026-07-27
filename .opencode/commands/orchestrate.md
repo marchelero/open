@@ -126,10 +126,10 @@ El report es OBLIGATORIO. No opcional. No se pregunta al usuario — se genera.
 
 ```
 ¿Cual es el stack del proyecto (de `docs/PROJECT.md`)?
-├── Angular  → `docs/reports/templates/angular.md`
-├── Python   → `docs/reports/templates/python.md`
-├── Rust     → `docs/reports/templates/rust.md`
-└── Otro     → `docs/reports/templates/default.md`
+├── Angular  → `.opencode/reports/templates/angular.md`
+├── Python   → `.opencode/reports/templates/python.md`
+├── Rust     → `.opencode/reports/templates/rust.md`
+└── Otro     → `.opencode/reports/templates/default.md`
 ```
 
 El orquestador lee `docs/PROJECT.md` y copia la plantilla correspondiente, llenando los placeholders con los datos del flujo.

@@ -144,7 +144,7 @@ function renderMarkdown(skills) {
   lines.push('');
   lines.push('## See also');
   lines.push('');
-  lines.push('- [Agents index](../../docs/AGENTS_INDEX.md) — auto-generated full index of all agents');
+  lines.push('- [Agents index](../../.opencode/AGENTS_INDEX.md) — auto-generated full index of all agents');
   lines.push('- [Commands index](../../.opencode/commands/) — slash commands by intent');
   lines.push('- `/list-skills` — interactive catalog with filters');
   lines.push('');

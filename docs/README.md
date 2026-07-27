@@ -7,7 +7,7 @@ Single landing for all project-generated documentation. Anything `.opencode/` pr
 | Path | What | When to read |
 |------|------|--------------|
 | `PROJECT.md` | Auto-generated project context (stack, structure, conventions) | Session start, onboarding |
-| `AGENTS_INDEX.md` | Auto-generated index of all 69 agents | Picking the right subagent |
+| `../.opencode/AGENTS_INDEX.md` | Auto-generated index of all agents (lives in the pack) | Picking the right subagent |
 | `prds/` | Product Requirements Docs (output of `/prd` or `/flow-feature`) | Before planning or implementing |
 | `plans/` | Implementation plans (output of `/plan`) | Before coding |
 | `reports/` | Execution reports (output of `/orchestrate`, `/verify`, etc.) | After a flow finishes |

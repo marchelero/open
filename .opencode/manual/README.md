@@ -83,7 +83,7 @@ node .opencode/bin/context.js                 # informe de presupuesto de contex
 node .opencode/bin/counts.js                  # --json / --update <files> / --check  (single source of truth)
 node .opencode/bin/instinct.js                # add/status/projects/promote/evolve/export/import
 node .opencode/bin/refresh-project.js         # regenera docs/PROJECT.md (--status, --auto, --dry-run, --check)
-node .opencode/bin/build-agents-index.js      # regenera docs/AGENTS_INDEX.md
+node .opencode/bin/build-agents-index.js      # regenera .opencode/AGENTS_INDEX.md
 node .opencode/bin/build-skills-index.js      # regenera .agents/skills/INDEX.md
 node .opencode/bin/state.js                   # recovery state por command
 node .opencode/bin/setup-mcp.js               # wizard interactivo para activar MCPs opcionales

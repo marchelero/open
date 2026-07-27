@@ -138,17 +138,16 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 ├── docs/                            project docs (UN solo lugar, fácil de llevar con rsync/tar)
 │   ├── README.md                    index de docs/ (qué vive dónde)
 │   ├── PROJECT.md                   capa 1: stack/conventions del proyecto (auto-gen)
-│   ├── AGENTS_INDEX.md              índice de los 72 agents (auto-gen)
 │   ├── prds/                        artefactos PRD (YYYY-MM-DD_HHMM-{slug}.prd.md)
 │   ├── plans/                       planes de implementación (YYYY-MM-DD_HHMM-{slug}.plan.md)
 │   ├── reports/                     reportes de ejecución (YYYY-MM-DD_HHMM-{slug}.report.md)
-│   │   └── templates/               4 templates (default/python/angular/rust)
 │   ├── audits/                      veredictos PASS/FAIL (YYYY-MM-DD_HHMM-{slug}.audit.md)
 │   ├── sessions/                    snapshots de fin de sesión (auto al "listo")
 │   ├── state/                       recovery state para flows resumibles (machine-local, gitignored)
 │   └── instincts/                   patrones aprendidos del proyecto (machine-local, gitignored)
 └── .opencode/                       pack template portable (cp -r a otros proyectos)
     ├── AGENTS.md                    capa 1: 9 comportamientos obligatorios + reglas globales
+    ├── AGENTS_INDEX.md              índice de los 72 agents (auto-gen, movido aquí en 1.2.1)
     ├── CONVENTIONS.md               naming + path conventions
     ├── package.json                 plugin deps (npm install una vez)
     ├── package-lock.json

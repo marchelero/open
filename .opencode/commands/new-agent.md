@@ -53,4 +53,4 @@ node .opencode/bin/scaffold-new-agent.js <name> --description "..."
 2. Refine the `description` (this drives `router` matching — the trigger skill matches the description text)
 3. Tighten the `permission:` block (deny what the agent should NOT do)
 4. Run `node .opencode/bin/validate-frontmatter.js` to verify the frontmatter
-5. Run `node .opencode/bin/build-agents-index.js` to refresh `docs/AGENTS_INDEX.md`
+5. Run `node .opencode/bin/build-agents-index.js` to refresh `.opencode/AGENTS_INDEX.md`
