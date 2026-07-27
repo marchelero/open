@@ -180,6 +180,232 @@ function detectOpencodePack() {
       || listDir(SKILLS_DIR).length > 0;
 }
 
+// ---------- generic project inspectors (1.2.5: language-agnostic) ----------
+// All these work for any stack: Flutter, Node, Python, PHP, Go, Rust, Java,
+// static HTML, etc. No hardcoded framework lists in the calling code.
+
+const SKIP_DIRS = new Set([
+  'node_modules', '.git', 'build', 'dist', '.dart_tool', '__pycache__',
+  'target', 'vendor', '.next', '.nuxt', 'Pods', 'ephemeral', '.gradle',
+  '.idea', '.vscode', '.opencode', '.agents', 'docs',
+]);
+
+const DIR_PURPOSE = {
+  'src': 'application code', 'lib': 'library code', 'app': 'application code',
+  'bin': 'CLI binaries', 'tests': 'test suites', 'test': 'test suites',
+  '__tests__': 'test suites', 'spec': 'test suites', 'docs': 'documentation',
+  'scripts': 'dev scripts', 'public': 'static assets', 'static': 'static assets',
+  'assets': 'static assets', 'config': 'configuration', 'migrations': 'DB migrations',
+};
+
+const LIB_SUBDIR_PURPOSE = {
+  screens: 'UI screens', widgets: 'reusable widgets', models: 'domain models',
+  state: 'state management', logic: 'business logic', theme: 'UI theme',
+  views: 'view layer', components: 'UI components', controllers: 'controllers',
+  services: 'service layer', providers: 'providers', routes: 'routes',
+  pages: 'pages', layouts: 'layouts', helpers: 'helpers', utils: 'utilities',
+  core: 'core domain', domain: 'domain layer', infrastructure: 'infrastructure',
+};
+
+function walkTopDirs(maxDepth = 2) {
+  const results = [];
+  function walk(dir, depth) {
+    if (depth > maxDepth) return;
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (!e.isDirectory()) continue;
+      if (SKIP_DIRS.has(e.name)) continue;
+      if (depth === 0 && e.name.startsWith('.')) continue;
+      const full = path.join(dir, e.name);
+      const rel = path.relative(ROOT, full);
+      let files = 0;
+      try {
+        files = fs.readdirSync(full).filter(f => {
+          try { return fs.statSync(path.join(full, f)).isFile() && !f.startsWith('.'); }
+          catch { return false; }
+        }).length;
+      } catch {}
+      results.push({ rel, name: e.name, files });
+      walk(full, depth + 1);
+    }
+  }
+  walk(ROOT, 0);
+  return results;
+}
+
+function detectDirPurpose(name, rel) {
+  if (DIR_PURPOSE[name]) return DIR_PURPOSE[name];
+  const seg = rel.split('/').pop();
+  if (LIB_SUBDIR_PURPOSE[seg]) return LIB_SUBDIR_PURPOSE[seg];
+  return null;
+}
+
+function detectLicense(manifest) {
+  for (const f of ['LICENSE', 'LICENSE.md', 'LICENSE.txt', 'license', 'License']) {
+    const p = path.join(ROOT, f);
+    if (fs.existsSync(p)) {
+      const content = readIfExists(p) || '';
+      const m = content.match(/^(MIT|Apache-2\.0|BSD-3-Clause|BSD-2-Clause|GPL-3\.0|GPL-2\.0|MPL-2\.0|ISC|Unlicense)\b/im);
+      if (m) return { name: m[1], source: f };
+      const line1 = content.split('\n').find(l => l.trim() && !l.startsWith('//') && !l.startsWith('#'));
+      if (line1) return { name: line1.replace(/^Copyright\s+(\d+\s+)?/i, '').replace(/\.$/, '').slice(0, 60).trim(), source: f };
+    }
+  }
+  if (manifest && manifest.type === 'package.json') {
+    const lic = manifest.data.license;
+    if (lic) return { name: typeof lic === 'string' ? lic : (lic.type || 'see package.json'), source: 'package.json' };
+  }
+  if (manifest && manifest.type === 'pubspec') {
+    const m = manifest.data.match(/^license\s*:\s*(\S+)/m);
+    if (m) return { name: m[1].replace(/^["']|["']$/g, ''), source: 'pubspec.yaml' };
+  }
+  if (manifest && manifest.type === 'cargo') {
+    const m = manifest.data.match(/^license\s*=\s*"([^"]+)"/m);
+    if (m) return { name: m[1], source: 'Cargo.toml' };
+  }
+  if (manifest && manifest.type === 'pyproject') {
+    const m = manifest.data.match(/^license\s*=\s*["']([^"']+)["']/m);
+    if (m) return { name: m[1], source: 'pyproject.toml' };
+  }
+  return null;
+}
+
+const ENTRY_POINT_CANDIDATES = [
+  { p: 'lib/main.dart', label: 'lib/main.dart (Flutter entry)' },
+  { p: 'lib/app.dart', label: 'lib/app.dart (root widget)' },
+  { p: 'src/main.ts', label: 'src/main.ts (Node entry)' },
+  { p: 'src/main.js', label: 'src/main.js (Node entry)' },
+  { p: 'src/index.ts', label: 'src/index.ts (Node entry)' },
+  { p: 'src/index.js', label: 'src/index.js (Node entry)' },
+  { p: 'src/App.tsx', label: 'src/App.tsx (React root)' },
+  { p: 'src/App.jsx', label: 'src/App.jsx (React root)' },
+  { p: 'app/page.tsx', label: 'app/page.tsx (Next.js app router)' },
+  { p: 'app/layout.tsx', label: 'app/layout.tsx (Next.js app router)' },
+  { p: 'pages/_app.tsx', label: 'pages/_app.tsx (Next.js pages router)' },
+  { p: 'pages/index.tsx', label: 'pages/index.tsx (Next.js pages router)' },
+  { p: 'main.go', label: 'main.go (Go entry)' },
+  { p: 'cmd/main.go', label: 'cmd/main.go (Go entry)' },
+  { p: 'main.py', label: 'main.py (Python entry)' },
+  { p: '__main__.py', label: '__main__.py (Python module entry)' },
+  { p: 'app.py', label: 'app.py (Python entry)' },
+  { p: 'wsgi.py', label: 'wsgi.py (WSGI entry)' },
+  { p: 'asgi.py', label: 'asgi.py (ASGI entry)' },
+  { p: 'manage.py', label: 'manage.py (Django CLI)' },
+  { p: 'src/main.rs', label: 'src/main.rs (Rust binary)' },
+  { p: 'src/lib.rs', label: 'src/lib.rs (Rust library)' },
+  { p: 'index.php', label: 'index.php (PHP entry)' },
+  { p: 'public/index.php', label: 'public/index.php (PHP entry)' },
+  { p: 'artisan', label: 'artisan (Laravel CLI)' },
+  { p: 'index.html', label: 'index.html (static HTML)' },
+  { p: 'public/index.html', label: 'public/index.html (static HTML)' },
+];
+
+function detectEntryPoints() {
+  return ENTRY_POINT_CANDIDATES.filter(c => fs.existsSync(path.join(ROOT, c.p))).map(c => c.label);
+}
+
+function detectArchitecture(manifest) {
+  const hints = [];
+  if (manifest && manifest.type === 'package.json') {
+    const all = { ...(manifest.data.dependencies || {}), ...(manifest.data.devDependencies || {}) };
+    if (all['@nestjs/core']) hints.push('NestJS');
+    if (all['next']) hints.push('Next.js');
+    if (all['nuxt']) hints.push('Nuxt');
+    if (all['gatsby']) hints.push('Gatsby');
+    if (all['react']) hints.push('React');
+    if (all['vue']) hints.push('Vue');
+    if (all['@angular/core']) hints.push('Angular');
+    if (all['svelte']) hints.push('Svelte');
+    if (all['express']) hints.push('Express');
+    if (all['fastify']) hints.push('Fastify');
+    if (all['koa']) hints.push('Koa');
+    if (all['redux'] || all['@reduxjs/toolkit']) hints.push('Redux');
+    if (all['zustand']) hints.push('Zustand');
+    if (all['mobx']) hints.push('MobX');
+    if (all['@tanstack/react-query']) hints.push('TanStack Query');
+    if (all['graphql'] || all['@apollo/client'] || all['urql']) hints.push('GraphQL');
+    if (all['prisma'] || all['@prisma/client']) hints.push('Prisma');
+    if (all['mongoose']) hints.push('Mongoose');
+  }
+  if (manifest && manifest.type === 'pubspec') {
+    const ps = manifest.data;
+    if (/^\s*flutter_bloc\s*:/m.test(ps)) hints.push('BLoC');
+    if (/^\s*provider\s*:/m.test(ps)) hints.push('Provider');
+    if (/^\s*flutter_riverpod\s*:|^\s*riverpod\s*:/m.test(ps)) hints.push('Riverpod');
+    if (/^\s*get\s*:/m.test(ps)) hints.push('GetX');
+    if (/^\s*hive\s*:/m.test(ps)) hints.push('Hive');
+    if (/^\s*drift\s*:/m.test(ps)) hints.push('Drift');
+    if (/^\s*dio\s*:/m.test(ps)) hints.push('Dio');
+  }
+  if (manifest && manifest.type === 'pyproject') {
+    const py = manifest.data;
+    if (/django/i.test(py)) hints.push('Django');
+    if (/flask/i.test(py)) hints.push('Flask');
+    if (/fastapi/i.test(py)) hints.push('FastAPI');
+    if (/pyramid/i.test(py)) hints.push('Pyramid');
+    if (/starlette/i.test(py)) hints.push('Starlette');
+    if (/tornado/i.test(py)) hints.push('Tornado');
+    if (/sqlalchemy/i.test(py)) hints.push('SQLAlchemy');
+  }
+  if (manifest && manifest.type === 'cargo') {
+    const ct = manifest.data;
+    if (/actix-web/.test(ct)) hints.push('Actix');
+    if (/axum/.test(ct)) hints.push('Axum');
+    if (/rocket/.test(ct)) hints.push('Rocket');
+    if (/warp/.test(ct)) hints.push('Warp');
+  }
+  if (manifest && manifest.type === 'go') {
+    const g = manifest.data;
+    if (/gin-gonic\/gin/.test(g)) hints.push('Gin');
+    if (/labstack\/echo/.test(g)) hints.push('Echo');
+    if (/gofiber\/fiber/.test(g)) hints.push('Fiber');
+    if (/go-chi\/chi/.test(g)) hints.push('Chi');
+  }
+  return hints;
+}
+
+function extractGlossary() {
+  const terms = new Set();
+  const candidates = ['lib', 'src', 'app', 'models', 'screens', 'widgets', 'views', 'components', 'services', 'core', 'domain'];
+  const regexes = [
+    /\bclass\s+(\w{4,})/g,
+    /\bdef\s+(\w{4,})/g,
+    /\bfunction\s+(\w{4,})/g,
+    /\binterface\s+(\w{4,})/g,
+    /\bconst\s+(\w{4,})\s*=\s*[\(\[]/g,
+    /export\s+(?:default\s+)?(?:class|function|const)\s+(\w{4,})/g,
+  ];
+  const STOP = /^(Test|Mock|Stub|Fake|From|To|String|Int|Bool|True|False|NULL|None|State|Props|Config|Error|Data|Utils|Helper)$/;
+  for (const d of candidates) {
+    const dir = path.join(ROOT, d);
+    if (!fs.existsSync(dir)) continue;
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { continue; }
+    for (const f of entries.slice(0, 25)) {
+      if (!f.isFile()) continue;
+      if (!/\.(dart|ts|tsx|js|jsx|py|java|go)$/.test(f.name)) continue;
+      const content = readIfExists(path.join(dir, f.name)) || '';
+      if (content.length > 50000) continue;
+      for (const re of regexes) {
+        const reCopy = new RegExp(re.source, re.flags);
+        let m;
+        while ((m = reCopy.exec(content)) !== null) {
+          const name = m[1];
+          if (name && /^[A-Z]/.test(name) && !STOP.test(name)) {
+            terms.add(name);
+            if (terms.size >= 12) break;
+          }
+        }
+        if (terms.size >= 12) break;
+      }
+      if (terms.size >= 12) break;
+    }
+    if (terms.size >= 12) break;
+  }
+  return [...terms].slice(0, 10);
+}
+
 function detect() {
   const isPack = detectOpencodePack();
   const manifest = detectManifest(isPack);
@@ -365,40 +591,53 @@ function detect() {
     }
   }
 
-  // directory layout
-  const topDirs = listDir(ROOT, f => fs.statSync(path.join(ROOT, f)).isDirectory() && !f.startsWith('.') && f !== 'node_modules');
-  const known = {
-    'src': 'application code',
-    'lib': 'library code',
-    'app': 'application code',
-    'tests': 'test suites',
-    'test': 'test suites',
-    'docs': 'project documentation (this file lives here)',
-    'scripts': 'dev scripts',
-    'bin': 'CLI binaries',
-    'public': 'static assets',
-    'static': 'static assets',
-  };
-  for (const d of topDirs) {
-    if (known[d]) data.directoryLayout.push(`\`${d}/\` — ${known[d]}`);
+  // ---- generic directory layout (1.2.5: language-agnostic) ----
+  const dirs = walkTopDirs(2);
+  for (const d of dirs) {
+    const purpose = detectDirPurpose(d.name, d.rel);
+    if (purpose) {
+      data.directoryLayout.push(`\`${d.rel}/\` — ${purpose}${d.files > 0 ? ` (${d.files} file${d.files > 1 ? 's' : ''})` : ''}`);
+    }
   }
-  // Add opencode-pack subdirs
+  // Pack subdirs (only when isPack)
   if (isPack) {
-    if (fs.existsSync(AGENTS_DIR)) data.directoryLayout.push('`.opencode/agents/` — sub-agent definitions (72)');
-    if (fs.existsSync(COMMANDS_DIR)) data.directoryLayout.push('`.opencode/commands/` — slash commands (64)');
-    if (fs.existsSync(SKILLS_DIR)) data.directoryLayout.push('`.agents/skills/` — knowledge skills (20)');
-    if (fs.existsSync(BIN_DIR)) data.directoryLayout.push('`.opencode/bin/` — native CLIs (13, zero deps)');
-    if (fs.existsSync(PLUGINS_DIR)) data.directoryLayout.push('`.opencode/plugins/` — local plugins');
+    if (fs.existsSync(AGENTS_DIR)) data.directoryLayout.push(`\`.opencode/agents/\` — sub-agent definitions (${listDir(AGENTS_DIR, f => f.endsWith('.md')).length})`);
+    if (fs.existsSync(COMMANDS_DIR)) data.directoryLayout.push(`\`.opencode/commands/\` — slash commands (${listDir(COMMANDS_DIR, f => f.endsWith('.md')).length})`);
+    if (fs.existsSync(SKILLS_DIR)) data.directoryLayout.push(`\`.agents/skills/\` — knowledge skills (${listDir(SKILLS_DIR).length})`);
+    if (fs.existsSync(BIN_DIR)) data.directoryLayout.push(`\`.opencode/bin/\` — native CLIs (${listDir(BIN_DIR, f => f.endsWith('.js')).length})`);
+    if (fs.existsSync(PLUGINS_DIR)) data.directoryLayout.push(`\`.opencode/plugins/\` — local plugins`);
   }
 
-  // domain map (opencode pack)
+  // ---- entry points (1.2.5: expanded) ----
+  if (data.entryPoints.length === 0) {
+    data.entryPoints = detectEntryPoints();
+  }
+
+  // ---- architecture hints (1.2.5: framework detection from manifest deps) ----
+  const archHints = detectArchitecture(manifest);
+  if (archHints.length > 0) {
+    data.architectureNotes.push(`**Pattern**: ${archHints.join(' + ')} (auto-detected from manifest dependencies)`);
+  }
+
+  // ---- license (1.2.5: LICENSE file + manifest field) ----
+  const lic = detectLicense(manifest);
+  if (lic) {
+    data.nonNegotiables.push(`**License**: ${lic.name} (from ${lic.source})`);
+  }
+
+  // ---- glossary (1.2.5: auto-extract class names from code) ----
+  if (data.glossary.length === 0) {
+    data.glossary = extractGlossary();
+  }
+
+  // ---- domain map (opencode pack) ----
   if (isPack) {
     data.domainMap = [
-      { module: 'agents', desc: '72 sub-agents (reviewers, resolvers, planners, specialists)' },
-      { module: 'commands', desc: '64 slash commands (workflows + dispatchers)' },
-      { module: 'skills', desc: '20 knowledge skills (patterns, processes, security)' },
-      { module: 'bin', desc: '13 native CLIs (zero deps, CommonJS, cross-platform)' },
-      { module: 'plugins', desc: '4 plugins (3 npm + 1 local hookify.js)' },
+      { module: 'agents', desc: `${listDir(AGENTS_DIR, f => f.endsWith('.md')).length} sub-agents (reviewers, resolvers, planners, specialists)` },
+      { module: 'commands', desc: `${listDir(COMMANDS_DIR, f => f.endsWith('.md')).length} slash commands (workflows + dispatchers)` },
+      { module: 'skills', desc: `${listDir(SKILLS_DIR).length} knowledge skills (patterns, processes, security)` },
+      { module: 'bin', desc: `${listDir(BIN_DIR, f => f.endsWith('.js')).length} native CLIs (zero deps, CommonJS, cross-platform)` },
+      { module: 'plugins', desc: 'plugins (npm + local hookify.js)' },
     ];
   }
 
@@ -455,10 +694,7 @@ function extractManualSections(existing) {
     const m = line.match(/^##\s+(.+?)\s*$/);
     if (m) {
       if (current && manualSections.has(current)) {
-        const content = buf.join('\n').trim();
-        // Treat placeholder/empty content (e.g. "```", "TBD", "...") as no content
-        const isPlaceholder = /^[`'.~\-*\s]*$/.test(content) || /^(tbd|todo|wip|n\/a|placeholder)$/i.test(content);
-        if (content && !isPlaceholder) sections[current] = content;
+        sections[current] = cleanManualContent(buf);
       }
       current = m[1].trim();
       buf = [];
@@ -467,11 +703,26 @@ function extractManualSections(existing) {
     }
   }
   if (current && manualSections.has(current)) {
-    const content = buf.join('\n').trim();
-    const isPlaceholder = /^[`'.~\-*\s]*$/.test(content) || /^(tbd|todo|wip|n\/a|placeholder)$/i.test(content);
-    if (content && !isPlaceholder) sections[current] = content;
+    sections[current] = cleanManualContent(buf);
   }
   return sections;
+}
+
+// Strip leading `<!-- manual -->` comments, HTML comment markers, and
+// template-placeholder bullets. Returns the trimmed content or '' if
+// the content is a placeholder/empty.
+function cleanManualContent(buf) {
+  let lines = buf.slice();
+  // Drop leading `<!-- manual ... -->` comment lines
+  while (lines.length > 0 && /^\s*<!--\s*(manual|auto|conditional)/.test(lines[0])) {
+    lines.shift();
+  }
+  // Drop leading/trailing blank lines
+  while (lines.length > 0 && lines[0].trim() === '') lines.shift();
+  while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+  const content = lines.join('\n');
+  const isPlaceholder = /^[`'.~\-*\s]*$/.test(content) || /^(tbd|todo|wip|n\/a|placeholder)$/i.test(content);
+  return content && !isPlaceholder ? content : '';
 }
 
 // Extract override section: content after "<!-- Override -->" comment in
@@ -648,11 +899,24 @@ function render(template, detected, manual, overrides, opts) {
     out = out.replace(/<!-- conditional:dependencies -->[\s\S]*?<!-- \/conditional -->\n*/g, '');
   }
 
-  // ---- Manual sections (preserved from existing or templates) ----
+  // ---- Manual sections (preserved from existing or auto-filled from detect()) ----
+  // Priority: existing manual content > auto-detected data (1.2.5) > template placeholder
+  const secDataKey = {
+    'Glossary': 'glossary',
+    'Non-Negotiables': 'nonNegotiables',
+    'Architecture Notes': 'architectureNotes',
+    'Open Questions': 'openQuestions',
+  };
   for (const sec of ['Glossary', 'Non-Negotiables', 'Architecture Notes', 'Open Questions']) {
     const re = new RegExp(`(##\\s+${sec}\\s+<!-- manual[^>]*-->)\\n[\\s\\S]*?(?=\\n##\\s|$)`);
     if (manual[sec]) {
       out = out.replace(re, `$1\n\n${manual[sec]}\n`);
+    } else if (detected[secDataKey[sec]] && detected[secDataKey[sec]].length > 0) {
+      // 1.2.5: auto-fill from detected data (License, Architecture, Glossary terms)
+      const bullets = detected[secDataKey[sec]]
+        .map(item => item.startsWith('-') ? item : `- ${item}`)
+        .join('\n');
+      out = out.replace(re, `$1\n\n${bullets}\n`);
     }
     // else: keep template placeholders
   }

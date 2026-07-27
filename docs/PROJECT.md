@@ -17,7 +17,7 @@
 -->
 # open — Project Context
 
-> **Status**: 🟢 fresh (19h ago) · **Init**: 2026-07-27 · **Refresh**: 2026-07-27 · **Stale after**: 3 days
+> **Status**: 🟢 fresh (20h ago) · **Init**: 2026-07-27 · **Refresh**: 2026-07-27 · **Stale after**: 3 days
 > **Template**: `.opencode/templates/PROJECT.md.template` v2.1
 > Manual sections (preserved): Non-Negotiables · Architecture Notes · Open Questions · Glossary
 > Auto-managed (append-only): Recent Activity
@@ -87,21 +87,20 @@
 ## Directory Layout
 <!-- auto: top 2 levels of common dirs (src, lib, app, test, docs, scripts) with one-line purpose -->
 
-`docs/` — project documentation (this file lives here)
 `.opencode/agents/` — sub-agent definitions (72)
-`.opencode/commands/` — slash commands (64)
-`.agents/skills/` — knowledge skills (20)
-`.opencode/bin/` — native CLIs (13, zero deps)
+`.opencode/commands/` — slash commands (65)
+`.agents/skills/` — knowledge skills (21)
+`.opencode/bin/` — native CLIs (15)
 `.opencode/plugins/` — local plugins
 
 ## Domain Map
 <!-- auto: detect from top-level dirs and their contents; one-line per module/area -->
 
 - **agents**: 72 sub-agents (reviewers, resolvers, planners, specialists)
-- **commands**: 64 slash commands (workflows + dispatchers)
-- **skills**: 20 knowledge skills (patterns, processes, security)
-- **bin**: 13 native CLIs (zero deps, CommonJS, cross-platform)
-- **plugins**: 4 plugins (3 npm + 1 local hookify.js)
+- **commands**: 65 slash commands (workflows + dispatchers)
+- **skills**: 21 knowledge skills (patterns, processes, security)
+- **bin**: 15 native CLIs (zero deps, CommonJS, cross-platform)
+- **plugins**: plugins (npm + local hookify.js)
 
 <!-- conditional:dependencies -->
 ## Dependencies
@@ -115,28 +114,20 @@
 ## Glossary
 <!-- manual: domain-specific terms. Helps sub-agents disambiguate "user" vs "account" vs "tenant" without re-deriving. -->
 
-<!-- manual: domain-specific terms. Helps sub-agents disambiguate "user" vs "account" vs "tenant" without re-deriving. -->
-
 - **{term}**: {definition in this project's context}
 - **{term}**: {definition}
 
 ## Non-Negotiables
 <!-- manual: things that MUST stay true. Preserved across refreshes. -->
 
-<!-- manual: things that MUST stay true. Preserved across refreshes. -->
-
-- **{constraint}**: {e.g. License: MIT, no telemetry, no third-party analytics, must run on Node 20+}
+- **License**: MIT (from LICENSE)
 
 ## Architecture Notes
-<!-- manual: ADRs, rationale, key decisions. Preserved across refreshes. -->
-
 <!-- manual: ADRs, rationale, key decisions. Preserved across refreshes. -->
 
 - **{decision}**: {rationale}
 
 ## Open Questions
-<!-- manual: things to resolve later. Preserved across refreshes. -->
-
 <!-- manual: things to resolve later. Preserved across refreshes. -->
 
 - [ ] {question}
