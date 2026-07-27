@@ -43,6 +43,172 @@
         }
       },
       "use_when": "Investigating data issues, validating migrations, debugging ORM queries against real data, writing postmortems with concrete numbers."
+    },
+    {
+      "name": "filesystem",
+      "description": "Read/write/search files and directories on the local filesystem, with allowlist of permitted paths. Useful when the agent needs to operate outside the project root (e.g. /tmp, a sibling monorepo, a shared docs dir).",
+      "package": "@modelcontextprotocol/server-filesystem",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "${FILESYSTEM_ALLOWED_DIRS}"
+      ],
+      "env": {
+        "FILESYSTEM_ALLOWED_DIRS": {
+          "description": "Comma-separated absolute paths the MCP is allowed to touch. Default: the current working directory. Example: /home/me/projects,/tmp/mcp-scratch. Server refuses paths outside this list.",
+          "secret": false,
+          "required": true
+        }
+      },
+      "use_when": "Reading config from a sibling repo, batch-renaming files, searching across multiple project roots, working with /tmp scratch dirs that opencode's built-in tools don't reach."
+    },
+    {
+      "name": "sentry",
+      "description": "Query Sentry for unresolved issues, error frequency, stack traces, and recent events. Triage production incidents without leaving the agent.",
+      "package": "@modelcontextprotocol/server-sentry",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sentry",
+        "--auth-token",
+        "${SENTRY_AUTH_TOKEN}"
+      ],
+      "env": {
+        "SENTRY_AUTH_TOKEN": {
+          "description": "Sentry auth token. Generate at https://sentry.io/settings/account/api/auth-tokens/. Needs 'event:read', 'project:read', 'org:read' scopes.",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Production incident response, finding regression-causing issues, getting stack traces for incident postmortems, checking error rates before a deploy."
+    },
+    {
+      "name": "linear",
+      "description": "Read and update Linear issues, projects, cycles, and teams. Useful for agents that need to track work alongside the user (creating follow-up issues from PR review, updating ticket status, fetching acceptance criteria).",
+      "package": "@modelcontextprotocol/server-linear",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-linear",
+        "--api-key",
+        "${LINEAR_API_KEY}"
+      ],
+      "env": {
+        "LINEAR_API_KEY": {
+          "description": "Linear personal API key. Generate at https://linear.app/settings/api. Needs 'read' and 'write' scopes for full functionality.",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Auto-creating Linear tickets from /pr-review findings, fetching acceptance criteria before implementing, updating ticket status after merging, cross-referencing PRs to tickets."
+    },
+    {
+      "name": "notion",
+      "description": "Read and search Notion pages, databases, and blocks. Useful for grounding the agent in team docs, design specs, runbooks, or product requirements.",
+      "package": "@modelcontextprotocol/server-notion",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-notion",
+        "--integration-token",
+        "${NOTION_API_KEY}"
+      ],
+      "env": {
+        "NOTION_API_KEY": {
+          "description": "Notion internal integration token. Create at https://www.notion.so/profile/integrations. The integration must be explicitly shared with the pages/databases you want to query.",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Reading product specs from Notion before implementing, searching runbooks during incident response, pulling design docs into a PRD, checking team conventions."
+    },
+    {
+      "name": "slack",
+      "description": "Read Slack channels, threads, and direct messages. Post messages on behalf of the user. Useful for triaging notifications, searching history, and posting incident updates.",
+      "package": "@modelcontextprotocol/server-slack",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-slack",
+        "--token",
+        "${SLACK_BOT_TOKEN}"
+      ],
+      "env": {
+        "SLACK_BOT_TOKEN": {
+          "description": "Slack bot token (xoxb-...) OR user token (xoxp-...). Create at https://api.slack.com/apps. Bot token needs 'channels:history', 'channels:read', 'chat:write', 'users:read' scopes for the demo workflow.",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Triaging unread Slack messages, posting incident updates to a channel, searching past decisions in threads, summarizing long discussions."
+    },
+    {
+      "name": "brave-search",
+      "description": "Web search via Brave. Useful for up-to-date information that isn't in the agent's training data (recent CVEs, latest library versions, breaking changes, current best practices).",
+      "package": "@modelcontextprotocol/server-brave-search",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-brave-search",
+        "--brave-api-key",
+        "${BRAVE_API_KEY}"
+      ],
+      "env": {
+        "BRAVE_API_KEY": {
+          "description": "Brave Search API key. Free tier (2000 queries/month) at https://brave.com/search/api/. Sufficient for most agent usage.",
+          "secret": true,
+          "required": true
+        }
+      },
+      "use_when": "Looking up recent CVEs, verifying library versions before recommending, finding breaking changes in upstream APIs, fact-checking training-data claims about recent events."
+    },
+    {
+      "name": "fetch",
+      "description": "Fetch any URL and return its content as markdown. Generic HTTP fetcher with HTML-to-markdown conversion. Useful for reading arbitrary web pages, API docs not in Context7, blog posts, RFCs.",
+      "package": "@modelcontextprotocol/server-fetch",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "env": {},
+      "use_when": "Reading docs that Context7 doesn't have, fetching RFCs or specifications, pulling blog posts the user references, scraping GitHub raw files (use github MCP first if available)."
+    },
+    {
+      "name": "gitlab",
+      "description": "Read GitLab issues, MRs, code search, project metadata. Same shape as the GitHub MCP but for self-hosted or gitlab.com projects. Useful for teams on GitLab instead of GitHub.",
+      "package": "@modelcontextprotocol/server-gitlab",
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-gitlab",
+        "--token",
+        "${GITLAB_PERSONAL_ACCESS_TOKEN}",
+        "--host",
+        "${GITLAB_HOST}"
+      ],
+      "env": {
+        "GITLAB_PERSONAL_ACCESS_TOKEN": {
+          "description": "GitLab personal access token. Generate at https://gitlab.com/-/user_settings/personal_access_tokens (or your self-hosted /-/user_settings/personal_access_tokens). Needs 'api' and 'read_repository' scopes.",
+          "secret": true,
+          "required": true
+        },
+        "GITLAB_HOST": {
+          "description": "GitLab host URL. Default 'https://gitlab.com'. For self-hosted: 'https://gitlab.yourcompany.com'.",
+          "secret": false,
+          "required": true
+        }
+      },
+      "use_when": "Working on a GitLab-hosted project, fetching MRs for review, searching code across a GitLab org, releasing from a GitLab CI pipeline."
     }
   ]
 }

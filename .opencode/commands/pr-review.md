@@ -72,8 +72,8 @@ Run these agents **in the same message** (one tool call block) so they execute c
    - Dart/Flutter → `flutter-reviewer`
    - Ruby → (no dedicated reviewer; route to `code-reviewer` with Ruby awareness)
    - PHP → `php-reviewer`
-4. **`pr-test-analyzer`** — verifies test coverage, behavioral coverage, and that new logic has tests.
-5. **`silent-failure-hunter`** — catches swallowed errors, bad fallbacks, missing error propagation. ALWAYS.
+4. **`code-quality-analyzer`** (mode: tests) — verifies test coverage, behavioral coverage, and that new logic has tests.
+5. **`code-quality-analyzer`** (mode: silent-failures) — catches swallowed errors, bad fallbacks, missing error propagation. ALWAYS.
 
 Skip a reviewer if its domain is clearly not present (e.g. no security-sensitive code → still run `security-reviewer`, never skip it).
 

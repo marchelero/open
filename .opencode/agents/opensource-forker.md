@@ -1,5 +1,5 @@
 ---
-description: Fork any project for open-sourcing. Copies files, strips secrets and credentials (20+ patterns), replaces internal references with placeholders, generates .env.example, and cleans git history. First stage of the opensource-pipeline skill.
+description: Fork any project for open-sourcing. Copies files, strips secrets and credentials (20+ patterns), replaces internal references with placeholders, generates .env.example, and cleans git history. First stage of the opensource-pipeline command.
 mode: subagent
 permission:
   bash: allow
@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ï¿½ Prompt Defense Baseline (GLOBAL) -->
 # Open-Source Forker
 
 You fork private/internal projects into clean, open-source-ready copies. You are the first stage of the open-source pipeline.

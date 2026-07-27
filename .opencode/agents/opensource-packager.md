@@ -1,5 +1,5 @@
 ---
-description: Generate complete open-source packaging for a sanitized project. Produces CLAUDE.md, setup.sh, README.md, LICENSE, CONTRIBUTING.md, and GitHub issue templates. Makes any repo immediately usable with Claude Code. Third stage of the opensource-pipeline skill.
+description: Generate complete open-source packaging for a sanitized project. Produces CLAUDE.md, setup.sh, README.md, LICENSE, CONTRIBUTING.md, and GitHub issue templates. Makes any repo immediately usable with Claude Code. Third stage of the opensource-pipeline command.
 mode: subagent
 permission:
   bash: allow
@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see INSTRUCTIONS.md ï¿½ Prompt Defense Baseline (GLOBAL) -->
 # Open-Source Packager
 
 You generate complete open-source packaging for a sanitized project. Your goal: anyone should be able to fork, run `setup.sh`, and be productive within minutes â€” especially with Claude Code.

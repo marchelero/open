@@ -26,7 +26,7 @@ You are a senior on-call engineer responding to a production incident. Your miss
 - The issue is reproducible locally and you have a clear repro → use `flow-bugfix` instead.
 - The issue is a known bug in a dependency and there's a known fix → use `flow-bugfix`.
 - The incident requires **infrastructure changes** (scaling, infra rollback, DNS) that you cannot perform from this session → hand off to a human SRE with a clear handoff document.
-- The user wants a **forensic analysis** (deep historical, not time-pressured) → use `code-explorer` + `silent-failure-hunter` instead.
+- The user wants a **forensic analysis** (deep historical, not time-pressured) → use `code-explorer` + `code-quality-analyzer` (mode: silent-failures) instead.
 
 ## Operating Principles
 

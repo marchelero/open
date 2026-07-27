@@ -4,12 +4,14 @@
 
 ## ¿Qué incluye?
 
-- **69 sub-agentes** en `.opencode/agents/` (revisores, planners, resolvers, especialistas por stack)
-- **16 skills portables** en `.agents/skills/` (patrones de API, TDD, seguridad, error handling, agent-router, etc.)
-- **67 slash commands** en `.opencode/commands/` (atajos recurrentes)
+- **72 sub-agentes** en `.opencode/agents/` (revisores, planners, resolvers, especialistas por stack)
+- **20 skills portables** en `.agents/skills/` (patrones de API, TDD, seguridad, error handling, testing, refactoring, debugging, agent-router, etc.)
+- **72 slash commands** en `.opencode/commands/` (atajos recurrentes)
 - **2 servidores MCP** en `opencode.json`: `context7` (docs) + `playwright` (browser)
-- **3 plugins** npm: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
-- **9 CLIs nativos** en `.opencode/bin/` (cero dependencias, solo Node stdlib)
+- **3 plugins npm**: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
+- **1 plugin local** `.opencode/plugins/hookify.js` con 2 hooks (SecretBlocker + DestructiveWarner). Auto-cargado, zero install. Ver `.opencode/plugins/hookify.js` para detalles.
+- **3 ejemplos downstream** en `.opencode/examples/` (node-api, python-data, react-app) — borrar tras grokking el pack
+- **10 CLIs nativos** en `.opencode/bin/` (cero dependencias, solo Node stdlib)
 
 ## Instalación
 
@@ -100,7 +102,7 @@ node .opencode/bin/refresh-project.js --status
 ## Documentación adicional
 
 - **[ROUTE.md](./ROUTE.md)** — elige el sub-agente correcto según la intención (legacy; el agent-router skill es la nueva forma automática)
-- **[COMMANDS.md](./COMMANDS.md)** — los 67 slash commands agrupados por intención
+- **[COMMANDS.md](./COMMANDS.md)** — los 72 slash commands agrupados por intención
 - **[EXAMPLES.md](./EXAMPLES.md)** — 6 flujos completos de proyectos reales
 - **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
 - **[SURFACES.md](./SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI

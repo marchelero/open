@@ -7,9 +7,10 @@
 A portable, zero-deps starter pack for [opencode](https://opencode.ai):
 
 - **72 agents** — specialist roles (reviewers, builders, planners, domain experts)
-- **17 skills** — on-demand reference material (patterns, checklists, frameworks)
-- **69 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
+- **20 skills** — on-demand reference material (patterns, checklists, frameworks)
+- **72 commands** — slash-commands for common flows (`/plan`, `/prd`, `/code-review`, etc.)
 - **9 bin scripts** — local CLIs (`context.js`, `instinct.js`, `build-agents-index.js`)
+- **3 example projects** — minimal apps in `.opencode/examples/` (delete after grokking)
 
 No `package.json` at the project root. No build step. Drop the `.opencode/` folder in any repo and it works.
 
@@ -128,7 +129,7 @@ These are the agents you'll see most often. Each has a focused specialty and a s
 | `code-architect` | Design before code on a non-trivial feature |
 | `code-explorer` | Understand an unfamiliar codebase |
 | `tdd-guide` | Enforce test-first on new code |
-| `silent-failure-hunter` | Catch swallowed errors and bad fallbacks |
+| `code-quality-analyzer` (mode: silent-failures) | Catch swallowed errors and bad fallbacks |
 | `migration-planner` | DB/framework/monorepo migrations |
 | `report-auditor` | Cross-check a report against the source PRD |
 

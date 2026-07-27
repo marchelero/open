@@ -39,7 +39,7 @@
 |---------|----------|-------|
 | `/react-review` | Revisa código React/JSX. | react-reviewer |
 | `/react-build` | Arregla errores de build de React. | react-build-resolver |
-| `/react-test` | Ejecuta tests de React. | react-build-resolver |
+| `/react-test` | Ejecuta tests de React. | tdd-guide |
 
 ### Flutter/Dart
 
@@ -47,7 +47,7 @@
 |---------|----------|-------|
 | `/flutter-review` | Revisa código Flutter/Dart. | flutter-reviewer |
 | `/flutter-build` | Arregla errores de build de Flutter. | dart-build-resolver |
-| `/flutter-test` | Ejecuta tests de Flutter. | dart-build-resolver |
+| `/flutter-test` | Ejecuta tests de Flutter. | tdd-guide |
 
 ### Go
 
@@ -71,7 +71,7 @@
 |---------|----------|-------|
 | `/cpp-review` | Revisa código C++. | cpp-reviewer |
 | `/cpp-build` | Arregla errores de build de C++. | cpp-build-resolver |
-| `/cpp-test` | Ejecuta tests de C++. | cpp-build-resolver |
+| `/cpp-test` | Ejecuta tests de C++. | tdd-guide |
 
 ### Kotlin
 
@@ -79,7 +79,7 @@
 |---------|----------|-------|
 | `/kotlin-review` | Revisa código Kotlin. | kotlin-reviewer |
 | `/kotlin-build` | Arregla errores de build de Kotlin/Gradle. | kotlin-build-resolver |
-| `/kotlin-test` | Ejecuta tests de Kotlin. | kotlin-build-resolver |
+| `/kotlin-test` | Ejecuta tests de Kotlin. | tdd-guide |
 
 ### Python
 
@@ -153,6 +153,7 @@
 | `/flow-feature` | Feature nueva end-to-end: `/orchestrate` → implement → `/verify` → report → audit. | build |
 | `/flow-refactor` | Refactor end-to-end: `/plan` → refactor → `/verify` → report → audit. | build |
 | `/flow-security` | Security review end-to-end: `/security` → fix → `/verify` → report → audit. | build |
+| `/opensource-pipeline` | Abrir código: `opensource-forker` → `opensource-sanitizer` (gate) → `opensource-packager`. NO pushea. | build |
 
 ## "Quiero colaborar via PR"
 

@@ -21,10 +21,10 @@ const OUT_MD = path.join(__dirname, '..', '..', 'docs', 'AGENTS_INDEX.md');
 
 const CATEGORIES = [
   { name: 'Build / Plan',       match: /^(build|prd-agent|planner|code-architect|code-explorer|architect|migration-planner)\.md$/ },
-  { name: 'Review (General)',   match: /^(code-reviewer|security-reviewer|pr-test-analyzer|refactor-cleaner|code-simplifier|comment-analyzer|silent-failure-hunter|type-design-analyzer)\.md$/ },
+  { name: 'Review (General)',   match: /^(code-reviewer|security-reviewer|code-quality-analyzer|refactor-cleaner)\.md$/ },
   { name: 'Language Reviewers', match: /(typescript|python|go|rust|java|kotlin|csharp|swift|cpp|fsharp|php|flutter|dart|react|vue|svelte)-reviewer\.md$/ },
   { name: 'Build Resolvers',    match: /-resolver\.md$/ },
-  { name: 'Specialized',        match: /^(database-reviewer|fastapi-reviewer|healthcare-reviewer|harmonyos-app-resolver|marketing-agent|seo-specialist|mle-reviewer|performance-optimizer|network-architect|network-config-reviewer|network-troubleshooter|homelab-architect|docs-lookup|a11y-architect)\.md$/ },
+  { name: 'Specialized',        match: /^(database-reviewer|fastapi-reviewer|healthcare-reviewer|harmonyos-app-resolver|marketing-agent|seo-specialist|mle-reviewer|performance-optimizer|network-architect|network-config-reviewer|network-troubleshooter|iac-reviewer|k8s-reviewer|homelab-architect|docs-lookup|a11y-architect)\.md$/ },
   { name: 'Quality / Process',  match: /^(tdd-guide|e2e-runner|doc-updater|conversation-analyzer|harness-optimizer|opensource-forker|opensource-sanitizer|opensource-packager|loop-operator|report-auditor|chief-of-staff)\.md$/ },
   { name: 'Meta / Harness',     match: /^(gan-planner|gan-evaluator|gan-generator)\.md$/ },
 ];

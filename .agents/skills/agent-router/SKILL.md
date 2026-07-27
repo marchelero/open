@@ -85,12 +85,12 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 | Request | Primary agent | Alternates |
 |---------|---------------|------------|
 | "review this code" / "code review" | `code-reviewer` | Stack-specific reviewer |
-| "review this PR" | `pr-test-analyzer` | `code-reviewer` |
+| "review this PR" | `code-quality-analyzer` (mode: tests) | `code-reviewer` |
 | "audit report vs PRD" | `report-auditor` | — |
 | "security review" / "is this secure" | `security-reviewer` | `security-review` (skill) |
-| "silent failures" / "error handling review" | `silent-failure-hunter` | `error-handling` (skill) |
-| "review comments / are docs accurate" | `comment-analyzer` | `doc-updater` |
-| "review types / type design" | `type-design-analyzer` | Stack reviewer |
+| "silent failures" / "error handling review" | `code-quality-analyzer` (mode: silent-failures) | `error-handling` (skill) |
+| "review comments / are docs accurate" | `code-quality-analyzer` (mode: comments) | `doc-updater` |
+| "review types / type design" | `code-quality-analyzer` (mode: types) | Stack reviewer |
 | "is this accessible" | `a11y-architect` | — |
 | "review SQL / schema" | `database-reviewer` | — |
 | "review ML code" | `mle-reviewer` | — |
@@ -105,6 +105,8 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 |-------|-------|
 | TypeScript / JS | `typescript-reviewer` |
 | React / TSX | `react-reviewer` |
+| Vue 3 / Nuxt | `vue-reviewer` |
+| Svelte 5 / SvelteKit | `svelte-reviewer` |
 | Python | `python-reviewer` |
 | Go | `go-reviewer` |
 | Rust | `rust-reviewer` |
@@ -119,6 +121,8 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | Django | `django-reviewer` |
 | FastAPI | `fastapi-reviewer` |
 | HarmonyOS | `harmonyos-app-resolver` |
+| Terraform / Pulumi / CFN / Ansible | `iac-reviewer` |
+| Kubernetes / Helm / Kustomize | `k8s-reviewer` |
 
 ### Test & QA
 
@@ -133,9 +137,9 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | Request | Primary agent | Notes |
 |---------|---------------|-------|
 | "refactor X" / "clean up" | `refactor-cleaner` | Load `coding-standards` skill |
-| "simplify this code" | `code-simplifier` | — |
+| "simplify this code" | `code-quality-analyzer` (mode: simplify) | `refactoring-patterns` (skill) |
 | "find dead code" | `refactor-cleaner` | — |
-| "remove duplicate Y" | `code-simplifier` | — |
+| "remove duplicate Y" | `code-quality-analyzer` (mode: simplify) | — |
 
 ### Documentation
 
@@ -176,14 +180,14 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 |-----------|-------|
 | "agregar auth con JWT" | `prd-agent` → `planner` → `backend-patterns` (skill) → `security-review` (skill) → `tdd-guide` → `security-reviewer` (review) |
 | "fix el bug en login" | `planner` (repro + plan) → `tdd-guide` (write failing test) → `build` (implement) → stack reviewer |
-| "code review del PR #42" | `pr-test-analyzer` → stack-specific reviewer |
+| "code review del PR #42" | `code-quality-analyzer` (mode: tests) → stack-specific reviewer |
 | "audit this report against PRD" | `report-auditor` |
 | "is this safe to deploy" | `security-reviewer` |
 | "regenerate docs" | `doc-updater` |
 | "no anda el build de Go" | `go-build-resolver` (NOT general `build-error-resolver` first) |
 | "como se hace X en React" | `frontend-patterns` (skill) + `docs-lookup` (for lib docs) |
 | "triage my email" | `chief-of-staff` |
-| "open source this app" | `opensource-forker` → `opensource-sanitizer` → `opensource-packager` |
+| "open source this app" | `/opensource-pipeline` command (orchestrates `opensource-forker` → `opensource-sanitizer` (gate) → `opensource-packager`) |
 
 ## Anti-Patterns
 

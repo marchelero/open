@@ -104,7 +104,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 **Úsalo para**:
 - Trabajo especializado que no debe contaminar el contexto del primary
 - Trabajo paralelizable (varios agentes en un mismo mensaje)
-- Auditorías read-only (code-reviewer, security-reviewer, pr-test-analyzer) donde el aislamiento previene ediciones accidentales
+- Auditorías read-only (code-reviewer, security-reviewer, code-quality-analyzer en modos comments/tests/silent-failures/types) donde el aislamiento previene ediciones accidentales. `code-quality-analyzer` en modo `simplify` sí edita.
 - Expertos específicos de stack (python-reviewer, flutter-reviewer, go-reviewer) — solo se cargan cuando son relevantes
 
 **Reglas de frontmatter** (las aplica `validate-frontmatter.js`):

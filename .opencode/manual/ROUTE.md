@@ -27,10 +27,10 @@
 | `code-reviewer` | Calidad, seguridad, mantenibilidad | **OBLIGATORIO** en cada cambio de código |
 | `security-reviewer` | OWASP Top 10, secretos, SSRF, inyección, criptografía insegura | Tras tocar auth, pagos, datos de usuario o secretos |
 | `a11y-architect` | WCAG 2.2, diseño inclusivo | Componentes de UI, design systems |
-| `comment-analyzer` | Comentarios obsoletos, doc desactualizada | Codebases maduros, antes de un PR |
-| `silent-failure-hunter` | Errores silenciados, fallbacks peligrosos | Tras fusionar un fix crítico, auditorías de robustez |
-| `type-design-analyzer` | Encapsulación, invariantes, uniones discriminadas | Refactors de modelo de dominio, diseño de APIs internas |
-| `pr-test-analyzer` | Calidad de cobertura de tests, cobertura conductual | Antes de aprobar un PR |
+| `code-quality-analyzer` (mode: comments) | Comentarios obsoletos, doc desactualizada | Codebases maduros, antes de un PR |
+| `code-quality-analyzer` (mode: silent-failures) | Errores silenciados, fallbacks peligrosos | Tras fusionar un fix crítico, auditorías de robustez |
+| `code-quality-analyzer` (mode: types) | Encapsulación, invariantes, uniones discriminadas | Refactors de modelo de dominio, diseño de APIs internas |
+| `code-quality-analyzer` (mode: tests) | Calidad de cobertura de tests, cobertura conductual | Antes de aprobar un PR |
 | `performance-optimizer` | Perfilado, fugas de memoria, rendimiento de render, bundle | Quejas de latencia, pre-release, frame drops |
 
 ### Revisores por stack (OBLIGATORIOS cuando el stack coincide)
@@ -39,6 +39,8 @@
 |-------|--------|----------------|
 | TypeScript/JS | `typescript-reviewer` | cambios en `.ts`/`.tsx`/`.js` |
 | React | `react-reviewer` | cambios en `.tsx`/`.jsx`, hooks, boundaries de Next.js |
+| Vue | `vue-reviewer` | Vue 3 / Nuxt 3 (Composition API, SFC, reactivity) |
+| Svelte | `svelte-reviewer` | Svelte 5 / SvelteKit (runes, `+page.server.ts`, form actions) |
 | Python | `python-reviewer` | cambios en `.py` |
 | Django | `django-reviewer` | apps Django (ORM, DRF, migraciones) |
 | FastAPI | `fastapi-reviewer` | apps FastAPI (async, Pydantic, DI) |
@@ -79,6 +81,13 @@
 | `tdd-guide` | ROJO→VERDE→REFACTOR, cobertura 80%+ | **PROACTIVAMENTE** en features nuevas, fix de bugs o refactors |
 | `e2e-runner` | Playwright/Vercel Agent Browser E2E | Flujos críticos de usuario, pre-release |
 
+## "Quiero revisar infra (IaC / K8s)"
+
+| Agente | Qué hace | Cuándo usarlo |
+|--------|----------|---------------|
+| `iac-reviewer` | Terraform / OpenTofu / Pulumi / CloudFormation / CDK / Ansible. Caza 0.0.0.0/0 en sensitive ports, IAM wildcards, state en bucket público, secrets hardcoded, missing encryption, módulos sin version pin | Cambios en `.tf`/`.tfvars`/`.yaml`/`.yml`/Pulumi program/CDK app |
+| `k8s-reviewer` | Kubernetes / Helm / Kustomize. Caza `privileged: true`, host namespaces, root sin justificación, capabilities.ALL, secrets en ConfigMap, image `:latest` + `Always`, sin `resources.requests/limits`, sin NetworkPolicy, automounted SA tokens | Cambios en manifests, charts, overlays, `kustomization.yaml` |
+
 ## "Quiero entender el codebase"
 
 | Agente | Qué hace | Cuándo usarlo |
@@ -92,17 +101,19 @@
 |--------|----------|---------------|
 | `refactor-cleaner` | Código muerto, duplicados (knip/depcheck/ts-prune) | Mantenimiento periódico, pre-release |
 | `doc-updater` | Codemaps, `/update-codemaps`, `/update-docs` | Tras cambios estructurales |
-| `code-simplifier` | Claridad, consistencia, sin cambio de comportamiento | Tras un PR pero antes del merge |
+| `code-quality-analyzer` (mode: simplify) | Claridad, consistencia, sin cambio de comportamiento | Tras un PR pero antes del merge |
 | `harness-optimizer` | Ajusta la configuración local del harness de agentes | Cuando el ruteo o los permisos se sienten mal |
 | `loop-operator` | Monitorea bucles autónomos de agentes, abort seguro | Cuando corres agentes de noche |
 
 ## "Quiero abrir el código de un proyecto"
 
-Pipeline de 3 etapas. Ejecuta en orden:
+Pipeline de 3 etapas con gate. Ejecuta en orden:
 
 1. `opensource-forker` — copia y elimina secretos
-2. `opensource-sanitizer` — verifica la limpieza (PASS/FAIL)
+2. `opensource-sanitizer` — verifica la limpieza (PASS / PASS-WITH-WARNINGS / FAIL). **Gate**: si FAIL, parar.
 3. `opensource-packager` — genera CLAUDE.md, LICENSE, README, plantillas de GitHub
+
+**Shortcut**: `/opensource-pipeline <source-dir> [target-dir]` corre las 3 etapas con gate automático entre sanitize y package. Pide confirmación si hay warnings. NO pushea — eso es manual del usuario después de revisar.
 
 ## "Quiero usar el bucle GAN"
 
