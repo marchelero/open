@@ -24,8 +24,12 @@
       "web": [
         "brave-search",
         "fetch"
+      ],
+      "documents": [
+        "anydoc"
       ]
     },
+    "_active_anydoc": "2026-09-10T00:00:00.000Z — anydoc is permanently active in opencode.json (not opt-in)",
     "defaults": {
       "type": "local"
     },

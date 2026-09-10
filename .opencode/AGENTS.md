@@ -22,5 +22,9 @@ Every agent inherits this baseline. No own copy — reference this section. Exte
 ## Pointers (on-demand → skill catalog)
 Security secrets/OWASP → `security-review`. Tool truncation >200 líneas → `pack-reference`. TDD → `tdd-workflow` + `testing-patterns`.
 
+## External Tools (integrados)
+- **Archify** — diagramas de arquitectura/workflow/sequence/dataflow/lifecycle → HTML/SVG/PNG autocontenido. Skill: `archify`. CLI: `node .agents/skills/archify/bin/archify.mjs`. Uso: "analiza el repo y crea un diagrama de arquitectura con archify".
+- **AnyDoc** — convierte PDF/Word/PPT/Excel/CSV/EPUB/RTF a Markdown limpio. MCP activo: `anydoc`. Skill: `convert-documents-to-markdown`. CLI: `npx -y @firecrawl/anydoc <file>`. Uso: "convierte este archivo a markdown con anydoc".
+
 ## Security (CRITICAL)
 Secrets SIEMPRE env vars, nunca hardcoded; issue → STOP → `security-reviewer`.
