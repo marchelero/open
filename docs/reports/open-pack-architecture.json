@@ -3,13 +3,11 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Open Pack — Agent System Architecture",
-    "subtitle": "opencode starter pack: 72 agents, 20 skills, 68 commands",
+    "subtitle": "opencode starter pack: agents, skills, MCPs",
     "output": "open-pack-architecture.html",
     "quality_profile": "showcase",
     "views": [
-      { "id": "full-system", "label": "Full system overview", "focus": ["user", "opencode", "build-agent", "sub-agents", "skills", "mcp-context7", "mcp-anydoc", "plugins", "filesystem"], "note": "Complete view of the pack architecture from user input to output." },
-      { "id": "agent-routing", "label": "Agent routing", "focus": ["user", "opencode", "build-agent", "router", "sub-agents"], "note": "How requests flow from the user through conditional routing to specialized agents." },
-      { "id": "external-integrations", "label": "External integrations", "focus": ["opencode", "mcp-context7", "mcp-anydoc", "plugins", "filesystem"], "note": "MCP servers, plugins, and file system interactions." }
+      { "id": "full-system", "label": "Full system overview", "focus": ["user", "opencode", "build-agent", "sub-agents", "skills", "mcp-context7", "mcp-anydoc"], "note": "Complete view of the pack architecture from user input to output." }
     ],
     "legend": {
       "mode": "auto",
@@ -19,50 +17,40 @@
         "external": { "label": "External Tools" },
         "cloud": { "label": "MCP Servers" },
         "database": { "label": "Storage & Memory" },
-        "security": { "label": "Security & Permissions" },
-        "messagebus": { "label": "Message Bus & Plugins" }
+        "security": { "label": "Security & Permissions" }
       }
     }
   },
   "components": [
-    { "id": "user", "type": "external", "label": "Developer", "sublabel": "User input", "pos": [40, 260], "size": [120, 60] },
-    { "id": "opencode", "type": "backend", "label": "OpenCode CLI", "sublabel": "orchestrator", "pos": [240, 260], "size": [140, 64], "tag": "core" },
-    { "id": "session-memory", "type": "database", "label": "Session Memory", "sublabel": "snapshots + recovery", "pos": [260, 100], "size": [140, 56] },
-    { "id": "dcp", "type": "security", "label": "DCP", "sublabel": "context pruning", "pos": [60, 440], "size": [110, 52] },
-    { "id": "build-agent", "type": "backend", "label": "Build Agent", "sublabel": "default primary", "pos": [480, 180], "size": [140, 60], "tag": "72 agents" },
-    { "id": "router", "type": "backend", "label": "Router", "sublabel": "conditional dispatch", "pos": [480, 400], "size": [140, 56] },
-    { "id": "sub-agents", "type": "backend", "label": "Specialized Agents", "sublabel": "code-reviewer, security, tdd...", "pos": [720, 260], "size": [160, 64] },
-    { "id": "skills", "type": "backend", "label": "20 Skills", "sublabel": "archify, anydoc, caveman...", "pos": [720, 420], "size": [140, 56] },
-    { "id": "commands", "type": "backend", "label": "68 Commands", "sublabel": "/prd, /verify, /orchestrate", "pos": [300, 440], "size": [140, 52] },
-    { "id": "mcp-context7", "type": "cloud", "label": "Context7 MCP", "sublabel": "live library docs", "pos": [960, 100], "size": [130, 56] },
-    { "id": "mcp-anydoc", "type": "cloud", "label": "AnyDoc MCP", "sublabel": "doc→markdown", "pos": [960, 220], "size": [130, 56] },
-    { "id": "plugins", "type": "messagebus", "label": "Plugins", "sublabel": "vibeguard, pty, dcp", "pos": [960, 340], "size": [130, 56] },
-    { "id": "filesystem", "type": "database", "label": "File System", "sublabel": "docs/, prds/, sessions/", "pos": [960, 460], "size": [140, 56] }
+    { "id": "user", "type": "external", "label": "Developer", "sublabel": "User input", "pos": [40, 180], "size": [120, 60] },
+    { "id": "opencode", "type": "backend", "label": "OpenCode CLI", "sublabel": "orchestrator", "pos": [240, 180], "size": [140, 64], "tag": "core" },
+    { "id": "build-agent", "type": "backend", "label": "Build Agent", "sublabel": "default primary", "pos": [460, 180], "size": [140, 60], "tag": "72 agents" },
+    { "id": "sub-agents", "type": "backend", "label": "Specialized Agents", "sublabel": "code-reviewer, security, tdd...", "pos": [680, 180], "size": [160, 64] },
+    { "id": "router", "type": "backend", "label": "Router", "sublabel": "conditional dispatch", "pos": [460, 380], "size": [140, 56] },
+    { "id": "skills", "type": "backend", "label": "20 Skills", "sublabel": "archify, anydoc, caveman...", "pos": [680, 380], "size": [140, 56] },
+    { "id": "session-memory", "type": "database", "label": "Session Memory", "sublabel": "snapshots", "pos": [240, 60], "size": [120, 48] },
+    { "id": "dcp", "type": "security", "label": "DCP", "sublabel": "context pruning", "pos": [460, 60], "size": [100, 44] },
+    { "id": "mcp-context7", "type": "cloud", "label": "Context7 MCP", "sublabel": "live docs", "pos": [240, 380], "size": [120, 52] },
+    { "id": "mcp-anydoc", "type": "cloud", "label": "AnyDoc MCP", "sublabel": "doc→markdown", "pos": [40, 380], "size": [120, 52] }
   ],
   "boundaries": [
-    { "kind": "region", "label": "OpenCode Pack", "wraps": ["opencode", "build-agent", "router", "sub-agents", "skills", "commands", "dcp", "session-memory"] },
-    { "kind": "security-group", "label": "MCP Layer", "wraps": ["mcp-context7", "mcp-anydoc"] },
-    { "kind": "security-group", "label": "Integrations", "wraps": ["plugins", "filesystem"] }
+    { "kind": "region", "label": "OpenCode Pack", "wraps": ["opencode", "build-agent", "router", "sub-agents", "skills", "dcp", "session-memory"] }
   ],
   "connections": [
     { "id": "user-input", "from": "user", "to": "opencode", "label": "prompt", "variant": "emphasis" },
-    { "id": "opencode-to-session", "from": "opencode", "to": "session-memory", "label": "snapshot", "fromSide": "top", "toSide": "bottom" },
     { "id": "opencode-to-agent", "from": "opencode", "to": "build-agent", "label": "dispatch" },
-    { "id": "agent-to-sub", "from": "build-agent", "to": "sub-agents", "label": "delegate", "fromSide": "right", "toSide": "top" },
-    { "id": "agent-to-skills", "from": "build-agent", "to": "skills", "label": "load", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [790, 390] },
-    { "id": "agent-to-router", "from": "build-agent", "to": "router", "label": "route", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [550, 370] },
-    { "id": "router-to-sub", "from": "router", "to": "sub-agents", "label": "specialist", "fromSide": "right", "toSide": "bottom", "labelAt": [800, 390] },
-    { "id": "opencode-to-commands", "from": "opencode", "to": "commands", "label": "slash", "fromSide": "bottom", "toSide": "top", "labelAt": [370, 410] },
-    { "id": "opencode-to-dcp", "from": "opencode", "to": "dcp", "label": "prune", "variant": "dashed", "fromSide": "left", "toSide": "right", "labelAt": [130, 380] },
-    { "id": "opencode-to-mcp1", "from": "opencode", "to": "mcp-context7", "label": "docs", "fromSide": "right", "toSide": "left" },
-    { "id": "opencode-to-mcp2", "from": "opencode", "to": "mcp-anydoc", "label": "convert", "fromSide": "right", "toSide": "left" },
-    { "id": "opencode-to-plugins", "from": "opencode", "to": "plugins", "label": "hooks", "fromSide": "right", "toSide": "left", "variant": "dashed" },
-    { "id": "opencode-to-fs", "from": "opencode", "to": "filesystem", "label": "read/write", "fromSide": "right", "toSide": "left", "labelAt": [850, 290] }
+    { "id": "agent-to-sub", "from": "build-agent", "to": "sub-agents", "label": "delegate", "fromSide": "right", "toSide": "left" },
+    { "id": "agent-to-router", "from": "build-agent", "to": "router", "label": "route", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [523, 254] },
+    { "id": "router-to-skills", "from": "router", "to": "skills", "label": "load", "fromSide": "right", "toSide": "left" },
+    { "id": "router-to-sub", "from": "router", "to": "sub-agents", "label": "specialist", "variant": "dashed", "fromSide": "top", "toSide": "bottom" },
+    { "id": "opencode-to-session", "from": "opencode", "to": "session-memory", "label": "snapshot", "fromSide": "top", "toSide": "bottom", "labelAt": [260, 120] },
+    { "id": "opencode-to-dcp", "from": "opencode", "to": "dcp", "label": "prune", "variant": "dashed", "fromSide": "top", "toSide": "bottom", "labelAt": [400, 120] },
+    { "id": "opencode-to-mcp1", "from": "opencode", "to": "mcp-context7", "label": "docs", "fromSide": "bottom", "toSide": "top", "labelAt": [280, 320] },
+    { "id": "opencode-to-mcp2", "from": "opencode", "to": "mcp-anydoc", "label": "convert", "fromSide": "bottom", "toSide": "right", "labelAt": [100, 320] }
   ],
   "cards": [
     { "dot": "cyan", "title": "Core Loop", "items": ["User sends prompt → OpenCode dispatches", "Build Agent is default primary handler", "Router conditionally routes to specialists"] },
-    { "dot": "emerald", "title": "Agent Ecosystem", "items": ["72 specialized agents (code, security, TDD, etc.)", "20 skills for domain-specific workflows", "68 slash commands for direct invocation"] },
-    { "dot": "rose", "title": "External Integrations", "items": ["Context7: live library/framework docs", "AnyDoc: PDF/Word/Excel → Markdown", "Plugins: vibeguard, pty, DCP"] },
-    { "dot": "amber", "title": "Persistence", "items": ["Session memory with snapshots", "PRD → Plan → Report → Audit pipeline", "DCP for context window optimization"] }
+    { "dot": "emerald", "title": "Agent Ecosystem", "items": ["72 specialized agents (code, security, TDD, etc.)", "20 skills for domain-specific workflows", "Slash commands for direct invocation"] },
+    { "dot": "rose", "title": "External Integrations", "items": ["Context7: live library/framework docs", "AnyDoc: PDF/Word/Excel → Markdown", "Plugins: vibeguard, pty, DCP"] }
   ]
 }
