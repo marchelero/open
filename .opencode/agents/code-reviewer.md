@@ -121,53 +121,6 @@ function processUsers(users) {
 }
 ```
 
-### React/Next.js (HIGH)
-
-- Missing dependency arrays (`useEffect`/`useMemo`/`useCallback`)
-- State updates in render → infinite loops
-- Missing keys in lists (using index when items reorder)
-- Prop drilling 3+ levels (use context or composition)
-- Unnecessary re-renders (missing memoization)
-- Client/server boundary (`useState`/`useEffect` in Server Components)
-- Missing loading/error states for data fetching
-- Stale closures (event handlers capturing stale state)
-
-```tsx
-// BAD: missing dep
-useEffect(() => { fetchData(userId) }, [])
-// GOOD: complete deps
-useEffect(() => { fetchData(userId) }, [userId])
-```
-
-```tsx
-// BAD: index key
-{items.map((item, i) => <ListItem key={i} item={item} />)}
-// GOOD: stable key
-{items.map(item => <ListItem key={item.id} item={item} />)}
-```
-
-### Node.js/Backend (HIGH)
-
-- Unvalidated input — request body/params without schema
-- Missing rate limiting on public endpoints
-- Unbounded queries — `SELECT *` or no LIMIT
-- N+1 queries — loop with fetch instead of join/batch
-- Missing timeouts on external HTTP calls
-- Error message leakage — internal details to clients
-- Missing CORS configuration
-
-```typescript
-// BAD: N+1
-const users = await db.query('SELECT * FROM users')
-for (const u of users) u.posts = await db.query('SELECT * FROM posts WHERE user_id = $1', [u.id])
-// GOOD: single JOIN
-const usersWithPosts = await db.query(`
-  SELECT u.*, json_agg(p.*) as posts
-  FROM users u LEFT JOIN posts p ON p.user_id = u.id
-  GROUP BY u.id
-`)
-```
-
 ### Performance (MEDIUM)
 
 - Inefficient algorithms — O(n²) when O(n log n) possible

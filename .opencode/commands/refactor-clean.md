@@ -1,6 +1,6 @@
 ---
 description: "Remove dead code (knip/depcheck/ts-prune), consolidate duplicates, y verifica no romper tests. Use periodically para mantener codebase limpio sin riesgo, o antes de un release para reducir surface area."
-agent: refactor-cleaner
+agent: code-quality-analyzer
 ---
 
 # Refactor Clean Command

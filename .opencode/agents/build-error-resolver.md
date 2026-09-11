@@ -107,8 +107,8 @@ npx eslint . --fix
 
 ## When NOT to Use
 
-- Code needs refactoring â use `refactor-cleaner`
-- Architecture changes needed â use `architect`
+- Code needs refactoring → use `code-quality-analyzer --mode simplify`
+- Architecture changes needed → use `code-architect`
 - New features required â use `planner`
 - Tests failing â use `tdd-guide`
 - Security issues â use `security-reviewer`

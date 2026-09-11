@@ -81,7 +81,7 @@ No `package.json` at the project root. No build step. Drop the `.opencode/` fold
 
 ```
 /refactor-clean
-  → runs refactor-cleaner (knip, depcheck, ts-prune)
+  → runs code-quality-analyzer --mode simplify (knip, depcheck, ts-prune)
   → identifies dead code, duplicates, unused exports
   → safe removal with verification
 ```

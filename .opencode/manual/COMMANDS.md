@@ -94,7 +94,7 @@
 
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
-| `/refactor-clean` | Elimina código muerto y consolida duplicados. | refactor-cleaner |
+| `/refactor-clean` | Elimina código muerto y consolida duplicados. | code-quality-analyzer |
 
 ## "Quiero mantener la documentación sincronizada"
 

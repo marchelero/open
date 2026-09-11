@@ -43,14 +43,14 @@ task { subagent_type: "prd-agent", prompt: "$ARGUMENTS" }
 |-------|-----------|---------|
 | **prd-agent** | **Intent clarification** | **Phase 0 — always first** |
 | planner | Implementation planning | Phase 1+ — complex feature design |
-| architect | System design | Architectural decisions |
+| code-architect | System design + architecture | Architectural decisions |
 | code-reviewer | Code quality | Review changes |
 | security-reviewer | Security analysis | Vulnerability detection |
 | tdd-guide | Test-driven dev | Feature implementation |
 | build-error-resolver | Build fixes | TypeScript/build errors |
 | e2e-runner | E2E testing | User flow testing |
 | doc-updater | Documentation | Updating docs |
-| refactor-cleaner | Code cleanup | Dead code removal |
+| code-quality-analyzer | Code cleanup | Dead code removal |
 | go-reviewer | Go code | Go-specific review |
 | go-build-resolver | Go builds | Go build errors |
 | database-reviewer | Database | Query optimization |
@@ -67,7 +67,7 @@ Use when: Later tasks depend on earlier results
 ```
               ┌→ security-reviewer
 prd-agent → planner →├→ code-reviewer
-              └→ architect
+              └→ code-architect
 ```
 Use when: Tasks are independent (after PRD is confirmed)
 

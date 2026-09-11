@@ -119,7 +119,7 @@ Then ask the user to clarify or pick.
 | API design | `api-design` (skill, not agent) |
 | Accessibility | `a11y-architect` |
 | E2E tests | `e2e-runner` |
-| Refactor | `refactor-cleaner` |
+| Refactor | `code-quality-analyzer --mode simplify` |
 | Plan | `planner` o `code-architect` |
 | PRD | `prd-agent` (siempre para features) |
 

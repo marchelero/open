@@ -8,12 +8,12 @@ Pack portable de opencode. Cópialo a cualquier proyecto, reinicia opencode y em
 > Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
-- **72** agents (.opencode/agents)
-- **64** commands (.opencode/commands)
-- **20** skills (.agents/skills)
-- **13** native CLIs (.opencode/bin)
+- **71** agents (.opencode/agents)
+- **70** commands (.opencode/commands)
+- **33** skills (.agents/skills)
+- **15** native CLIs (.opencode/bin)
 - **3** npm plugins + **1** local plugin(s)
-- **2** active MCPs + **10** optional MCP(s)
+- **2** active MCPs + **12** optional MCP(s)
 <!-- COUNTS-END -->
 
 > Las cifras exactas (agentes, commands, skills, plugins, MCPs, CLIs) están en el bloque `## Counts` de abajo. Se regenera con `node .opencode/bin/counts.js --update .opencode/README.md .opencode/manual/README.md .agents/skills/INDEX.md`.
@@ -48,7 +48,7 @@ Baja los plugins (vibeguard, pty, dcp) + `@opencode-ai/plugin` peer. Sin esto op
 2. `opencode debug config` — verifica config mergeada (plugins, MCPs, instructions)
 3. `opencode debug skill` — verifica skill discovery
 4. Node 20+ recomendado (Node 18 funciona con warnings `EBADENGINE`)
-5. MCPs context7 / playwright = 10-30s en el primer boot del proyecto (npx descarga). Después es instant (versiones pineadas).
+5. MCPs context7 / anydoc = 10-30s en el primer boot del proyecto (npx descarga). Después es instant (versiones pineadas).
 6. Si el proyecto destino tiene su propio `node_modules/` con +10K archivos, el file watcher se satura. Mover a `.gitignore` + `npm prune` ayuda.
 
 ## Documentación

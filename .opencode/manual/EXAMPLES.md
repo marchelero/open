@@ -22,7 +22,7 @@ Dispara: `@prd-agent` (Understanding Protocol). Genera `docs/prds/YYYY-MM-DD_HHM
 /plan docs/prds/YYYY-MM-DD_HHMM-users-profile.prd.md
 ```
 
-Dispara: `@planner` + `@code-architect` + `@architect` (en paralelo). Devuelve: archivos a crear, dependencias, orden, criterios de validación.
+Dispara: `@planner` + `@code-architect` (en paralelo). Devuelve: archivos a crear, dependencias, orden, criterios de validación.
 
 Skills auto-cargadas: `api-design`, `coding-standards`, `error-handling`.
 
@@ -84,7 +84,7 @@ Dispara build con skill `git-workflow` auto. Conventional commit. **No push** (v
 /orchestrate "app Flutter quiz: 10 preguntas, scoring, animaciones, dark mode"
 ```
 
-Dispara el flujo completo: `@prd-agent` (Phase 0) → `@planner` (síntesis) → dispatch paralelo a `@architect`, `@flutter-reviewer`, `@tdd-guide`. La skill `intent-driven-development` se auto-carga para producir criterios de aceptación.
+Dispara el flujo completo: `@prd-agent` (Phase 0) → `@planner` (síntesis) → dispatch paralelo a `@code-architect`, `@flutter-reviewer`, `@tdd-guide`. La skill `intent-driven-development` se auto-carga para producir criterios de aceptación.
 
 Cada sub-agente devuelve su parte en caveman mode:
 ```
@@ -296,7 +296,7 @@ Repetir para `aggregator.py`, `exporter.py`.
 /refactor-clean
 ```
 
-Dispara `@refactor-cleaner` que corre `knip`, `depcheck`, `vulture`. Detecta imports muertos, código duplicado entre los nuevos módulos.
+Dispara `@code-quality-analyzer --mode simplify` que corre `knip`, `depcheck`, `vulture`. Detecta imports muertos, código duplicado entre los nuevos módulos.
 
 ### Paso 6 — validar
 

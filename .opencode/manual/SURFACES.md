@@ -70,7 +70,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 **Coste de tokens**: el esquema se pre-carga (~pocos cientos de tokens); cada invocación devuelve datos.
 
 **Úsalo para**:
-- Llamar a servicios externos (Context7 docs, navegador Playwright, GitHub, Postgres)
+- Llamar a servicios externos (Context7 docs, AnyDoc, GitHub, Postgres)
 - Cualquier cosa que el modelo necesite hacer, no solo saber
 - Capacidades con input/output estructurado que valen la pena validar con Zod
 
@@ -78,7 +78,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 
 **Ejemplos en este pack**:
 - `context7` — resuelve library ID, recupera documentación actualizada (reemplaza los datos de entrenamiento)
-- `playwright` — automatización de navegador para tests E2E y debugging en vivo
+- `anydoc` — convierte PDF/Word/PPT/Excel/CSV/EPUB/RTF a Markdown limpio
 
 ### 4. CLI / slash command (invocado por el usuario, sin prompt de agente)
 

@@ -28,10 +28,10 @@ ACTIVE (auto-loaded by opencode at boot)
     Cmd:    npx -y @upstash/context7-mcp@3.2.3
     Use:    Fetch up-to-date library/framework docs via Context7
 
-  • playwright
+  • anydoc
     Type:   local
-    Cmd:    npx -y @playwright/mcp@0.0.78
-    Use:    Drive a real browser for E2E tests, screenshots, scraping
+    Cmd:    npx -y mcp-server-anydoc
+    Use:    Convert PDF/Word/PPT/Excel/CSV/EPUB/RTF to clean Markdown
 
 OPTIONAL (opt-in via /setup-mcp activate <name>)
   • github

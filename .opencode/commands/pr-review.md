@@ -131,4 +131,4 @@ Reviewers consulted: code, security, typescript, pr-test, silent-failure
 
 - For typo fixes or 1-line docs changes.
 - For PRs that are still draft and not yet ready for feedback (the reviewers will be noisy).
-- For PRs that are pure refactors with no logic change (use `refactor-cleaner` directly).
+- For PRs that are pure refactors with no logic change (use `code-quality-analyzer --mode simplify` directly).

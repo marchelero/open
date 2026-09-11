@@ -55,6 +55,33 @@ Decide which **subagent** to invoke and/or which **knowledge skill** to load for
 
 ## Routing Process
 
+### Step 0 — Ambiguity Check (Grill Me)
+
+**BEFORE routing, check if request is ambiguous:**
+
+```
+IF request has multiple interpretations OR vague scope OR missing critical details:
+  1. ASK user: "Tu request tiene varias interpretaciones:"
+     - [Interpretación A]: [descripción]
+     - [Interpretación B]: [descripción]
+     
+     ¿Cómo prefieres que proceda?
+     a) **Específicas** — Te hago preguntas una por vez (más lento, más preciso)
+     b) **Tradicional** — Procedo con supuestos mínimos (más rápido, menos preciso)
+     
+  2. IF específicas → load `grill-me` skill, run iterative clarification, THEN route
+  3. IF tradicional → document assumptions, THEN route normally
+ELSE:
+  → proceed to Step 1
+```
+
+**Detection signals for ambiguity:**
+- Vague verbs: "arreglar", "mejorar", "hacer algo", "fix it", "improve"
+- Missing specifics: no file, no feature, no error message
+- Multiple valid interpretations
+- No clear success criteria
+- Conflicting requirements
+
 ### Step 1 — Classify the Request
 
 Extract from the user request:

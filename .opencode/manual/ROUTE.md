@@ -16,8 +16,7 @@
 | Agente | Qué hace | Cuándo usarlo |
 |--------|----------|---------------|
 | `planner` | Plan por fases con riesgos, dependencias y validación | Features complejos, refactors, cambios arquitectónicos |
-| `architect` | Diseño de sistema, decisiones tecnológicas, escalabilidad | Decisiones arquitectónicas, "¿usamos X o Y?" |
-| `code-architect` | Plano de archivos, interfaces, flujo de datos y orden de construcción | Antes de implementar una feature en un repo existente |
+| `code-architect` | Diseño de sistema, decisiones tecnológicas, escalabilidad, plano de archivos | Decisiones arquitectónicas, features en repos existentes |
 | `gan-planner` | Expande un prompt de una línea en un spec GAN completo | Flujo GAN (plan→genera→evalúa en bucle) |
 
 ## "Quiero revisar código"
@@ -99,7 +98,7 @@
 
 | Agente | Qué hace | Cuándo usarlo |
 |--------|----------|---------------|
-| `refactor-cleaner` | Código muerto, duplicados (knip/depcheck/ts-prune) | Mantenimiento periódico, pre-release |
+| `code-quality-analyzer` | Código muerto, duplicados (knip/depcheck/ts-prune) | Mantenimiento periódico, pre-release |
 | `doc-updater` | Codemaps, `/update-codemaps`, `/update-docs` | Tras cambios estructurales |
 | `code-quality-analyzer` (mode: simplify) | Claridad, consistencia, sin cambio de comportamiento | Tras un PR pero antes del merge |
 | `harness-optimizer` | Ajusta la configuración local del harness de agentes | Cuando el ruteo o los permisos se sienten mal |
