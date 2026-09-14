@@ -70,7 +70,7 @@ function parseFrontmatter(content) {
   if (!stripped.startsWith('---')) return null;
   const end = stripped.indexOf('\n---', 3);
   if (end === -1) return null;
-  const block = stripped.substring(3, end);
+  const block = stripped.substring(3, end).replace(/\r/g, '');
   const lines = block.split(/\r?\n/);
   const fm = {};
   for (let i = 0; i < lines.length; i++) {

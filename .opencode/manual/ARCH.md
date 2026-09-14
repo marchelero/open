@@ -172,8 +172,6 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
     │   ├── EXAMPLES.md              6 flujos completos
     │   ├── ARCH.md                  este archivo
     │   └── SURFACES.md              regla vs skill vs MCP vs agente vs CLI
-    ├── agent → agents               junction (backwards compat opencode 1.17.x)
-    ├── skill → ../.agents/skills    junction (skills viven en .agents/, junction preserva 1.17.x compat)
     └── node_modules/                3 plugins npm (vibeguard, pty, dcp) + peer; 136MB, gitignored
 # CI recomendado: smoke-test + validate-frontmatter (workflow no incluido en el pack)
 # package.json (root) intencionalmente ausente (regla cero-deps)

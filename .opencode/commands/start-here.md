@@ -88,7 +88,7 @@ When: "como esta el pack" / "que tengo disponible" / "se comporta raro"
 
 ```bash
 /pack-doctor
-# → 10 health checks (frontmatter, orphans, size, junctions)
+# → 10 health checks (frontmatter, orphans, size, symlinks legacy)
 
 /list-agents
 # → 72 agentes agrupados por categoria, con triggers

@@ -111,11 +111,9 @@ check(`commands (got ${commands}, expected 47+)`, () => commands >= 47);
 check(`bin scripts (got ${binScripts}, expected 2+)`, () => binScripts >= 2);
 
 console.log('');
-console.log('[Junctions (opencode 1.17.x backwards compat)]');
-const agentJunction = isJunction('.opencode/agent');
-const skillJunction = isJunction('.opencode/skill');
-check('.opencode/agent is a junction/symlink', () => agentJunction);
-check('.opencode/skill is a junction/symlink', () => skillJunction);
+console.log('[Symlinks legacy (must NOT exist)]');
+check('.opencode/agent absent (opencode >=1.14 reads .opencode/agents natively)', () => !fs.existsSync('.opencode/agent'));
+check('.opencode/skill absent (opencode >=1.14 reads .agents/skills natively)', () => !fs.existsSync('.opencode/skill'));
 
 console.log('');
 console.log('[Bin scripts]');

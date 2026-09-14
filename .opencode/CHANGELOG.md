@@ -4,6 +4,14 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+### Removed (2026-09-13) — pack-doctor --fix
+- **`.opencode/agent` y `.opencode/skill` symlinks eliminados del repo.** Opencode >=1.14 descubre nativamente `.opencode/agents/` y `.agents/skills/`; las junctions en singular eran compat legacy 1.17.x y provocaban doble registro de skills. En Windows, `git` sin `core.symlinks` los checkeaba como stubs de texto rotos. Añadidos a `.gitignore`; `smoke-test.js` y `/pack-doctor` check 10 ahora verifican su AUSENCIA.
+- **`docs/prds/2026-08-12-optimize-pack-token-consumption.prd.md`** archivado a `docs/prds/archive/` (DRAFT >30d).
+
+### Fixed (2026-09-13) — pack-doctor --fix
+- **`validate-frontmatter.js`**: el bloque frontmatter en archivos CRLF retenía `\r` en la última línea y el parser la descartaba → 11 FAIL + 69 WARN falsos positivos (skills sin `description`, commands sin `agent`). Fix: strip de `\r` del bloque.
+- **Frontmatter en línea 1** para `flutter-reviewer`, `java-reviewer`, `migration-planner`, `prd-agent`, `prd-reviewer`, `report-auditor` (comentario Prompt Defense movido bajo el bloque `---`).
+
 ### Token consumption optimization (2026-08-12) — PRD: `docs/prds/2026-08-12-optimize-pack-token-consumption.prd.md`
 
 Cut boot/turn token usage for OpenCode Zen free tier: AGENTS.md 61→25 lines (7.2KB→3.0KB, -58%), MCPs closed by default, plugins conservative, `/tone` + `/mcp-on`/`/mcp-off` commands, measurable via `measure-tokens.js` (-71% estimated boot vs baseline).

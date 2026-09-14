@@ -99,12 +99,12 @@ echo "Audits: $(ls docs/audits/*.md 2>/dev/null | wc -l)"
 find docs/prds -name "*.md" -mtime +7 -exec grep -l "Status.*DRAFT" {} \;
 ```
 
-#### 10. Junctions
-- `.opencode/agent` y `.opencode/skill` deben existir como junctions (opencode 1.17.x compat).
+#### 10. Symlinks legacy (deben NO existir)
+- `.opencode/agent` y `.opencode/skill` fueron removidos: opencode >=1.14 descubre nativamente `.opencode/agents/` y `.agents/skills/`. Las junctions causaban doble registro de skills y en Windows se checkeaban como stubs de texto rotos por git.
 
 ```bash
-[ ! -L .opencode/agent ] && echo "FAIL: junction .opencode/agent no existe"
-[ ! -L .opencode/skill ] && echo "FAIL: junction .opencode/skill no existe"
+[ -e .opencode/agent ] && echo "FAIL: .opencode/agent no deberia existir (legacy)"
+[ -e .opencode/skill ] && echo "FAIL: .opencode/skill no deberia existir (legacy)"
 ```
 
 ### Salida
@@ -121,7 +121,7 @@ find docs/prds -name "*.md" -mtime +7 -exec grep -l "Status.*DRAFT" {} \;
 [7/10] Tamanio archivos      PASS
 [8/10] Stats                 72 agents, 20 skills, 64 commands, 3 PRDs, 7 reports, 0 audits
 [9/10] PRDs huerfanos        WARN: 1 PRD en DRAFT >7d (ex006-csv-import)
-[10/10] Junctions            PASS
+[10/10] Symlinks legacy      PASS (ausentes, como debe ser)
 
 Total: 8 PASS, 2 WARN, 0 FAIL
 
