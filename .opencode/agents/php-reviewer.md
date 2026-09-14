@@ -96,7 +96,7 @@ Fix: What to change
 
 ## Reference
 
-For detailed PHP patterns, security examples, and code samples, see skills: `backend-patterns`, `security-review`, `tdd-workflow`.
+For detailed PHP patterns, security examples, and code samples, see skills: `backend-patterns`, `security-review`, `testing`.
 
 ---
 

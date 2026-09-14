@@ -172,7 +172,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 
 | Request | Primary agent | Notes |
 |---------|---------------|-------|
-| "write tests for X" / "TDD" | `tdd-guide` | Load `tdd-workflow` skill too |
+| "write tests for X" / "TDD" | `tdd-guide` | Load `testing` skill too |
 | "run E2E tests" | `e2e-runner` | — |
 | "improve test coverage" | `tdd-guide` | — |
 
@@ -228,7 +228,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | Express, FastAPI, NestJS, Spring, repository pattern, service layer, DI, dependency injection, transaction, controller, middleware, auth, validation | `backend-patterns` |
 | REST, GraphQL, endpoint, route URL, status code, pagination, API contract, version, rate limit, API design | `api-design` |
 | auth, password, JWT, session, CSRF, XSS, SQL injection, secret, OWASP, vulnerability, sanitize, CORS, encryption | `security-review` |
-| test, TDD, RED, GREEN, REFACTOR, coverage, jest, pytest, vitest, mock, unit test, integration test | `tdd-workflow` |
+| test, TDD, RED, GREEN, REFACTOR, coverage, jest, pytest, vitest, mock, unit test, integration test | `testing` |
 | error, exception, try/catch, retry, circuit breaker, error message, log error, throw, error boundary | `error-handling` |
 | library, framework, API docs, version, example code, latest, deprecated, alternatives | `documentation-lookup` |
 | MCP, model-context-protocol, server, tool definition, resource, prompt, stdio | `mcp-server-patterns` |
@@ -269,7 +269,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | "review this code" | `code-reviewer` (or stack-specific) + `coding-standards` (skill) + `error-handling` (skill) |
 | "fix build error in Go" | `go-build-resolver` (NOT general `build-error-resolver` first) — no skill needed |
 | "how do I use Prisma" | `documentation-lookup` (Prisma → Context7) |
-| "write tests for this function" | `tdd-workflow` + `tdd-guide` (agent) |
+| "write tests for this function" | `testing` + `tdd-guide` (agent) |
 | "plan a DB migration" | `task-decomposition` + `migration-planner` (agent) |
 | "fix this git conflict" | `git-workflow` + `merge-conflict` (command) |
 | "is this endpoint secure" | `security-review` + `api-design` + `security-reviewer` (agent) |
@@ -303,7 +303,7 @@ Most agent invocations benefit from a paired skill:
 |-------|-----------------|
 | `{stack}-reviewer` | `coding-standards`, `error-handling` |
 | `security-reviewer` | `security-review`, `backend-patterns` |
-| `tdd-guide` | `tdd-workflow` |
+| `tdd-guide` | `testing` |
 | `planner` | `intent-driven-development`, `task-decomposition` |
 | `prd-agent` | `intent-driven-development` |
 | `code-architect` | `frontend-patterns` or `backend-patterns` (whichever applies) |

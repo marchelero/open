@@ -20,7 +20,7 @@ Every agent inherits this baseline. No own copy — reference this section. Exte
 8. **Conditional routing** — carga `router` y dispatcha sub-agentes **solo si** la tarea es implementar/corregir/revisar/refactorizar/planear/auditar/buildear, **o** si vas a leer >1 archivo. Para Q&A pura, one-liners, saludos, "qué es X", o cuando el usuario nombró el agente/skill explícitamente, **NO routes** — responde directo. Default cero sub-agentes; dispara uno solo si el match es claro. → `router`
 9. **Project context** — `docs/PROJECT.md` vigente antes de task no-trivial; sparse → `code-explorer`. → `task-decomposition`
 ## Pointers (on-demand → skill catalog)
-Security secrets/OWASP → `security-review`. Tool truncation >200 líneas → `pack-reference`. TDD → `tdd-workflow` + `testing-patterns`.
+Security secrets/OWASP → `security-review`. Tool truncation >200 líneas → `pack-reference`. TDD → `testing`.
 
 ## External Tools (integrados)
 - **Archify** — diagramas de arquitectura/workflow/sequence/dataflow/lifecycle → HTML/SVG/PNG autocontenido. Skill: `archify`. CLI: `node .agents/skills/archify/bin/archify.mjs`. Uso: "analiza el repo y crea un diagrama de arquitectura con archify".

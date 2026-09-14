@@ -1,6 +1,6 @@
 ---
 name: refactoring-patterns
-description: Use this skill when restructuring existing code without changing its behavior. Covers the Fowler catalog of refactorings (Extract Function, Inline Variable, Replace Conditional with Polymorphism, Introduce Parameter Object, Replace Magic Literal with Constant), code smells (long method, primitive obsession, data clumps, speculative generality, dead code), the red-green-refactor discipline, and tooling (jscodeshift, codemod, IDE shortcuts). Pair with tdd-workflow and testing-patterns.
+description: Use this skill when restructuring existing code without changing its behavior. Covers the Fowler catalog of refactorings (Extract Function, Inline Variable, Replace Conditional with Polymorphism, Introduce Parameter Object, Replace Magic Literal with Constant), code smells (long method, primitive obsession, data clumps, speculative generality, dead code), the red-green-refactor discipline, and tooling (jscodeshift, codemod, IDE shortcuts). Pair with `testing`.
 triggers: [refactor, refactoring, extract method, extract function, inline, rename, move, decompose, restructure, code smell, long method, large class, primitive obsession, data clumps, shotgun surgery, speculative generality, dead code, duplication, jscodeshift, codemod, refactoring catalog, Fowler, red-green-refactor, baby steps, preserve behavior]
 origin: starter-pack
 ---
@@ -379,8 +379,8 @@ jscodeshift -t transforms/rename-getUserById.js src/
 
 ## Pair With
 
-- `tdd-workflow` — red-green-refactor discipline; tests are the safety net
-- `testing-patterns` — what good tests look like (you need them before refactoring)
+- `testing` — red-green-refactor discipline + test patterns
+
 - `coding-standards` — naming, immutability, KISS/DRY principles that guide refactor decisions
 - `code-reviewer` — review a refactor PR for completeness (any behavior change hidden?)
 - `code-quality-analyzer` (mode: simplify) — can invoke this skill to apply the catalog mechanically

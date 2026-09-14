@@ -97,7 +97,7 @@ Fix: What to change
 ## Reference
 
 For detailed C# patterns, see skill: `backend-patterns`.
-For testing guidelines, see skill: `testing-patterns`.
+For testing guidelines, see skill: `testing`.
 
 ---
 

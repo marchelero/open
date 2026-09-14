@@ -219,7 +219,7 @@ graphql.mutation('CreateUser', async ({ request }) => {
 
 ## References
 
-- See `skill: testing-patterns` for test architecture
-- See `skill: tdd-workflow` for TDD methodology
+- See `skill: testing` for test architecture
+- See `skill: testing` for TDD methodology
 - See `agent: e2e-runner` for E2E testing
 - See `agent: test-data-generator` for mock data factories

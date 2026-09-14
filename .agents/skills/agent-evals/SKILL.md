@@ -19,7 +19,7 @@ Code has tests; agent behavior has evals. A prompt change that "looks better" an
 
 ## Do Not Activate For
 
-- Code correctness (tdd-workflow), build health (verification-loop), frontmatter schema (validate-frontmatter.js)
+- Code correctness (testing), build health (verification-loop), frontmatter schema (validate-frontmatter.js)
 - Model quality questions ("is model A better than B") — out of pack scope
 
 ## Eval Unit: The Case

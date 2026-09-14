@@ -60,3 +60,10 @@ node .opencode/bin/context.js --skills           # skills only
 node .opencode/bin/context.js --recommend        # recs only
 node .opencode/bin/context.js --files            # project size
 ```
+
+## Integration
+
+- `/session-start` — loads minimal context (Layer 1+2 of the 4-layer hierarchy)
+- `/session-end` — writes a snapshot, freeing you to start fresh
+- `dynamic-context-pruning` plugin — auto-prunes mid-session
+- `caveman` mode — terse responses (~75% fewer tokens)

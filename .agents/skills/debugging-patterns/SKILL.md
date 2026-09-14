@@ -117,7 +117,7 @@ Goal: confirm or kill the hypothesis.
 Goal: change the *cause*, not the symptom.
 
 - Apply the smallest change that addresses the cause.
-- Add a regression test (this is non-negotiable — see `testing-patterns`).
+- Add a regression test (this is non-negotiable — see `testing`).
 - Run the full test suite to confirm no other paths broke.
 - Commit with a message that explains the cause: `fix: handle null parseDate return in checkout validator (regression from #1234)`, not `fix: bug`.
 
@@ -410,8 +410,8 @@ When investigating a bug:
 
 - `incident-responder` — production incidents, on-call, live systems
 - `observability` — logging/tracing/metrics patterns (the *what* of observability)
-- `testing-patterns` — regression tests, repro tests
+- `testing` — regression tests, repro tests
 - `performance-optimizer` — when the "bug" is a performance regression
 - `code-reviewer` — review a bugfix PR for "is the fix actually at the root?"
 - `code-quality-analyzer` (mode: silent-failures) — hunt for swallowed errors that masked the original bug
-- `tdd-workflow` — red-green for the regression test
+- `testing` — red-green for the regression test

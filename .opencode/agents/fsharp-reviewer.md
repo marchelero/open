@@ -96,7 +96,7 @@ Fix: What to change
 ## Reference
 
 For detailed .NET patterns, see skill: `backend-patterns`.
-For testing guidelines, see skill: `testing-patterns`.
+For testing guidelines, see skill: `testing`.
 
 ---
 

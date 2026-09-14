@@ -79,7 +79,7 @@ You review whether a PR's tests actually cover the changed behavior.
 - prefer meaningful assertions over no-throw checks (`expect(x).toBeDefined()` is weak)
 - flag flaky patterns (sleep, time-dependent, order-dependent shared state)
 - check isolation and clarity of test names (`"rejects expired token"` > `"test_validate"`)
-- see `testing-patterns` skill for the full catalog
+- see `testing` skill for the full catalog
 
 **4. Coverage gaps**
 
@@ -250,7 +250,7 @@ Run all five modes and report findings under a clear mode header. For PR-sized d
 
 ## Pair With
 
-- `testing-patterns` skill — for `tests` mode
+- `testing` skill — for `tests` mode
 - `error-handling` skill — for `silent-failures` mode
 - `refactoring-patterns` skill — for `simplify` mode
 - `coding-standards` skill — baseline naming and style
