@@ -7,7 +7,7 @@
     "postinstall": "node .opencode/bin/install-plugins.js"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "1.17.11",
+    "@opencode-ai/plugin": "1.18.30",
     "@tarquinen/opencode-dcp": "*",
     "opencode-pty": "*",
     "opencode-vibeguard": "*"
