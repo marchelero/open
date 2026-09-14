@@ -1,0 +1,26 @@
+{
+  "name": "opencode-starter-pack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Opencode starter pack with pre-commit hooks",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "node .opencode/bin/smoke-test.js"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,yml,yaml}": ["prettier --write"],
+    ".opencode/agents/*.md": ["node .opencode/bin/validate-frontmatter.js"],
+    ".opencode/commands/*.md": ["node .opencode/bin/validate-frontmatter.js"]
+  },
+  "devDependencies": {
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

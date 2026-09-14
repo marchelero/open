@@ -1,59 +1,53 @@
 ---
 name: monorepo-patterns
-description: Use when working with monorepos using Turborepo, Nx, pnpm workspaces, Lerna, or npm workspaces. Covers workspace structure, dependency management, task orchestration, caching, shared packages, and build optimization for multi-package repositories.
+description: Use this skill when working with monorepos. Covers Turborepo, Nx, pnpm workspaces, Lerna patterns for workspace boundaries, task orchestration, build caching, dependency management, and code sharing.
+triggers: [monorepo, turborepo, nx, pnpm workspace, lerna, workspace, package, build cache, task graph]
+origin: starter-pack
 ---
 
-# Monorepo Patterns Skill
+# Monorepo Patterns
 
-Workspace management for Turborepo, Nx, pnpm, Lerna, npm.
+Patterns for building and maintaining monorepos with Turborepo, Nx, pnpm workspaces, or Lerna.
 
-## Core Principles
+## When to Activate
 
-1. **Shared code via packages** — not copy-paste between apps
-2. **Explicit dependencies** — declare what you use, deduplicate at root
-3. **Task orchestration** — build order based on dependency graph
-4. **Caching** — cache builds, tests, lints to avoid redundant work
-5. **Selective publishing** — only publish packages that changed
+- Setting up a new monorepo
+- Adding a new package to an existing monorepo
+- Configuring build orchestration and caching
+- Managing shared dependencies across packages
+- Setting up code sharing (shared types, utilities)
+- Debugging build order or dependency issues
 
-## Tool Selection
+## Tool Detection
 
-| Tool | Best For | Key Feature |
-|------|----------|-------------|
-| **Turborepo** | Any stack, simplicity | Caching, task orchestration |
-| **Nx** | Large teams, Angular/React | Affected commands, generators |
-| **pnpm workspaces** | Minimal setup, strict deps | Disk efficiency, strict mode |
-| **npm workspaces** | Simple projects | Built-in with npm 7+ |
-| **Lerna** | Publishing packages | Version management |
+| File | Tool |
+|------|------|
+| `turbo.json` | Turborepo |
+| `nx.json` | Nx |
+| `pnpm-workspace.yaml` | pnpm workspaces |
+| `lerna.json` | Lerna |
 
-## Turborepo
+## Turborepo Patterns
 
-### Structure
-
-```
-├── turbo.json
-├── package.json
-├── apps/
-│   ├── web/          # Next.js app
-│   └── api/          # Express app
-├── packages/
-│   ├── ui/           # Shared UI components
-│   ├── config/       # Shared ESLint/TS configs
-│   └── utils/        # Shared utilities
-```
-
-### turbo.json
+### Basic Configuration
 
 ```json
 {
-  "pipeline": {
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "lint": {
+      "inputs": ["src/**"],
+      "cache": true
     },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "cache": true
     },
-    "lint": {},
     "dev": {
       "cache": false,
       "persistent": true
@@ -62,186 +56,242 @@ Workspace management for Turborepo, Nx, pnpm, Lerna, npm.
 }
 ```
 
-### Commands
-
-```bash
-turbo run build                  # Build all packages
-turbo run build --filter=web     # Build web + its dependencies
-turbo run test --filter='./packages/*'  # Test all packages
-turbo run build --dry            # Preview what would run
-```
-
-## Nx
-
-### Structure
-
-```
-├── nx.json
-├── workspace.json
-├── apps/
-│   └── web/
-├── libs/
-│   ├── shared/
-│   │   └── ui/
-│   └── feature/
-```
-
-### Commands
-
-```bash
-npx nx run web:build              # Build specific app
-npx nx run-many --target=build --all   # Build everything
-npx nx affected --target=build    # Build only affected by changes
-npx nx graph                     # Visualize dependency graph
-```
-
-### generators.json
+### Task Dependencies
 
 ```json
 {
-  "generators": {
-    "library": {
-      "factory": "./libs/shared/ui/generators/library/schema.json",
-      "description": "Create a shared library"
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],  // Build dependencies first
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["build"],   // Build this package first
+      "inputs": ["src/**", "test/**"]
     }
   }
 }
 ```
 
-## pnpm Workspaces
-
-### package.json (root)
+### Caching
 
 ```json
 {
-  "private": true,
-  "scripts": {
-    "build": "pnpm -r run build",
-    "test": "pnpm -r run test",
-    "lint": "pnpm -r run lint"
+  "tasks": {
+    "build": {
+      "cache": true,
+      "outputs": ["dist/**", ".next/**"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
+    }
   }
 }
 ```
 
-### pnpm-workspace.yaml
-
-```yaml
-packages:
-  - 'apps/*'
-  - 'packages/*'
-```
-
-### Commands
+### Remote Caching
 
 ```bash
-pnpm -r run build                # Run build in all packages
-pnpm --filter web build          # Build only web
-pnpm --filter './packages/**' test  # Test all packages
-pnpm list --depth 0              # List workspace dependencies
+# Vercel Remote Cache
+turbo login
+turbo link
+
+# Or via env var
+TURBO_TOKEN=xxx turbo run build
 ```
 
-## npm Workspaces
+## pnpm Workspaces Patterns
 
-### package.json (root)
+### Workspace Configuration
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - 'packages/*'
+  - 'apps/*'
+  - 'tools/*'
+```
+
+### Shared Dependencies
 
 ```json
+// root package.json
 {
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "npm run build --workspaces",
-    "build:web": "npm run build -w apps/web"
+  "pnpm": {
+    "overrides": {
+      "react": "^18.2.0",
+      "typescript": "^5.3.0"
+    }
   }
 }
 ```
 
-## Shared Package Patterns
+### Workspace Protocol
+
+```json
+// packages/app/package.json
+{
+  "dependencies": {
+    "@myorg/utils": "workspace:*",
+    "@myorg/ui": "workspace:^"
+  }
+}
+```
+
+### Scripts
+
+```json
+{
+  "scripts": {
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "clean": "pnpm -r run clean"
+  }
+}
+```
+
+## Nx Patterns
+
+### Project Configuration
+
+```json
+// nx.json
+{
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "test": {
+      "inputs": ["default", "^production"]
+    }
+  },
+  "namedInputs": {
+    "production": ["default", "!{projectRoot}/**/*.spec.ts"],
+    "sharedGlobals": []
+  }
+}
+```
+
+### Dependency Graph
+
+```bash
+nx graph                     # Interactive graph
+nx graph --file=graph.json   # Export for analysis
+nx affected --target=build   # Build only affected packages
+```
+
+## Workspace Boundaries
+
+### Import Restrictions
+
+```json
+// packages/app/tsconfig.json
+{
+  "compilerOptions": {
+    "paths": {
+      "@myorg/*": ["../packages/*/src"]
+    }
+  }
+}
+```
+
+### ESLint Rules
+
+```json
+// .eslintrc.json
+{
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["../other-package/*"],
+            "message": "Import from the package name, not relative path"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Code Sharing Patterns
+
+### Shared Types Package
+
+```
+packages/
+  types/
+    package.json    # { "name": "@myorg/types" }
+    src/
+      index.ts      # export interface User { ... }
+```
 
 ### Shared Config Package
 
 ```
 packages/
   config/
-    package.json
-    eslint.js          # Shared ESLint config
-    tsconfig.base.json # Shared TypeScript config
+    package.json    # { "name": "@myorg/config" }
+    src/
+      eslint.ts     # export default { ... }
+      tsconfig.ts   # export default { ... }
 ```
 
-### Shared UI Package
+### Shared Utils Package
 
 ```
 packages/
-  ui/
-    package.json
+  utils/
+    package.json    # { "name": "@myorg/utils" }
     src/
-      Button.tsx
-      Input.tsx
-      index.ts
+      format.ts     # export function formatDate() { ... }
+      validate.ts   # export function validateEmail() { ... }
 ```
 
-### Consuming Shared Packages
+## Versioning Strategies
+
+### Fixed Version (Lerna-style)
 
 ```json
+// lerna.json
 {
-  "dependencies": {
-    "@myorg/ui": "workspace:*",
-    "@myorg/config": "workspace:*"
-  }
+  "version": "1.2.3",
+  "npmClient": "pnpm",
+  "useWorkspaces": true
 }
 ```
 
-## Caching
+### Independent Version
 
-### Turborepo Remote Cache
-
-```bash
-turbo login                       # Authenticate
-turbo run build                   # Local + remote cache
+```json
+// lerna.json
+{
+  "version": "independent",
+  "npmClient": "pnpm",
+  "useWorkspaces": true
+}
 ```
 
-### Nx Cloud
+## Anti-Patterns
 
-```bash
-npx nx connect-to-nx-cloud        # Connect
-npx nx run-many --target=build    # Cached builds
-```
+1. **Circular dependencies** → Build fails or infinite loop
+2. **Missing `dependsOn`** → Stale output or build failure
+3. **Package not in workspace** → Orphaned, not built
+4. **Relative imports** → Breaks package boundaries
+5. **`private: false` on internal package** → Published accidentally
+6. **No shared tsconfig** → Inconsistent TypeScript config
+7. **Duplicate dependencies** → Version conflicts
+8. **No `engines` field** → Incompatible Node/pnpm versions
 
-## Dependency Management
+## Related Skills
 
-### Root-Level Dependencies
+- `pipeline-patterns` — for CI/CD in monorepos
+- `coding-standards` — for consistent code style
+- `testing-patterns` — for test strategy across packages
 
-- Dev tools: eslint, prettier, typescript, jest
-- Build tools: turbo, nx, lerna
-- No runtime dependencies at root
+## Related Agents
 
-### Package-Level Dependencies
-
-- Runtime dependencies for that package only
-- Shared deps via workspace protocol: `"dep": "workspace:*"`
-- Peer deps for optional integrations
-
-### Deduplication
-
-```bash
-pnpm dedupe                       # pnpm
-npx npm-dedupe                    # npm
-```
-
-## Common Anti-Patterns
-
-| Anti-Pattern | Fix |
-|-------------|-----|
-| Circular dependencies between packages | Extract shared code to a third package |
-| Every app depends on every package | Only depend on what you use |
-| Version pinning each package independently | Use workspace protocol |
-| No task caching | Enable Turborepo/Nx caching |
-| Publishing all packages on any change | Use affected/changed detection |
-
-## References
-
-- See `skill: coding-standards` for naming conventions
-- See `skill: backend-patterns` for API patterns
-- See `skill: frontend-patterns` for React patterns
+- `monorepo-architect` — for monorepo architecture review
+- `ci-cd-reviewer` — for pipeline optimization

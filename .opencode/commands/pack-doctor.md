@@ -72,11 +72,15 @@ done
 ```
 
 #### 7. Tamanio de archivos
-- Agents y skills no deben superar 800 lineas (regla del proyecto).
+- SKILL.md de skills no deben superar 800 lineas (regla del proyecto).
+- Agents no deben superar 800 lineas.
 - Commands no deben superar 400 lineas (son prompts).
+- **Excluir**: archivos en `references/`, `themes/`, `rules/`, `scripts/` (referencias de skills, se cargan bajo demanda).
 
 ```bash
-find .opencode/agents .agents/skills -name "*.md" -exec wc -l {} \; | awk '$1 > 800 {print "WARN:", $2, $1, "lineas"}'
+find .opencode/agents -name "*.md" -exec wc -l {} \; | awk '$1 > 800 {print "WARN:", $2, $1, "lineas"}'
+find .agents/skills -name "SKILL.md" -exec wc -l {} \; | awk '$1 > 800 {print "WARN:", $2, $1, "lineas"}'
+find .opencode/commands -name "*.md" -exec wc -l {} \; | awk '$1 > 400 {print "WARN:", $2, $1, "lineas"}'
 ```
 
 #### 8. Stats del pack

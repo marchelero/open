@@ -61,6 +61,13 @@
       "skillPath": "skills/pptx/SKILL.md",
       "computedHash": "d6198c2f85d5d1c737d451b98ebacc3bbc187730c9a79252aa738ddb8d818455"
     },
+    "self-improving": {
+      "source": "clawhub.ai",
+      "sourceUrl": "https://clawhub.ai/ivangdavila/skills/self-improving",
+      "sourceType": "well-known",
+      "computedHash": "69837ace4c47121d2f3662e980bf7bdda2d8bec487b1045b48cc08455040cf3c",
+      "wellKnownDigest": "sha256:4354b727daebf75acd62c451102451e7dd91d1cb5a586dfd4ee8b702e55e5e2d"
+    },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",

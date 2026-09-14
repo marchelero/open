@@ -32,8 +32,8 @@ opencode starter pack — overview
 
 Pick a starting point:
 
-  /list-agents            # 67 agents — see who can do what
-  /list-skills             # 13 skills — see what knowledge is on tap
+  /list-agents            # 76 agents — see who can do what
+  /list-skills             # 66 skills — see what knowledge is on tap
   /prd "<idea>"            # start a non-trivial feature (PRD-first)
   /plan <prd-path>         # turn a PRD into a phased plan
   /code-review             # review current changes
@@ -57,14 +57,17 @@ Que queres hacer? (responde libre o con keyword)
   2. "fix bug en Y"              → /flow-bugfix o /quick-prd
   3. "refactor Z"                → /flow-refactor o /refactor-clean
   4. "review codigo"             → /code-review o /pr-review
-  5. "como se usa el pack"       → /start-here (5 min onboarding)
-  6. otra cosa / no se           → describe con tus palabras
+  5. "review UI/UX"             → /ui-review
+  6. "optimizar React"          → /react-perf
+  7. "design system"            → /design-system
+  8. "como se usa el pack"      → /start-here (5 min onboarding)
+  9. otra cosa / no se           → describe con tus palabras
 
 Tambien podes correr:
   /help <section>      # agents, skills, commands, conventions, flows
   /help <pregunta>     # ruta libre contra el catalogo
-  /list-agents [kwd]   # ver 72 agentes
-  /list-skills [kwd]   # ver 20 skills
+  /list-agents [kwd]   # ver 76 agentes
+  /list-skills [kwd]   # ver 66 skills
   /pack-doctor         # health check del pack
 ```
 
@@ -116,7 +119,13 @@ Reviewing:
   /code-review   review current changes
   /pr-review     review a GitHub PR (uses gh)
   /security      security-focused review
+  /ui-review     review UI/UX (100+ rules)
+  /react-perf    optimize React/Next.js performance
   /merge-conflict  resolve git merge conflicts
+
+Design:
+  /design-system generate or review design system
+  /self-reflect  auto-evaluate work, save learnings
 
 Maintaining:
   /refactor-clean   remove dead code, consolidate

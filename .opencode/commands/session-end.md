@@ -78,6 +78,11 @@ Create `docs/sessions/{DATE}-{SLUG}.md` with this template:
 | {path} | modified | {+N -N, what changed} |
 | {path} | deleted | {why} |
 
+## Skills used this session
+- {skill-name} — {why se usó}
+- {skill-name} — {por qué fue útil}
+(Revisar qué skills se cargaron durante la sesión. Si ninguno, escribir "None — Q&A only")
+
 ## Open questions
 - {question 1}
 - {question 2}

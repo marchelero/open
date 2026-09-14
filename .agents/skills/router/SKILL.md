@@ -1,12 +1,12 @@
 ---
 name: router
-description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 72-agent catalog AND the right skill from the 20-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
+description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 76-agent catalog AND the right skill from the 65-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
 triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check, explicar, explain, "show me", "muéstrame", "what is", "qué es", "how does", "cómo funciona", "what's in", "qué hay", list, lista, describe, describe, estructura, structure, overview, resumen, summary, crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto", "agent", "agents", "which agent", "what agent", "que agente", "subagent", "dispatch", "delegate", "skill", "skills", "route", "routing", "which skill", "what skill", "load", "knowledge"]
 ---
 
 # Router
 
-Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 72 agents and 20 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 92 descriptions.
+Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 76 agents and 65 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 141 descriptions.
 
 > **This is the merged `agent-router` + `skill-router`.** When you needed both before, you load just this one now. Save ~10K tokens of skill content per turn.
 
@@ -251,6 +251,27 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | xlsx, spreadsheet, excel, formulas, pivot, csv a planilla | `xlsx` |
 | pdf, merge pdf, split pdf, llenar formulario pdf, ocr pdf | `pdf` |
 | react performance, rerender, bundle size, code splitting, nextjs perf, hydration, memo | `vercel-react-best-practices` |
+| react composition, compound components, render props, boolean props, component library, design patterns | `vercel-composition-patterns` |
+| web design, UI audit, accessibility check, design review, interface guidelines, UX audit, 100+ rules | `vercel-web-design` |
+| distinctive design, visual identity, typography, aesthetic direction, bold design, not templated, brand look, intentional design | `anthropic-frontend-design` |
+| UI/UX design, design system, style selection, color palette, font pairing, GSAP animation, chart design, product UI, mobile UI, desktop UI, design intelligence | `ui-ux-pro-max` |
+| AI, LLM, RAG, embeddings, vector database, prompt engineering, OpenAI, Claude, chatbot, AI integration | `ai-llm-patterns` |
+| edge computing, cloudflare workers, vercel edge, deno deploy, edge functions, edge middleware | `edge-computing` |
+| WebAssembly, WASM, wasm, AssemblyScript, Rust WASM, performance optimization, native code in browser | `webassembly-patterns` |
+| real-time, WebSocket, SSE, Socket.io, live updates, collaborative editing, live chat, real-time sync | `realtime-patterns` |
+| React Native, Flutter, iOS, Android, mobile app, push notifications, offline support, mobile navigation | `mobile-patterns` |
+| CI/CD pipeline, github actions review, pipeline security, workflow audit, runner optimization, pipeline cost | `pipeline-patterns` |
+| monorepo, turborepo, nx, pnpm workspace, lerna, workspace, build cache, task graph, dependency graph | `monorepo-patterns` |
+| feature flag, feature toggle, A/B test, experiment, rollout, kill switch, gradual release | `feature-flags` |
+| message queue, event driven, rabbitmq, kafka, redis streams, bullmq, async, worker, consumer, producer | `message-queue-patterns` |
+| cache, redis, memcached, CDN, HTTP cache, cache invalidation, TTL, LRU | `caching-patterns` |
+| git hooks, husky, lint-staged, pre-commit, pre-push, commit lint, commitlint | `git-hooks` |
+| typescript patterns, zod, trpc, branded types, discriminated unions, runtime validation, type safe | `typescript-advanced-patterns` |
+| python async, asyncio, fastapi, background tasks, connection pooling, async database, aiohttp | `python-async-patterns` |
+| OWASP, authentication, authorization, rate limiting, CORS, CSP, security headers, secrets management | `security-hardening` |
+| API versioning, REST versioning, backward compatibility, deprecation, API migration, version negotiation | `api-versioning` |
+| microservices, circuit breaker, service mesh, gRPC, saga, CQRS, event sourcing, distributed systems | `microservices-patterns` |
+| self-improvement, self-learning, corrections, memory, reflection, learning, mistakes, better approach | `self-improving` |
 | refactor, refactoring, extract method, extract function, inline, rename, code smell, Fowler, codemod | `refactoring-patterns` |
 | bug, debugging, reproduce, bisect, stack trace, hypothesis, root cause, incident, regression | `debugging-patterns` |
 | log, logger, pino, winston, structlog, OpenTelemetry, metric, trace, health check, graceful shutdown | `observability` |

@@ -127,8 +127,8 @@
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
 | `/help` | Overview del pack: comandos principales, agentes, skills, convenciones. | build |
-| `/list-agents` | Lista los 72 agents con descripción y triggers. Filtros: keyword, categoría. | build |
-| `/list-skills` | Lista las 20 skills con descripción y triggers. Filtros: keyword. | build |
+| `/list-agents` | Lista los 76 agents con descripción y triggers. Filtros: keyword, categoría. | build |
+| `/list-skills` | Lista las 66 skills con descripción y triggers. Filtros: keyword. | build |
 | `/route` | Sugiere el mejor sub-agente + skills para un request libre. Útil como consulta antes de dispatchar. | build |
 | `/pack-doctor` | Diagnostica la salud del pack (10 checks: frontmatter, duplicados, permalinks, etc). | build |
 
