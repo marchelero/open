@@ -7,7 +7,7 @@ origin: starter-pack
 
 # Frontend Patterns
 
-React-specific conventions layered on top of `coding-standards`. This is the detailed playbook for components, hooks, and UI architecture. Not for Flutter/SwiftUI/native (use the relevant language-specific agent).
+React-specific conventions layered on top of `coding-standards`. This is the detailed playbook for components, hooks, and UI architecture. Not for Flutter/SwiftUI/native (use the relevant language-specific agent). For *deep* performance work (rerender prevention, bundle, hydration, server-component waterfalls) load `vercel-react-best-practices` too — this skill keeps the architectural floor, that one the perf rule set.
 
 ## When to Activate
 

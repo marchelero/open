@@ -237,6 +237,20 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | PRD, requirement, acceptance criteria, scope, objective, success criteria, intention map | `intent-driven-development` |
 | task graph, dependency, DAG, parallel work, work breakdown, sprint, estimate | `task-decomposition` |
 | naming, immutability, code quality, lint, formatting, KISS, DRY, YAGNI, complexity | `coding-standards` |
+| search, find usages, grep, ripgrep, rg, ast-grep, structural search, glob, locate, "where is", who calls | `file-search` |
+| ci, github actions, workflow yml, runner minutes, caching, matrix, concurrency, gh run, pipeline cost | `github-actions-efficiency` |
+| changelog, release notes, semver, keep a changelog, version bump, git tag, publish notes | `changelog-automation` |
+| sql, postgres, postgresql, query optimization, index, jsonb, window function, explain, n+1 | `postgresql-optimization` |
+| visual design, aesthetic direction, landing page design, typography, hero, brand look | `frontend-design` |
+| design tokens, spacing, dark mode, theming, interactive states, type scale, component variants | `ui-design-systems` |
+| write docs, review docs, api reference, diataxis, readme, docs site, technical writing | `docs-writing` |
+| eval, agent behavior test, routing test, golden transcript, prompt regression, skill test | `agent-evals` |
+| kubernetes, k8s, helm, manifest, pod, ingress, rbac, networkpolicy, kubectl, gitops | `kubernetes-specialist` |
+| word doc, docx, memo, letter, tracked changes, report en word | `docx` |
+| pptx, deck, slides, presentacion, pitch deck | `pptx` |
+| xlsx, spreadsheet, excel, formulas, pivot, csv a planilla | `xlsx` |
+| pdf, merge pdf, split pdf, llenar formulario pdf, ocr pdf | `pdf` |
+| react performance, rerender, bundle size, code splitting, nextjs perf, hydration, memo | `vercel-react-best-practices` |
 | refactor, refactoring, extract method, extract function, inline, rename, code smell, Fowler, codemod | `refactoring-patterns` |
 | bug, debugging, reproduce, bisect, stack trace, hypothesis, root cause, incident, regression | `debugging-patterns` |
 | log, logger, pino, winston, structlog, OpenTelemetry, metric, trace, health check, graceful shutdown | `observability` |
