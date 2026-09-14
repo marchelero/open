@@ -277,7 +277,7 @@ export default async function middleware(request: Request) {
 
 - `caching-patterns` — for edge caching strategies
 - `security-hardening` — for edge security
-- `api-versioning` — for global API deployment
+- `api-design` — for API versioning and deployment
 
 ## Related Agents
 

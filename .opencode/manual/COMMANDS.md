@@ -140,7 +140,6 @@
 | `/flow-feature` | Feature nueva end-to-end: `/orchestrate` → implement → `/verify` → report → audit. | build |
 | `/flow-refactor` | Refactor end-to-end: `/plan` → refactor → `/verify` → report → audit. | build |
 | `/flow-security` | Security review end-to-end: `/security` → fix → `/verify` → report → audit. | build |
-| `/opensource-pipeline` | Abrir código: `opensource-forker` → `opensource-sanitizer` (gate) → `opensource-packager`. NO pushea. | build |
 
 ## "Quiero colaborar via PR"
 

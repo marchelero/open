@@ -77,6 +77,18 @@ Log automatically when you notice these patterns:
 - Context-specific ("in this file...")
 - Hypotheticals ("what if...")
 
+**Reverted Changes** → log immediately, high priority:
+- User runs `git checkout -- file` or `git restore file` after your edit
+- User undoes or reverts your work
+- User re-edits files you just edited
+- Pattern: same file reverted 2+ times → systemic issue
+
+**Repeated Issues** → track frequency, escalate after 3x:
+- Same mistake appearing multiple times in conversation
+- You repeatedly using a tool in an undesired way
+- Patterns of behavior the user keeps correcting
+- Frequency field: track count per session
+
 ## Self-Reflection
 
 After completing significant work, pause and evaluate:

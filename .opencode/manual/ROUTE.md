@@ -1,6 +1,6 @@
 # Ruteo de agentes
 
-> 76 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
+> 59 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
 > Descripciones completas en `.opencode/agents/<nombre>.md`.
 
 > **Nota (2026)**: el primary agent ahora auto-rutea via el skill `router` (Mandatory Routing Protocol, AGENTS.md comportamiento #8; merged `agent-router` + `skill-router` en pack 1.1). Este archivo es la versión "manual lookup" — útil para entender el catálogo, pero el primary ya no necesita que le digas qué agente invocar.
@@ -17,7 +17,6 @@
 |--------|----------|---------------|
 | `planner` | Plan por fases con riesgos, dependencias y validación | Features complejos, refactors, cambios arquitectónicos |
 | `code-architect` | Diseño de sistema, decisiones tecnológicas, escalabilidad, plano de archivos | Decisiones arquitectónicas, features en repos existentes |
-| `gan-planner` | Expande un prompt de una línea en un spec GAN completo | Flujo GAN (plan→genera→evalúa en bucle) |
 
 ## "Quiero revisar código"
 
@@ -50,11 +49,9 @@
 | Swift | `swift-reviewer` | Swift / iOS / SwiftUI |
 | C# | `csharp-reviewer` | cambios en .NET |
 | C++ | `cpp-reviewer` | cambios en C++, templates, RAII |
-| F# | `fsharp-reviewer` | cambios en F# |
 | PHP | `php-reviewer` | PHP, Laravel/Symfony |
 | Flutter | `flutter-reviewer` | widgets Dart/Flutter, gestión de estado |
 | Base de datos | `database-reviewer` | SQL, migraciones, diseño de schema |
-| Salud | `healthcare-reviewer` | apps EMR/EHR/clínicas (HIPAA) |
 | ML/MLOps | `mle-reviewer` | entrenamiento, inferencia, feature store |
 
 ## "Quiero arreglar un error de build / tipos"
@@ -103,39 +100,3 @@
 | `code-quality-analyzer` (mode: simplify) | Claridad, consistencia, sin cambio de comportamiento | Tras un PR pero antes del merge |
 | `harness-optimizer` | Ajusta la configuración local del harness de agentes | Cuando el ruteo o los permisos se sienten mal |
 | `loop-operator` | Monitorea bucles autónomos de agentes, abort seguro | Cuando corres agentes de noche |
-
-## "Quiero abrir el código de un proyecto"
-
-Pipeline de 3 etapas con gate. Ejecuta en orden:
-
-1. `opensource-forker` — copia y elimina secretos
-2. `opensource-sanitizer` — verifica la limpieza (PASS / PASS-WITH-WARNINGS / FAIL). **Gate**: si FAIL, parar.
-3. `opensource-packager` — genera CLAUDE.md, LICENSE, README, plantillas de GitHub
-
-**Shortcut**: `/opensource-pipeline <source-dir> [target-dir]` corre las 3 etapas con gate automático entre sanitize y package. Pide confirmación si hay warnings. NO pushea — eso es manual del usuario después de revisar.
-
-## "Quiero usar el bucle GAN"
-
-3 agentes en bucle:
-
-1. `gan-planner` — prompt de una línea → spec
-2. `gan-generator` — implementa según el spec
-3. `gan-evaluator` — testea con Playwright, puntúa, feedback → bucle
-
-## "Quiero trabajo de red / homelab"
-
-| Agente | Uso |
-|--------|-----|
-| `network-architect` | Diseño enterprise/multi-sitio |
-| `network-config-reviewer` | Auditoría de config de router/switch (pre-prod) |
-| `network-troubleshooter` | Diagnóstico read-only por capas OSI |
-| `homelab-architect` | Planes de red para home-lab o laboratorio pequeño |
-
-## "Quiero ayuda especializada"
-
-| Agente | Uso |
-|--------|-----|
-| `marketing-agent` | Estrategia de campaña, copy, calendario de contenido |
-| `chief-of-staff` | Triaje de email/Slack/Messenger (4 niveles) |
-| `harmonyos-app-resolver` | HarmonyOS / OpenHarmony (ArkTS/ArkUI) |
-| `conversation-analyzer` | `/hookify` — encuentra comportamientos que vale la pena prevenir con hooks |

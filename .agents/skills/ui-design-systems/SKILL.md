@@ -20,7 +20,7 @@ The difference between "AI-generated looking UI" and "designed UI" is almost nev
 
 ## Do Not Activate For
 
-- Aesthetic direction / distinctive visual identity for a new surface → `frontend-design` (this skill builds the system it draws from)
+- Aesthetic direction / distinctive visual identity for a new surface → `anthropic-frontend-design` (this skill builds the system it draws from)
 - Component architecture, state, hooks, server/client boundaries → `frontend-patterns`
 - Keyboard/screen-reader/contrast **compliance** → `a11y-architect` agent (this skill designs to its floor)
 - Backend or CLI surfaces

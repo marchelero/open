@@ -16,14 +16,12 @@ Resúmenes de 1 línea para skills frecuentes. Evita re-leer SKILL.md completo c
 | Skill | Qué hace | Cuándo usar |
 |-------|----------|-------------|
 | `backend-patterns` | Repository, service, DI, transactions | APIs, Express/FastAPI/NestJS |
-| `api-design` | REST endpoints, versioning, pagination | Diseñar APIs |
-| `api-versioning` | Versionado REST, deprecation | Versionar APIs |
+| `api-design` | REST endpoints, versioning, pagination, deprecation | Diseñar APIs |
 
 ## Security
 | Skill | Qué hace | Cuándo usar |
 |-------|----------|-------------|
-| `security-review` | Checklist OWASP, auth, secrets | Cualquier endpoint sensible |
-| `security-hardening` | OWASP, CORS, CSP, rate limiting | Hardening de app |
+| `security-review` | Checklist OWASP, auth, secrets, CORS, CSP, rate limiting | Cualquier endpoint sensible |
 
 ## DevOps
 | Skill | Qué hace | Cuándo usar |

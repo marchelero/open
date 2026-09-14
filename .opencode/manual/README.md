@@ -10,9 +10,9 @@
 > Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
-- **71** agents (.opencode/agents)
-- **70** commands (.opencode/commands)
-- **33** skills (.agents/skills)
+- **59** agents (.opencode/agents)
+- **58** commands (.opencode/commands)
+- **63** skills (.agents/skills)
 - **15** native CLIs (.opencode/bin)
 - **3** npm plugins + **1** local plugin(s)
 - **2** active MCPs + **12** optional MCP(s)

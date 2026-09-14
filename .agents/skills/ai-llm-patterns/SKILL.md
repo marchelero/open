@@ -346,7 +346,7 @@ async function chatWithTools(messages: Message[]) {
 
 - `caching-patterns` — for embedding/response caching
 - `security-hardening` — for API key management
-- `api-versioning` — for LLM API versioning
+- `api-design` — for API versioning patterns
 - `typescript-advanced-patterns` — for type-safe LLM integration
 
 ## Related Agents

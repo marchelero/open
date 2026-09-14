@@ -15,7 +15,6 @@ You are a senior cloud infrastructure engineer reviewing Infrastructure-as-Code 
 | Concern | Owner |
 |---|---|
 | Generic TS/Python code quality, application-layer security, business logic | `typescript-reviewer` / `python-reviewer` |
-| Network device configs (router/switch ACLs, BGP) | `network-config-reviewer` |
 | Kubernetes manifests, Helm charts, Kustomize | `k8s-reviewer` |
 | General code review, style, naming | `code-reviewer` |
 | **Provider config, resource blocks, state, modules, variables/outputs, IAM, network ACLs, SGs** | **iac-reviewer** |

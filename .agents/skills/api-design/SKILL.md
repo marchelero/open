@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: Use this skill when designing, reviewing, or documenting REST APIs. Covers resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs.
+description: Use this skill when designing, reviewing, or documenting REST APIs. Covers resource naming, status codes, pagination, filtering, error responses, versioning strategies, backward compatibility, deprecation policies, and rate limiting for production APIs.
 triggers: [REST, GraphQL, endpoint, status code, pagination, API, rate limit, version]
 origin: starter-pack
 ---
@@ -522,3 +522,86 @@ Before shipping a new endpoint:
 - [ ] Response does not leak internal details (stack traces, SQL errors)
 - [ ] Consistent naming with existing endpoints (camelCase vs snake_case)
 - [ ] Documented (OpenAPI/Swagger spec updated)
+
+## API Versioning
+
+Patterns for REST API versioning, backward compatibility, and deprecation.
+
+### When to Activate
+
+- Adding versioning to existing API
+- Deprecating old API versions
+- Migrating clients between versions
+- Implementing version negotiation
+- Managing backward compatibility
+
+### Versioning Strategies
+
+**URL Path Versioning** (recommended for most APIs):
+```
+GET /api/v1/users
+GET /api/v2/users
+```
+
+**Header Versioning** (clean URLs, content negotiation):
+```
+Accept: application/vnd.myapp.v1+json
+```
+
+**Query Parameter Versioning** (simple, cacheable):
+```
+GET /api/users?version=1
+```
+
+### Express Implementation
+
+```typescript
+import { Router } from 'express';
+
+const v1Router = Router();
+const v2Router = Router();
+
+v1Router.get('/users', getUsersV1);
+v2Router.get('/users', getUsersV2);
+
+app.use('/api/v1', v1Router);
+app.use('/api/v2', v2Router);
+```
+
+### NestJS Implementation
+
+```typescript
+app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
+
+@Controller('users')
+export class UsersController {
+  @Version('1') @Get() findAllV1() { return 'v1'; }
+  @Version('2') @Get() findAllV2() { return 'v2'; }
+}
+```
+
+### Backward Compatibility Rules
+
+- **Additive changes are safe**: new fields, new endpoints, new optional params
+- **Breaking changes require new version**: type changes, field removal, required param changes
+- **Response transformation**: strip new fields when returning v1 responses from v2 data
+
+### Deprecation Strategy
+
+1. Add `Deprecation: true` + `Sunset: <date>` headers
+2. Log usage metrics to track remaining consumers
+3. Reduce functionality (read-only first, then remove)
+4. Remove entirely when traffic hits zero
+
+### Migration Patterns
+
+- **Parallel running**: both versions live, monitor traffic shift
+- **Canary**: route small percentage to new version, compare
+- **Content negotiation**: client requests version via Accept header
+
+### Anti-Patterns
+
+- Breaking changes in same version
+- No deprecation timeline
+- Missing version headers
+- Too many versions maintained simultaneously

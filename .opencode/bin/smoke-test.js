@@ -105,7 +105,7 @@ const skills = fs.existsSync('.agents/skills') ? fs.readdirSync('.agents/skills'
 const commands = countFiles('.opencode/commands', '.md');
 const binScripts = countFiles('.opencode/bin', '.js');
 
-check(`agents (got ${agents}, expected 64-65)`, () => agents >= 64);
+check(`agents (got ${agents}, expected 55+)`, () => agents >= 55);
 check(`skills (got ${skills}, expected 10+)`, () => skills >= 10);
 check(`commands (got ${commands}, expected 47+)`, () => commands >= 47);
 check(`bin scripts (got ${binScripts}, expected 2+)`, () => binScripts >= 2);

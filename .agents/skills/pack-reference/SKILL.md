@@ -92,3 +92,24 @@ Naming: PRDs → `docs/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md` · plans → `docs/
 **Immediate agent usage** (no user prompt needed): complex features → `planner` · code just written → `code-reviewer` · bug fix or new feature → `tdd-guide` · architectural decision → `architect`.
 
 **Parallel task execution**: SIEMPRE usar parallel Task para ops independientes. Multi-perspective analysis para problemas complejos (factual/senior/security/consistency sub-agents). Cada sub-agent corre en su propio context, primary sintetiza outputs.
+
+## Communication Triage Pattern
+
+When managing multi-channel communication (email, Slack, messaging), use this 4-tier classification:
+
+| Tier | Trigger | Action |
+|------|---------|--------|
+| **skip** | noreply, bots, @github.com, @jira, automated alerts | Auto-archive, show count only |
+| **info_only** | CC'd, receipts, @channel announcements, file shares | One-line summary |
+| **meeting_info** | Zoom/Teams URLs, date+meeting context, .ics attachments | Cross-reference calendar, fill missing links |
+| **action_required** | Direct questions, @user mentions, scheduling requests | Generate draft reply, present [Send/Edit/Skip] |
+
+**Priority order**: skip → info_only → meeting_info → action_required.
+
+**Post-send checklist** (enforce after every send):
+1. Calendar — Create [Tentative] events for proposed dates
+2. Relationships — Append interaction to sender context
+3. Todo — Update upcoming events, mark completed
+4. Pending responses — Set follow-up deadlines
+5. Archive — Remove processed message
+6. Knowledge files — Git commit all changes

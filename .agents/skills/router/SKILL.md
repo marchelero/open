@@ -87,7 +87,7 @@ ELSE:
 Extract from the user request:
 - **Stage**: plan | implement | fix | review | test | refactor | audit | doc | ship
 - **Domain**: ui | api | db | security | auth | infra | config | ci | data | ml | perf
-- **Stack**: react | ts | python | go | rust | java | swift | flutter | csharp | cpp | php | kotlin | dart | fsharp
+- **Stack**: react | ts | python | go | rust | java | swift | flutter | csharp | cpp | php | kotlin | dart
 - **Risk**: data loss | security | production | safe
 
 ### Step 2 — Match Against the Catalogs Below
@@ -108,12 +108,11 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 |---------|---------------|------------|
 | "build X" / "add feature" (new work) | `prd-agent` | `planner`, `code-architect` |
 | "plan implementation of X" | `planner` | `code-architect`, `architect` |
-| "design the system" / architecture decision | `code-architect` | `architect`, `network-architect` |
+| "design the system" / architecture decision | `code-architect` | `architect` |
 | "explore how Y works" / map codebase | `code-explorer` | `code-architect` |
 | "review the PRD" | `prd-reviewer` | `planner` |
 | "break down X into tasks" | `planner` | `task-decomposition` (skill) |
 | "migrate X to Y" | `migration-planner` | `planner` |
-| "generate spec for X" (autonomous loop) | `gan-planner` | `prd-agent` |
 
 ## Implementation & Build
 
@@ -122,7 +121,6 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 | "implement X" (after PRD/plan) | `build` (primary) | Routes to sub-agents as needed |
 | "fix this build error" | `build-error-resolver` | Falls back to language-specific |
 | Language-specific build error | `{lang}-build-resolver` | cpp, csharp, dart, django, go, java, kotlin, python, pytorch, react, rust, swift |
-| "implement feature via autonomous loop" | `gan-generator` | Pairs with `gan-evaluator` |
 
 ## Review & Quality
 
@@ -138,8 +136,6 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 | "is this accessible" | `a11y-architect` | — |
 | "review SQL / schema" | `database-reviewer` | — |
 | "review ML code" | `mle-reviewer` | — |
-| "review healthcare code" | `healthcare-reviewer` | — |
-| "is this config correct" | `network-config-reviewer` | `network-architect` |
 
 ## Stack-specific Reviewers
 
@@ -161,10 +157,8 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | Swift / iOS | `swift-reviewer` |
 | Flutter / Dart | `flutter-reviewer` |
 | PHP | `php-reviewer` |
-| F# | `fsharp-reviewer` |
 | Django | `django-reviewer` |
 | FastAPI | `fastapi-reviewer` |
-| HarmonyOS | `harmonyos-app-resolver` |
 | Terraform / Pulumi / CFN / Ansible | `iac-reviewer` |
 | Kubernetes / Helm / Kustomize | `k8s-reviewer` |
 
@@ -197,13 +191,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 
 | Domain | Agent |
 |--------|-------|
-| Network design (enterprise) | `network-architect` |
-| Network troubleshooting | `network-troubleshooter` |
-| Home / small lab network | `homelab-architect` |
 | Performance optimization | `performance-optimizer` |
-| Marketing / copy / launch | `marketing-agent` |
-| SEO | `seo-specialist` |
-| GAN Harness loop | `gan-planner` + `gan-generator` + `gan-evaluator` |
 | Autonomous loop operation | `loop-operator` |
 | Harness tuning | `harness-optimizer` |
 
@@ -211,11 +199,6 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 
 | Request | Primary agent | Notes |
 |---------|---------------|-------|
-| "triage my messages" / comms | `chief-of-staff` | — |
-| "fork this for open source" | `opensource-forker` | Then `opensource-sanitizer`, `opensource-packager` |
-| "sanitize the fork" | `opensource-sanitizer` | — |
-| "package for open source release" | `opensource-packager` | — |
-| "analyze conversation for hooks" | `conversation-analyzer` | — |
 | "what did I learn" / pattern extraction | `learn` (skill) | — |
 
 ---
@@ -241,7 +224,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | ci, github actions, workflow yml, runner minutes, caching, matrix, concurrency, gh run, pipeline cost | `github-actions-efficiency` |
 | changelog, release notes, semver, keep a changelog, version bump, git tag, publish notes | `changelog-automation` |
 | sql, postgres, postgresql, query optimization, index, jsonb, window function, explain, n+1 | `postgresql-optimization` |
-| visual design, aesthetic direction, landing page design, typography, hero, brand look | `frontend-design` |
+| visual design, aesthetic direction, landing page design, typography, hero, brand look | `anthropic-frontend-design` |
 | design tokens, spacing, dark mode, theming, interactive states, type scale, component variants | `ui-design-systems` |
 | write docs, review docs, api reference, diataxis, readme, docs site, technical writing | `docs-writing` |
 | eval, agent behavior test, routing test, golden transcript, prompt regression, skill test | `agent-evals` |
@@ -268,8 +251,8 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | git hooks, husky, lint-staged, pre-commit, pre-push, commit lint, commitlint | `git-hooks` |
 | typescript patterns, zod, trpc, branded types, discriminated unions, runtime validation, type safe | `typescript-advanced-patterns` |
 | python async, asyncio, fastapi, background tasks, connection pooling, async database, aiohttp | `python-async-patterns` |
-| OWASP, authentication, authorization, rate limiting, CORS, CSP, security headers, secrets management | `security-hardening` |
-| API versioning, REST versioning, backward compatibility, deprecation, API migration, version negotiation | `api-versioning` |
+| OWASP, authentication, authorization, rate limiting, CORS, CSP, security headers, secrets management | `security-review` |
+| API versioning, REST versioning, backward compatibility, deprecation, API migration, version negotiation | `api-design` |
 | microservices, circuit breaker, service mesh, gRPC, saga, CQRS, event sourcing, distributed systems | `microservices-patterns` |
 | self-improvement, self-learning, corrections, memory, reflection, learning, mistakes, better approach | `self-improving` |
 | refactor, refactoring, extract method, extract function, inline, rename, code smell, Fowler, codemod | `refactoring-patterns` |
@@ -297,8 +280,6 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | "agregar auth con JWT" | `prd-agent` → `planner` → `backend-patterns` + `security-review` → `tdd-guide` → `security-reviewer` |
 | "fix el bug en login" | `planner` (repro) → `tdd-guide` (failing test) → `build` → stack reviewer + `debugging-patterns` |
 | "como se hace X en React" | `frontend-patterns` + `docs-lookup` |
-| "triage my email" | `chief-of-staff` |
-| "open source this app" | `/opensource-pipeline` command (orchestrates `opensource-forker` → `opensource-sanitizer` → `opensource-packager`) |
 
 ---
 
