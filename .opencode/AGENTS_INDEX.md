@@ -116,7 +116,7 @@
 
 ## See also
 
-- [Skills index](../.agents/skills/) — 64 starter-pack skills (see `.agents/skills/INDEX.md` for the full list)
+- [Skills index](../.agents/skills/) — 78 starter-pack skills (see `.agents/skills/INDEX.md` for the full list)
 - [Commands index](../.opencode/commands/) — 64 starter-pack commands
 - `/list-agents` — interactive catalog with filters
 
@@ -129,7 +129,7 @@
 
 - **67** agents (this file)
 - **64** commands
-- **64** skills
+- **78** skills
 - **20** native CLIs
 - **3** npm plugins + **2** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)

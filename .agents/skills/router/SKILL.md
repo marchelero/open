@@ -1,12 +1,12 @@
 ---
 name: router
-description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 67-agent catalog AND the right skill from the 64-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
+description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 67-agent catalog AND the right skill from the 78-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
 triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check, explicar, explain, "show me", "muéstrame", "what is", "qué es", "how does", "cómo funciona", "what's in", "qué hay", list, lista, describe, describe, estructura, structure, overview, resumen, summary, crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto", "agent", "agents", "which agent", "what agent", "que agente", "subagent", "dispatch", "delegate", "skill", "skills", "route", "routing", "which skill", "what skill", "load", "knowledge"]
 ---
 
 # Router
 
-Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 67 agents and 64 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 131 descriptions.
+Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 67 agents and 78 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 145 descriptions.
 
 > **This is the merged `agent-router` + `skill-router`.** When you needed both before, you load just this one now. Save ~10K tokens of skill content per turn.
 
@@ -267,6 +267,20 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | terse, brief, less tokens, token efficiency, conciso, resumido, "habla menos", "modo caveman" | `caveman` |
 | pack, opencode, agent, command, structure, layout, where does X go, where do PRDs go | `pack-reference` |
 | "find a skill", "is there a skill for", extend capabilities, install skill | `find-skills` (global, `~/.agents/skills/`) |
+| drizzle, drizzle-orm, drizzle-kit, type-safe query, pgTable, schema migration | `drizzle-patterns` |
+| supabase, RLS, row level security, supabase realtime, storage bucket, edge function | `supabase-patterns` |
+| stripe, checkout session, subscription, billing portal, stripe webhook, payment_intent | `stripe-integration` |
+| clerk, sign-in, sign-up, organizations, MFA, user management, clerk middleware | `clerk-auth` |
+| firebase, firestore, firebase auth, cloud functions, security rules, realtime database | `firebase-patterns` |
+| turso, libsql, embedded replica, edge sqlite, global database | `turso-libsql` |
+| railway, railway.json, paas deploy, railway add postgresql, railway up | `railway-deploy` |
+| vercel deploy, vercel --prod, custom domain, preview deployment, ISR, serverless function | `vercel-deploy` |
+| compliance, GDPR, SOC2, HIPAA, PCI-DSS, CCPA, PII, PHI, consent, audit logging, data retention | `compliance-checker` |
+| API contract, OpenAPI, swagger, undocumented endpoint, response schema, contract test, status code audit | `api-contract-tester` |
+| ERD, entity relationship diagram, database schema diagram, data model, table relations, Mermaid erDiagram | `db-schema-visualizer` |
+| dependency audit, CVE, license compliance, supply chain, outdated package, vulnerable dependency | `dependency-audit` |
+| performance budget, Core Web Vitals, LCP, CLS, bundle size, load time, Lighthouse, TTI, TBT | `performance-budget` |
+| user manual, end-user documentation, user guide, handoff docs, guía de usuario, entrega | `user-manual-generator` |
 
 ---
 

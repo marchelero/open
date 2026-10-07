@@ -96,11 +96,11 @@
   {
     "id": "E11",
     "kind": "metric",
-    "title": "counts: 64 skills presentes (no se filtran)",
+    "title": "counts: 78 skills presentes (no se filtran)",
     "tool": "counts",
     "field": "skills",
-    "equals": 64,
-    "why": "invariante propia de open: la poda del instalador NO toca skills"
+    "equals": 78,
+    "why": "invariante propia de open: la poda del instalador NO toca skills (64 + 14 skills SaaS/stack de Fase 4)"
   },
   {
     "id": "E12",
@@ -132,10 +132,10 @@
   {
     "id": "E15",
     "kind": "count",
-    "title": "skills-lock.json cubre 64 skills + 67 agents (sha256 >= 131)",
+    "title": "skills-lock.json cubre 78 skills + 67 agents (sha256 >= 145)",
     "files": ["skills-lock.json"],
     "pattern": "\"sha256\"",
-    "gte": 131,
-    "why": "un lockfile casi vacio deja pasar drift de contenido"
+    "gte": 145,
+    "why": "un lockfile casi vacio deja pasar drift de contenido (64+14 skills + 67 agents)"
   }
 ]

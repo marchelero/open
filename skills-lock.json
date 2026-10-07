@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-10-07T04:04:34.791Z",
+  "generated": "2026-10-07T04:26:36.723Z",
   "skills": {
     "agent-evals": {
       "path": ".agents/skills/agent-evals/SKILL.md",
@@ -13,6 +13,10 @@
     "anthropic-frontend-design": {
       "path": ".agents/skills/anthropic-frontend-design/SKILL.md",
       "sha256": "1d86dd1272ecc3fa94a093ded9e98ac9e441c7c135036360aaaf7615e4b7f916"
+    },
+    "api-contract-tester": {
+      "path": ".agents/skills/api-contract-tester/SKILL.md",
+      "sha256": "662ce89f45f8a044a9dbc19988cbe17c6ca1e3f9d047e6b8fc8329c4bd89f1a6"
     },
     "api-design": {
       "path": ".agents/skills/api-design/SKILL.md",
@@ -41,6 +45,10 @@
       "sourceType": "github",
       "skillPath": "plugins/documentation-generation/skills/changelog-automation/SKILL.md"
     },
+    "clerk-auth": {
+      "path": ".agents/skills/clerk-auth/SKILL.md",
+      "sha256": "fd26ff8964cf45043902d0a87bb41323144b81f60cc3b3646035e41a95bebbd8"
+    },
     "codebase-graph": {
       "path": ".agents/skills/codebase-graph/SKILL.md",
       "sha256": "38810888efcd7f1d6eff19747ccfc173888fd72ac6a5009d6569ce4198816a5d"
@@ -48,6 +56,10 @@
     "coding-standards": {
       "path": ".agents/skills/coding-standards/SKILL.md",
       "sha256": "650e420256539cbd52f9cd1cc20baeb4cf7a31520e842811665b27faf247f417"
+    },
+    "compliance-checker": {
+      "path": ".agents/skills/compliance-checker/SKILL.md",
+      "sha256": "2a823bad7a04be3fdfea7b6ed9e9a1e51645b7777d2450ae4e841347b3be8b2a"
     },
     "contextual-commits": {
       "path": ".agents/skills/contextual-commits/SKILL.md",
@@ -64,6 +76,10 @@
       "path": ".agents/skills/database-migrations/SKILL.md",
       "sha256": "a30576fbeadb0403fa9b1ca7c3d06f3b79d80d403482a5cc9d4504cf547bec99"
     },
+    "db-schema-visualizer": {
+      "path": ".agents/skills/db-schema-visualizer/SKILL.md",
+      "sha256": "77c7aecbe6f380b79c8e60c3a079e9505e73c53ec342884b8df7b69476c172ef"
+    },
     "debugging-patterns": {
       "path": ".agents/skills/debugging-patterns/SKILL.md",
       "sha256": "6d14cc7690694f23aa812d8759d1a2016da5aa609454a970dcc54b54a540417a"
@@ -71,6 +87,10 @@
     "deep-research": {
       "path": ".agents/skills/deep-research/SKILL.md",
       "sha256": "e4ea67da4c280eafa0a8dd7048b7be130d4b1ff685d31b7ed40fd84de499e975"
+    },
+    "dependency-audit": {
+      "path": ".agents/skills/dependency-audit/SKILL.md",
+      "sha256": "243171af97cf133e1a5fdac7536bfcc1d3dbba76a91de94e9213f22905206e27"
     },
     "docker-patterns": {
       "path": ".agents/skills/docker-patterns/SKILL.md",
@@ -94,6 +114,10 @@
       "sourceType": "github",
       "skillPath": "skills/docx/SKILL.md"
     },
+    "drizzle-patterns": {
+      "path": ".agents/skills/drizzle-patterns/SKILL.md",
+      "sha256": "f28ede999442ac7d58f8286d6e3b645508e35fe4a299491fa099f84ce31cef0a"
+    },
     "edge-computing": {
       "path": ".agents/skills/edge-computing/SKILL.md",
       "sha256": "1446f3c0a8cdd36600159f2a1b9ad2af85b1e1e5568ccbbd4ff8f034274e8e40"
@@ -113,6 +137,10 @@
     "file-search": {
       "path": ".agents/skills/file-search/SKILL.md",
       "sha256": "673f17aa49eaf13bd3a6149f8a922bf2bc4a6fa8f1f6cd1a0a0d5b9a57cc536d"
+    },
+    "firebase-patterns": {
+      "path": ".agents/skills/firebase-patterns/SKILL.md",
+      "sha256": "33fb799848f123c0b50d19e5848afa007f935fdd167e27ebe218a879851efc02"
     },
     "frontend-patterns": {
       "path": ".agents/skills/frontend-patterns/SKILL.md",
@@ -191,6 +219,10 @@
       "sourceType": "github",
       "skillPath": "skills/pdf/SKILL.md"
     },
+    "performance-budget": {
+      "path": ".agents/skills/performance-budget/SKILL.md",
+      "sha256": "51bdd6b5423662a70763936032edc4c0a674ab3952a34f2423f85e7844587206"
+    },
     "persistent-memory": {
       "path": ".agents/skills/persistent-memory/SKILL.md",
       "sha256": "2ee04f182934dd5df4623baa004b7b158b8356c045310ba9fb339f03f3e28529"
@@ -217,6 +249,10 @@
       "path": ".agents/skills/python-async-patterns/SKILL.md",
       "sha256": "51ffe392ca91d571fb2e077e6d4af6b4a011d27fb009d16da3574a4e3fea6afd"
     },
+    "railway-deploy": {
+      "path": ".agents/skills/railway-deploy/SKILL.md",
+      "sha256": "d4ac5e74cd9b0d4dabac83a07433352e3322f1984849ee23ebab0bc0bda787cc"
+    },
     "realtime-patterns": {
       "path": ".agents/skills/realtime-patterns/SKILL.md",
       "sha256": "e115b72141c192b3f503ebad1962b0787b84df4af919693f121c721896c40b38"
@@ -227,7 +263,7 @@
     },
     "router": {
       "path": ".agents/skills/router/SKILL.md",
-      "sha256": "9cb9de82e74022ce7dba058046d1c541c732b838cca062df98b3bcbac8016de9"
+      "sha256": "4d929442cd84c5afab0906e0e7675b6b642eab066296966b9b76fda335065ad6"
     },
     "security-review": {
       "path": ".agents/skills/security-review/SKILL.md",
@@ -245,6 +281,14 @@
       "path": ".agents/skills/skill-optimizer/SKILL.md",
       "sha256": "bfb2ee977f02f94013c303e22efe44b62fa38cb22a96bf224658cce9841a2e3e"
     },
+    "stripe-integration": {
+      "path": ".agents/skills/stripe-integration/SKILL.md",
+      "sha256": "b05e105ad61e157e0f9f630b8876d93aa48c25bdbbd22d1a0098de18cb9bfcc8"
+    },
+    "supabase-patterns": {
+      "path": ".agents/skills/supabase-patterns/SKILL.md",
+      "sha256": "c7d7c8472a1f131d336437ba5c99e1669200e9011e1600e74da29ca49ac787d7"
+    },
     "task-decomposition": {
       "path": ".agents/skills/task-decomposition/SKILL.md",
       "sha256": "291d1122695bf72b46282edf29d7e7437446cf445d2315fcd71c4520f7d3b694"
@@ -252,6 +296,10 @@
     "testing": {
       "path": ".agents/skills/testing/SKILL.md",
       "sha256": "7ed3bac6cc4f162aa23d28fcf5bcf1213bb30ca3b02466b1788402b2f3739f84"
+    },
+    "turso-libsql": {
+      "path": ".agents/skills/turso-libsql/SKILL.md",
+      "sha256": "f60f1856e0052f950b745d012d41d27a27ab72a7c043fae9490064008da82077"
     },
     "typescript-advanced-patterns": {
       "path": ".agents/skills/typescript-advanced-patterns/SKILL.md",
@@ -265,9 +313,17 @@
       "path": ".agents/skills/ui-ux-pro-max/SKILL.md",
       "sha256": "ea087c341bfb5b23195c7302027268ede86da802554c18a5c4896a6017b439f9"
     },
+    "user-manual-generator": {
+      "path": ".agents/skills/user-manual-generator/SKILL.md",
+      "sha256": "78861f0bbe76453247729ff6f8755c26d64edd285bedc00a7e0e7bd5b5be6a65"
+    },
     "vercel-composition-patterns": {
       "path": ".agents/skills/vercel-composition-patterns/SKILL.md",
       "sha256": "8d5da630ffd457447f003de2e0052c8895c8d1db376610e8d5177a6df71f3324"
+    },
+    "vercel-deploy": {
+      "path": ".agents/skills/vercel-deploy/SKILL.md",
+      "sha256": "23ce8ac3221f5db52650677e792fe7e1c1fd7a4e66489fe9812b719b09db5298"
     },
     "vercel-react-best-practices": {
       "path": ".agents/skills/vercel-react-best-practices/SKILL.md",

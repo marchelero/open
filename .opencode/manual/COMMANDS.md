@@ -99,7 +99,7 @@
 | `/help` | Overview del pack: comandos principales, agentes, skills, convenciones. | build |
 | `/start-here` | Onboarding: primeros pasos tras instalar el pack. | build |
 | `/list-agents` | Lista los 67 agents con descripción y triggers. Filtros: keyword, categoría. | build |
-| `/list-skills` | Lista las 64 skills con descripción y triggers. Filtros: keyword. | build |
+| `/list-skills` | Lista las 78 skills con descripción y triggers. Filtros: keyword. | build |
 | `/list-mcps` | Lista MCPs activos y opcionales. | build |
 | `/pack-doctor` | Diagnostica la salud del pack (frontmatter, duplicados, permalinks, etc). | build |
 

@@ -33,7 +33,7 @@ opencode starter pack — overview
 Pick a starting point:
 
   /list-agents            # 67 agents — see who can do what
-  /list-skills             # 64 skills — see what knowledge is on tap
+  /list-skills             # 78 skills — see what knowledge is on tap
   /prd "<idea>"            # start a non-trivial feature (PRD-first)
   /plan <prd-path>         # turn a PRD into a phased plan
   /code-review             # review current changes
@@ -67,7 +67,7 @@ Tambien podes correr:
   /help <section>      # agents, skills, commands, conventions, flows
   /help <pregunta>     # ruta libre contra el catalogo
   /list-agents [kwd]   # ver 67 agentes
-  /list-skills [kwd]   # ver 64 skills
+  /list-skills [kwd]   # ver 78 skills
   /pack-doctor         # health check del pack
 ```
 
