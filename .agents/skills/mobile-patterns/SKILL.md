@@ -1,6 +1,6 @@
 ---
 name: mobile-patterns
-description: Use this skill when building mobile applications with React Native, Flutter, or native iOS/Android. Covers navigation, state management, offline support, push notifications, and platform-specific patterns.
+description: "Use this skill when building mobile applications with React Native, Flutter, or native iOS/Android."
 triggers: [React Native, Flutter, iOS, Android, mobile app, push notifications, offline support, mobile navigation, mobile state]
 origin: starter-pack
 ---

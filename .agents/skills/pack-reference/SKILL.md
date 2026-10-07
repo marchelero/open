@@ -1,12 +1,6 @@
 ---
 name: pack-reference
-description: >
-  Use when you need to look up opencode pack structure, naming conventions, project doc paths,
-  session memory layout, plugin/npm setup, or non-critical pack-level rules. The 9 mandatory
-  behaviors + security baseline + prompt defense live in AGENTS.md (always loaded at boot);
-  this skill covers the reference material that's only consulted on-demand — for example:
-  "where do PRDs go", "what's the naming convention", "which plugins are auto-loaded",
-  "how do memory layers work", "when should I trigger a snapshot", "what shouldn't I do in the pack".
+description: "Use when you need opencode pack structure, naming conventions, doc paths, session memory, or non-critical pack-level rules."
 ---
 
 # pack-reference

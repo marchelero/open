@@ -1,6 +1,6 @@
 ---
 name: open-montage
-description: Use when the user wants to create visual compositions, montages, or combined visual outputs from multiple sources. Generates HTML/CSS/SVG compositions combining code snippets, diagrams, screenshots, and text into unified visual layouts. Complements archify for more creative, freeform visual outputs.
+description: "Use when the user wants to create visual compositions, montages, or combined visual outputs from multiple sources."
 ---
 
 # Open Montage Skill

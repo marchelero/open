@@ -1,5 +1,5 @@
 ---
-description: Expert Infrastructure-as-Code reviewer for Terraform, OpenTofu, Pulumi, AWS CloudFormation/CDK, and Ansible. Flags public storage, 0.0.0.0/0 ingress on sensitive ports, IAM wildcards, state in public buckets, hardcoded secrets, missing encryption at rest/in transit, and provider/module version drift. Use for any change touching .tf/.tfvars/.yaml/.yml/.ts/.py IaC files. MUST BE USED for IaC PRs.
+description: "Expert Infrastructure-as-Code reviewer for Terraform, OpenTofu, Pulumi, AWS CloudFormation/CDK, and Ansible."
 mode: subagent
 permission:
   bash: allow

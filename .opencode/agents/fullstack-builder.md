@@ -1,5 +1,5 @@
 ---
-description: Full-stack builder that generates complete frontend + backend + database stacks. Use PROACTIVELY when building new apps from scratch, MVPs, or complete features. Generates Next.js/React/Vue + Node/Python/Go + PostgreSQL/Supabase/MongoDB.
+description: "Full-stack builder that generates complete frontend + backend + database stacks."
 mode: subagent
 permission:
   bash: allow

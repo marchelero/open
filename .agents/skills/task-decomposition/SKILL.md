@@ -1,6 +1,6 @@
 ---
 name: task-decomposition
-description: Use this skill when a PRD, plan, or high-level goal needs to be broken down into a directed acyclic graph (DAG) of executable tasks. Covers work breakdown structure, dependency analysis, parallelization opportunities, and effort estimation. Use intent-driven-development to define the criteria first, then this skill to structure the work.
+description: "Use this skill when a PRD, plan, or high-level goal needs to be broken down into a directed acyclic graph (DAG) of executable tasks."
 triggers: [task graph, dependency, DAG, parallel, work breakdown, sprint, estimate]
 origin: starter-pack
 ---

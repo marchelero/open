@@ -1,6 +1,6 @@
 ---
 name: docker-patterns
-description: Use when writing, reviewing, or optimizing Dockerfiles and docker-compose configurations. Covers multi-stage builds, security best practices, layer caching, image size optimization, health checks, secrets management, and docker-compose patterns for development and production.
+description: "Use when writing, reviewing, or optimizing Dockerfiles and docker-compose configurations."
 ---
 
 # Docker Patterns Skill

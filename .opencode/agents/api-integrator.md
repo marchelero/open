@@ -1,5 +1,5 @@
 ---
-description: API integrator for connecting external services (Stripe, Twilio, SendGrid, Resend, OpenAI, etc.). Use PROACTIVELY when your app needs to communicate with third-party APIs, handle webhooks, or process external data.
+description: "API integrator for connecting external services (Stripe, Twilio, SendGrid, Resend, OpenAI, etc.). Use PROACTIVELY when your app needs to communicate"
 mode: subagent
 permission:
   bash: allow

@@ -1,5 +1,5 @@
 ---
-description: Lightweight post-execution auditor. Crosses a completed report against the source PRD and the loaded skills, emitting a single concise verdict (PASS/PASS-WITH-NITS/FAIL) with criterion-level findings. No code edits, no exhaustive anti-pattern hunt, no giant tables. Use after /orchestrate, /plan, or any multi-agent flow that produced a report. Auto-triggers on: "/audit-report", "/auditar", or invoked by the primary agent at the end of a multi-agent flow.
+description: "Lightweight post-execution auditor."
 mode: subagent
 permission:
   read: allow

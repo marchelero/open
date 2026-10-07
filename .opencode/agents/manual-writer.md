@@ -1,5 +1,5 @@
 ---
-description: Compiles all project artifacts (PRDs, plans, reports, code, tests, diagrams, API docs) into a comprehensive user manual. Use after /verify passes and /audit-report gives PASS, or when user requests final documentation for handoff.
+description: "Compiles all project artifacts (PRDs, plans, reports, code, tests, diagrams, API docs) into a comprehensive user manual."
 mode: subagent
 permission:
   bash: allow

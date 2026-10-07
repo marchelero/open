@@ -1,5 +1,5 @@
 ---
-description: Swift/Xcode build, compilation, and dependency error resolution specialist. Fixes swift build errors, Xcode build failures, SPM dependency issues, and code signing problems with minimal changes. Use when Swift builds fail.
+description: "Swift/Xcode build, compilation, and dependency error resolution specialist."
 mode: subagent
 permission:
   bash: allow

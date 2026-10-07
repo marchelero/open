@@ -1,6 +1,6 @@
 ---
 name: dependency-audit
-description: Use this skill when auditing project dependencies for security vulnerabilities, license compliance, supply chain risks, abandoned packages, and duplicate dependencies. Covers npm/yarn/pnpm, pip, cargo, go modules, and Maven/Gradle. Produces a PASS/FAIL report with categorized findings.
+description: "Use this skill when auditing project dependencies for security vulnerabilities, license compliance, supply chain risks, abandoned packages, and"
 triggers: [npm, audit, dependency, dependencies, license, licenses, CVE, supply chain, vulnerable, outdated, abandoned, duplicate deps, package, packages, pip audit, cargo audit, go mod audit]
 origin: starter-pack
 ---

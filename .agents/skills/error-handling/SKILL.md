@@ -1,6 +1,6 @@
 ---
 name: error-handling
-description: Use this skill when designing or reviewing error handling. Covers patterns for robust error handling across TypeScript, Python, and Go: typed errors, error boundaries, retries, circuit breakers, and user-facing error messages.
+description: "Use this skill when designing or reviewing error handling."
 triggers: [error, exception, try/catch, retry, circuit breaker, throw, log error]
 origin: starter-pack
 ---

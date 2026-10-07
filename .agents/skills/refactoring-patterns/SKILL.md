@@ -1,6 +1,6 @@
 ---
 name: refactoring-patterns
-description: Use this skill when restructuring existing code without changing its behavior. Covers the Fowler catalog of refactorings (Extract Function, Inline Variable, Replace Conditional with Polymorphism, Introduce Parameter Object, Replace Magic Literal with Constant), code smells (long method, primitive obsession, data clumps, speculative generality, dead code), the red-green-refactor discipline, and tooling (jscodeshift, codemod, IDE shortcuts). Pair with `testing`.
+description: "Use this skill when restructuring existing code without changing its behavior."
 triggers: [refactor, refactoring, extract method, extract function, inline, rename, move, decompose, restructure, code smell, long method, large class, primitive obsession, data clumps, shotgun surgery, speculative generality, dead code, duplication, jscodeshift, codemod, refactoring catalog, Fowler, red-green-refactor, baby steps, preserve behavior]
 origin: starter-pack
 ---

@@ -1,5 +1,5 @@
 ---
-description: Monorepo architecture specialist for Turborepo, Nx, pnpm workspaces, Lerna, and custom build systems. Reviews workspace boundaries, task dependencies, build caching, dependency graphs, and code sharing. Use for changes touching turbo.json, nx.json, pnpm-workspace.yaml, lerna.json, or workspace package.json files. MUST BE USED for monorepo PRs.
+description: "Monorepo architecture specialist for Turborepo, Nx, pnpm workspaces, Lerna, and custom build systems."
 mode: subagent
 permission:
   bash: allow

@@ -1,6 +1,6 @@
 ---
 name: codebase-graph
-description: Use when the user wants to understand codebase structure through interactive knowledge graphs, dependency visualization, or architecture mapping. Turns code into explorable graphs showing module relationships, call chains, and data flow. Complements code-explorer with visual representations.
+description: "Use when the user wants to understand codebase structure through interactive knowledge graphs, dependency visualization, or architecture mapping."
 ---
 
 # Codebase Graph Skill

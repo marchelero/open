@@ -1,5 +1,5 @@
 ---
-description: Expert GraphQL schema and resolver reviewer for API design, security, performance, and best practices. Flags N+1 queries, missing DataLoader, exposed internal IDs, introspection in production, missing rate limits, and insecure directives. Use for any change touching *.graphql, *.gql, or resolver code. MUST BE USED for GraphQL PRs.
+description: "Expert GraphQL schema and resolver reviewer for API design, security, performance, and best practices."
 mode: subagent
 permission:
   bash: allow

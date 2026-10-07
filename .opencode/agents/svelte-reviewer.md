@@ -1,5 +1,5 @@
 ---
-description: Expert Svelte 5 / SvelteKit code reviewer specializing in runes ($state, $derived, $effect, $props), snippets, event handling, bind:value, SvelteKit load functions and form actions, and Svelte-specific security ({@html} sanitization, URL scheme validation). Use for any change touching .svelte/.ts files in Svelte/SvelteKit projects. MUST BE USED for Svelte projects.
+description: "Expert Svelte 5 / SvelteKit code reviewer specializing in runes ($state, $derived, $effect, $props), snippets, event handling, bind:value, SvelteKit"
 mode: subagent
 permission:
   bash: allow

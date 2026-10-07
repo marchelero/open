@@ -1,6 +1,6 @@
 ---
 name: performance-budget
-description: Use this skill when defining, validating, or monitoring performance budgets for web applications. Covers Core Web Vitals (LCP, FID, CLS), bundle size limits, load time thresholds, and runtime performance metrics. Detects regressions and suggests prioritized optimizations.
+description: "Use when defining or enforcing performance budgets for web pages: Core Web Vitals, bundle size, load time, and slow-page regressions."
 triggers: [performance, budget, LCP, FID, CLS, bundle size, load time, Core Web Vitals, threshold, metric, optimization, speed, slow, regresión, rendering, paint, TTI, TBT, FCP,ighthouse]
 origin: starter-pack
 ---

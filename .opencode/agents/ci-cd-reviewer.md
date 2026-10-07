@@ -1,5 +1,5 @@
 ---
-description: Expert CI/CD pipeline reviewer for GitHub Actions, GitLab CI, CircleCI, Jenkins, and Travis CI. Flags missing caching, insecure workflows, secrets exposure, missing concurrency controls, race conditions in matrix builds, and cost-inefficient configurations. Use for any change touching .github/workflows/, .gitlab-ci.yml, Jenkinsfile, .circleci/, or .travis.yml. MUST BE USED for CI/CD PRs.
+description: "Expert CI/CD pipeline reviewer for GitHub Actions, GitLab CI, CircleCI, Jenkins, and Travis CI."
 mode: subagent
 permission:
   bash: allow

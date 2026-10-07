@@ -1,6 +1,6 @@
 ---
 name: file-search
-description: Use when searching a codebase for symbols, patterns, or text and the results risk flooding context. Covers ripgrep (rg) discipline — file-type and glob filters, max-count limits, list-first-then-read strategy — ast-grep structural (syntax-aware) pattern matching, globbing for unknown layouts, and alignment with the pack's tool-truncation rule (>200 lines). Complements `code-explorer`, the `explore` subagent, and the coding-standards search floor.
+description: "Use when searching a codebase for symbols, patterns, or text and the results risk flooding context."
 triggers: [search, find, grep, ripgrep, rg, ast-grep, structural search, pattern matching, locate usages, find references, codebase search, file search, glob, where is, who calls, find all, symbol lookup]
 origin: starter-pack
 ---

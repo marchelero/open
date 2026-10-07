@@ -1,5 +1,5 @@
 ---
-description: Diagnose and fix Angular build failures across ng build / ng serve / ng test / Angular CLI workspace, Ivy, esbuild builder, SSR, and standalone migration. Handles ng compilation errors, ngc AOT errors, webpack/esbuild config issues, hydration mismatches, and missing types with minimal, surgical changes. MUST BE USED when an Angular build fails.
+description: "Diagnose and fix Angular build failures across ng build / ng serve / ng test / Angular CLI workspace, Ivy, esbuild builder, SSR, and standalone"
 mode: subagent
 permission:
   bash: allow

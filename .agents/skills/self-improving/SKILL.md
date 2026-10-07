@@ -1,6 +1,6 @@
 ---
 name: self-improving
-description: "Use this skill when a command, tool, or operation fails; when the user corrects you or rejects your work; when you discover a better approach; or when knowledge should compound over time. Self-reflection + Self-criticism + Self-learning + Self-organizing memory. Agent evaluates its own work, catches mistakes, and improves permanently."
+description: "Use this skill when a command, tool, or operation fails; when the user corrects you or rejects your work; when you discover a better approach; or when"
 origin: clawhub
 ---
 

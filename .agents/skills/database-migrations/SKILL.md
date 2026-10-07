@@ -1,6 +1,6 @@
 ---
 name: database-migrations
-description: Use when creating, reviewing, or troubleshooting database migrations across any ORM or framework. Covers migration safety, rollback strategies, data migrations vs schema migrations, index management, and zero-downtime patterns for Prisma, Drizzle, Alembic, Django, ActiveRecord, Sequelize, TypeORM, Goose, and golang-migrate.
+description: "Use when creating, reviewing, or troubleshooting database migrations across any ORM or framework."
 ---
 
 # Database Migrations Skill

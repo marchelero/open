@@ -1,5 +1,5 @@
 ---
-description: Java/Maven/Gradle build, compilation, and dependency error resolution specialist. Automatically detects Spring Boot or Quarkus and applies framework-specific fixes. Fixes build errors, Java compiler errors, and Maven/Gradle issues with minimal changes. Use when Java builds fail.
+description: "Java/Maven/Gradle build, compilation, and dependency error resolution specialist."
 mode: subagent
 permission:
   bash: allow

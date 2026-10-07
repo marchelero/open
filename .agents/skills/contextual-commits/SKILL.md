@@ -1,6 +1,6 @@
 ---
 name: contextual-commits
-description: Use when writing git commit messages that capture the WHY behind changes, not just the WHAT. Goes beyond conventional commits by adding context about decisions, trade-offs, and reasoning. Complements git-workflow with deeper commit semantics.
+description: "Use when writing git commit messages that capture the WHY behind changes, not just the WHAT."
 ---
 
 # Contextual Commits Skill

@@ -1,5 +1,5 @@
 ---
-description: Expert Dockerfile and docker-compose reviewer for security, image size, layer caching, multi-stage builds, and runtime best practices. Flags running as root, secrets in build args, unpinned base images, excessive layers, missing health checks, and insecure bind mounts. Use for any change touching Dockerfile*, docker-compose*, or .dockerignore. MUST BE USED for Docker PRs.
+description: "Expert Dockerfile and docker-compose reviewer for security, image size, layer caching, multi-stage builds, and runtime best practices."
 mode: subagent
 permission:
   bash: allow

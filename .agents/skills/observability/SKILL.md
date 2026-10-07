@@ -1,6 +1,6 @@
 ---
 name: observability
-description: Use this skill when adding logging, metrics, tracing, health checks, error tracking, or graceful shutdown to any service. Covers structured logging, OpenTelemetry, prom-client, Sentry SDK, liveness vs readiness probes, and SIGTERM handling across Node/TypeScript, Python, and Go.
+description: "Use this skill when adding logging, metrics, tracing, health checks, error tracking, or graceful shutdown to any service."
 triggers: [log, logger, pino, winston, structlog, logrus, zap, observability, tracing, OTel, OpenTelemetry, metrics, prometheus, prom-client, Sentry, health check, /health, /ready, liveness, readiness, graceful shutdown, SIGTERM, error tracking, monitoring, alerting]
 origin: starter-pack
 ---

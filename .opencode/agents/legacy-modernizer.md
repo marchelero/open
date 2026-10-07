@@ -1,5 +1,5 @@
 ---
-description: Legacy code modernizer for migrating between frameworks, languages, or versions. Use PROACTIVELY when upgrading Angular to React, JavaScript to TypeScript, class components to hooks, or any legacy migration.
+description: "Legacy code modernizer for migrating between frameworks, languages, or versions."
 mode: subagent
 permission:
   bash: allow

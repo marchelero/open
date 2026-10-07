@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: Use this skill when writing or reviewing code that should follow project-wide conventions. Covers naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.
+description: "Use this skill when writing or reviewing code that should follow project-wide conventions."
 triggers: [naming, immutability, code quality, KISS, DRY, YAGNI, lint, format]
 origin: starter-pack
 ---

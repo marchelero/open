@@ -85,6 +85,9 @@ node .opencode/bin/instinct.js                # add/status/projects/promote/evol
 node .opencode/bin/refresh-project.js         # regenera docs/PROJECT.md (--status, --auto, --dry-run, --check)
 node .opencode/bin/build-agents-index.js      # regenera .opencode/AGENTS_INDEX.md
 node .opencode/bin/build-skills-index.js      # regenera .agents/skills/INDEX.md
+node .opencode/bin/measure-tokens.js --digest # regenera .opencode/catalog-digest.json (índice condensado del router)
+node .opencode/bin/measure-tokens.js --digest --check   # gate de frescura del digest (CI, Win+Linux)
+node .opencode/bin/measure-tokens.js --catalog-report   # descripciones por longitud (reporte de coste)
 node .opencode/bin/state.js                   # recovery state por command
 node .opencode/bin/setup-mcp.js               # wizard interactivo para activar MCPs opcionales
 node .opencode/bin/scaffold-new-project.js    # scaffold <name>  (crea docs/{prds,plans,...} + PROJECT.md)
@@ -101,6 +104,29 @@ node .opencode/bin/install-plugins.js         # postinstall npm (idempotente)
 | 2 | `docs/sessions/LATEST.md` | al iniciar sesión | ~1-3K tokens |
 | 3 | Skills bajo demanda, archivos, sub-agentes | cuando se piden | variable |
 | 4 | Historial git, PRDs, planes, instintos | nunca | disco |
+
+## Índice condensado del catálogo (digest)
+
+El router (`bin/lib/route-engine.js`) solo necesita `name` + `description` +
+`triggers` para rankear. En vez de releer y parsear los 145 `SKILL.md`/agentes
+en cada dispatch, lee **un único fichero derivado**:
+`.opencode/catalog-digest.json` (145 entradas: `name`, `type`, `summary`,
+`triggers`, `bytes`, `hash`). Si el digest falta o está stale, el router degrada
+automáticamente a `listCatalog()` (145 lecturas) para no romperse.
+
+```bash
+# Regenerar el digest (hazlo junto con los índices: build-skills-index / build-agents-index)
+node .opencode/bin/measure-tokens.js --digest
+
+# Gate de frescura (falla si el digest no coincide byte a byte con el catálogo; CI)
+node .opencode/bin/measure-tokens.js --digest --check
+
+# Reporte de coste: descripciones ordenadas por longitud (nombre + bytes)
+node .opencode/bin/measure-tokens.js --catalog-report
+```
+
+Es **derivado y determinista** (LF-normalizado, sin timestamps, orden fijo), por
+lo que `--check` es válido en Windows y Linux. No se edita a mano.
 
 ## Primeros 5 minutos (post-instalación)
 

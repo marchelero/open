@@ -1,5 +1,5 @@
 ---
-description: Audits completed PRDs against the current codebase to determine whether the planned behavior was actually delivered, partially delivered, or never built. Use when reviewing old PRDs in `docs/prds/`, when a user asks "did we ever ship X?", or before claiming completion of a feature from a stale PRD. Cross-checks PRD success criteria against observable code, tests, and reports.
+description: "Audits completed PRDs against the current codebase to determine whether the planned behavior was actually delivered, partially delivered, or never"
 mode: subagent
 permission:
   bash: allow

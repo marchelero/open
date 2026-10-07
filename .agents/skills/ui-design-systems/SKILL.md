@@ -1,6 +1,6 @@
 ---
 name: ui-design-systems
-description: Use when building or reviewing UI that needs visual consistency — design tokens (color, space, type scale), spacing rhythm, typographic hierarchy, dark mode via semantic tokens, interactive states (hover/focus/active/disabled), component variants API, and layout-shift prevention. Covers the visual layer only; for component architecture and hooks correctness use frontend-patterns. Pairs with a11y-architect for contrast and focus requirements.
+description: "Use when building or reviewing UI that needs visual consistency — design tokens (color, space, type scale), spacing rhythm, typographic hierarchy"
 triggers: [design system, design tokens, spacing, typography, color palette, dark mode, theme, hover state, focus ring, visual consistency, brand, ui polish, css variables, tailwind tokens, contrast, type scale]
 origin: starter-pack
 ---

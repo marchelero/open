@@ -1,5 +1,5 @@
 ---
-description: Software architecture specialist for system design, scalability, and technical decision-making. Analyzes codebase patterns and provides implementation blueprints with concrete files, interfaces, data flow, and build order. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions.
+description: "Software architecture specialist for system design, scalability, and technical decision-making."
 mode: subagent
 permission:
   bash: allow

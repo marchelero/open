@@ -1,5 +1,5 @@
 ---
-description: Generates mock APIs for testing without a backend. Use when frontend tests need a mock server, when developing against an API spec, or when creating API fixtures for E2E tests. Supports REST and GraphQL mocking with MSW, json-server, or custom Express servers.
+description: "Generates mock APIs for testing without a backend."
 mode: subagent
 permission:
   bash: allow

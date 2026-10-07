@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Use when the user's request is ambiguous, has multiple interpretations, or lacks critical details. Activates iterative questioning to clarify requirements before implementation. Asks the user whether to use this deep-clarification mode or proceed with minimal questions first.
+description: "Use when the user's request is ambiguous, has multiple interpretations, or lacks critical details."
 ---
 
 # Grill Me Skill

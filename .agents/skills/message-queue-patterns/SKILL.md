@@ -1,6 +1,6 @@
 ---
 name: message-queue-patterns
-description: Use this skill when implementing message queues, event-driven architectures, or async processing. Covers RabbitMQ, Kafka, Redis Streams, BullMQ, SQS patterns for producers, consumers, dead letter queues, and idempotency.
+description: "Use this skill when implementing message queues, event-driven architectures, or async processing."
 triggers: [message queue, event driven, rabbitmq, kafka, redis streams, bullmq, sqs, async, worker, consumer, producer]
 origin: starter-pack
 ---

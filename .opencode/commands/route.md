@@ -38,6 +38,7 @@ Use its `recommended` + `alternatives` as the primary candidates (BM25 over `nam
 ```bash
 node .opencode/bin/build-agents-index.js    # .opencode/AGENTS_INDEX.md
 node .opencode/bin/build-skills-index.js    # .agents/skills/INDEX.md
+node .opencode/bin/measure-tokens.js --digest   # .opencode/catalog-digest.json (cache del router; --check verifica frescura)
 # commands have no INDEX but list them via ls + parse frontmatter
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: skill-optimizer
-description: Use when auditing, optimizing, or maintaining agent skills in a pack. Covers skill lifecycle management: mining repeated workflows, auditing skill quality, detecting orphan skills, optimizing token usage, and preparing skills for public release.
+description: "Use when auditing, optimizing, or maintaining agent skills in a pack."
 ---
 
 # Skill Optimizer

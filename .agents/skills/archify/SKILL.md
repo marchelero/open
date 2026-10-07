@@ -1,6 +1,6 @@
 ---
 name: archify
-description: Use when the user asks to visualize system architecture, infrastructure, cloud/security/network topology, technical workflows, API call sequences, request lifecycles, data pipelines, ETL/ELT, data lineage, state machines, or to convert/beautify Mermaid. Creates polished, validated diagrams as explorable standalone HTML with inline SVG, dark/light themes, optional trace motion, and PNG/JPEG/WebP/SVG/WebM export. Accepts plain-language requirements or pasted Mermaid flowchart, sequenceDiagram, and stateDiagram input; inspects repository evidence when the diagram must reflect real code.
+description: "Use when the user asks to visualize system architecture, infrastructure, cloud/security/network topology, technical workflows, API call sequences"
 license: MIT
 metadata:
   version: "2.17"

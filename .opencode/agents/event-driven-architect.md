@@ -1,5 +1,5 @@
 ---
-description: Event-driven architecture specialist for message queues (RabbitMQ, Kafka, Redis Streams, BullMQ), event sourcing, CQRS, and saga patterns. Reviews async communication, dead letter queues, idempotency, and message ordering. Use for changes touching queue consumers, producers, event handlers, or saga orchestrators. MUST BE USED for event-driven PRs.
+description: "Event-driven architecture specialist for message queues (RabbitMQ, Kafka, Redis Streams, BullMQ), event sourcing, CQRS, and saga patterns."
 mode: subagent
 permission:
   bash: allow

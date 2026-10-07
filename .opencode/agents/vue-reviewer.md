@@ -1,5 +1,5 @@
 ---
-description: Expert Vue 3 / Nuxt 3 code reviewer specializing in Composition API, reactivity primitives, <script setup>, v-model, Suspense, Pinia, Nuxt server routes, and Vue-specific security (v-html sanitization, URL scheme validation). Use for any change touching .vue/.ts files in Vue/Nuxt projects. MUST BE USED for Vue projects.
+description: "Expert Vue 3 / Nuxt 3 code reviewer specializing in Composition API, reactivity primitives, <script setup>, v-model, Suspense, Pinia, Nuxt server"
 mode: subagent
 permission:
   bash: allow

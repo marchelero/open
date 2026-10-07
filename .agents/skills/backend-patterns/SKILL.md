@@ -1,6 +1,6 @@
 ---
 name: backend-patterns
-description: Use this skill when designing, reviewing, or implementing server-side code: REST/GraphQL APIs, repository/service layers, database access, authentication, validation, and error handling. Covers layered architecture, dependency injection, middleware, transactions, and request lifecycle. Use api-design for the URL/status-code contract and security-review for auth/authorization.
+description: "Use this skill when designing, reviewing, or implementing server-side code: REST/GraphQL APIs, repository/service layers, database access"
 triggers: [Express, FastAPI, NestJS, repository, service layer, DI, transaction, controller, middleware]
 origin: starter-pack
 ---

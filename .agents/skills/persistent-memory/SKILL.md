@@ -1,6 +1,6 @@
 ---
 name: persistent-memory
-description: Use when the user wants to persist knowledge, decisions, or context across sessions beyond the built-in session memory. Covers vector-based memory, knowledge graphs, decision logs, and cross-session context preservation. Complements session memory with longer-term, searchable knowledge storage.
+description: "Use when the user wants to persist knowledge, decisions, or context across sessions beyond the built-in session memory."
 ---
 
 # Persistent Memory Skill

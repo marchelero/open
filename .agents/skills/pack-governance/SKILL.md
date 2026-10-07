@@ -1,6 +1,6 @@
 ---
 name: pack-governance
-description: Use when the session is compacted or resumed, when coordinating a multi-agent flow (handoffs between PRD, plan, implementation and review), or when a named agent may not be installed because the installer filtered it by stack. Covers the post-compaction recovery checklist, the agent handoff protocol, stack-based agent fallback, and session continuity. Loaded on demand; AGENTS.md keeps only a short pointer.
+description: "Use when the session is compacted or resumed, when coordinating a multi-agent flow (handoffs between PRD, plan, implementation and review), or when a"
 triggers: [compact, compaction, recover, resume, session start, session end, handoff, continuity, gobernanza, continuidad, retomar, compactacion]
 ---
 

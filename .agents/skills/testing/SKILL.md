@@ -1,6 +1,6 @@
 ---
 name: testing
-description: Use this skill when writing new features, fixing bugs, refactoring code, writing or reviewing tests, designing test architecture, or improving test coverage. Covers TDD methodology (red-green-refactor), test pyramid, AAA pattern, mocking strategies per language (jest/vitest, pytest, Go testing, JUnit, Swift Testing), test doubles (dummy/stub/spy/mock/fake), integration tests with databases (testcontainers, transactional), E2E with Playwright, parameterized tests, and coverage anti-patterns.
+description: "Use this skill when writing new features, fixing bugs, refactoring code, writing or reviewing tests, designing test architecture, or improving test"
 triggers: [test, TDD, RED, GREEN, REFACTOR, coverage, jest, pytest, vitest, mock, testing, unit test, integration test, e2e, stub, spy, fake, fixture, factory, builder, testcontainers, playwright, junit, go test, RSpec, parameterized, AAA, arrange act assert, FIRST, test pyramid, mutation testing, flaky test, snapshot test, test double, harness]
 origin: starter-pack
 ---

@@ -1,6 +1,6 @@
 ---
 name: anthropic-frontend-design
-description: Use this skill when building or redesigning UI that needs distinctive, intentional visual design. Guidance for aesthetic direction, typography, and making choices that don't read as templated defaults. From Anthropic's official skills collection.
+description: "Use this skill when building or redesigning UI that needs distinctive, intentional visual design."
 origin: anthropic-skills
 ---
 

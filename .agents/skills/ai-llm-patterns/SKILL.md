@@ -1,6 +1,6 @@
 ---
 name: ai-llm-patterns
-description: Use this skill when integrating AI/LLM features into applications. Covers RAG, embeddings, vector databases, prompt engineering, streaming responses, token management, and LLM API patterns (OpenAI, Anthropic, local models).
+description: "Use this skill when integrating AI/LLM features into applications."
 triggers: [AI, LLM, RAG, embeddings, vector database, prompt engineering, OpenAI, Anthropic, GPT, Claude, chatbot, AI integration]
 origin: starter-pack
 ---

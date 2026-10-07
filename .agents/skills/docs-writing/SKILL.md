@@ -1,6 +1,6 @@
 ---
 name: docs-writing
-description: Use when asked to "review my docs", "write an API reference", or improve a documentation page. Writes and audits technical docs with Diataxis type gating, runnable examples, and 51 documentation rules.
+description: "Use when asked to 'review my docs', 'write an API reference', or improve a documentation page."
 triggers: [documentation, write docs, review docs, api reference, diataxis, technical writing, docs site, readme, how-to, tutorial, docs quality]
 origin: skills.sh/mblode/agent-skills
 ---

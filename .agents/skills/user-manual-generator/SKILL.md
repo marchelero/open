@@ -1,6 +1,6 @@
 ---
 name: user-manual-generator
-description: Use this skill when generating a complete user manual or end-user documentation for a project. Compiles information from README, code, tests, PRDs, reports, and API docs into a structured manual with installation, configuration, usage, API reference, FAQ, and troubleshooting sections.
+description: "Use this skill when generating a complete user manual or end-user documentation for a project."
 triggers: [manual, usuario, documentation, documentación, handoff, entrega, user guide, user manual, end user docs, guía, user documentation, release notes, changelog]
 origin: starter-pack
 ---

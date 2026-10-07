@@ -1,6 +1,6 @@
 ---
 name: debugging-patterns
-description: Use this skill when investigating bugs, performance issues, or production incidents. Covers the diagnostic workflow (reproduce, bisect, hypothesize, eliminate), logging strategies (correlation IDs, structured logs, strategic placement), interactive debugging (breakpoints, watch expressions, conditional breakpoints, logpoints), profiling (CPU via perf/py-spy/pprof/clinic.js, memory via heap snapshots, I/O and lock profiling), postmortem templates (5 Whys, timeline reconstruction), and common bug categories (off-by-one, race conditions, null/undefined, timezones, encoding). Pair with incident-responder for production issues and observability for logging patterns.
+description: "Use this skill when investigating bugs, performance issues, or production incidents."
 triggers: [debug, debugging, bug, bugfix, reproduce, bisect, git bisect, log, console.log, print, print debug, breakpoint, debugger, watch, profile, profiler, perf, py-spy, pprof, clinic.js, flamegraph, heap snapshot, memory leak, race condition, deadlock, off-by-one, null pointer, NPE, undefined, timezone, encoding, postmortem, 5 whys, root cause, flaky test, flake, intermittent, stack trace, stacktrace, coredump, minidump]
 origin: starter-pack
 ---

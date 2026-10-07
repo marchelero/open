@@ -1,5 +1,5 @@
 ---
-description: Expert Kubernetes / Helm / Kustomize reviewer for manifests, charts, and overlays. Flags privileged containers, host namespaces, root user without justification, capabilities.ALL/SYS_ADMIN, plain-text secrets in ConfigMap, latest tag with Always pull, missing resource limits, missing NetworkPolicy, automounted SA tokens, missing liveness/readiness probes, and PDB gaps. Use for any change touching *.yaml manifests, charts, or kustomization files. MUST BE USED for Kubernetes PRs.
+description: "Expert Kubernetes / Helm / Kustomize reviewer for manifests, charts, and overlays."
 mode: subagent
 permission:
   bash: allow

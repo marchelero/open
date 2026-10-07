@@ -1,5 +1,5 @@
 ---
-description: Analyze or improve code quality across five modes — comment accuracy and rot, behavioral test coverage in PRs, silent failures and swallowed errors, type design and invariant enforcement, and clarity simplification without behavior change. Specify a mode (comments | tests | silent-failures | types | simplify) for focused review; omit for full multi-dimensional audit.
+description: "Analyze or improve code quality across five modes — comment accuracy and rot, behavioral test coverage in PRs, silent failures and swallowed errors"
 mode: subagent
 permission:
   bash: deny

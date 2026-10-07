@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Use when the user needs thorough, multi-source research on a technical topic, library, architecture pattern, or market analysis. Goes beyond simple doc lookup by synthesizing multiple sources, cross-referencing claims, and producing a structured research report with confidence levels.
+description: "Use when the user needs thorough, multi-source research on a technical topic, library, architecture pattern, or market analysis."
 ---
 
 # Deep Research Skill

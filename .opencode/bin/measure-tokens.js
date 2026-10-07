@@ -287,6 +287,66 @@ function main() {
   const baselineRef = getArg("baseline") || DEFAULT_BASELINE_REF
   const asJson = args.includes("--json")
 
+  // --- condensed catalog digest surface (same CLI, no new counted CLI) -----
+  // `--digest`         regenerate .opencode/catalog-digest.json (derived cache)
+  // `--digest --check` freshness gate (byte-exact, LF-normalized; exit 0/1)
+  // `--catalog-report` descriptions ordered by length (+ totals)
+  if (args.includes("--digest") || args.includes("--catalog-report")) {
+    const digest = require("./lib/catalog-digest.js")
+    if (args.includes("--catalog-report")) {
+      const rep = digest.catalogReport()
+      if (asJson) {
+        process.stdout.write(JSON.stringify(rep, null, 2) + "\n")
+      } else {
+        process.stdout.write("catalog cost report (description bytes, longest first)\n")
+        process.stdout.write("=========================================================\n")
+        for (const r of rep.entries) {
+          process.stdout.write(
+            "  " + String(r.bytes).padStart(5) + " B  " + r.type.padEnd(5) + " " + r.name + "\n"
+          )
+        }
+        process.stdout.write("\n")
+        process.stdout.write(
+          "  " + rep.count + " entries, " + rep.descriptionBytes + " B, ~" +
+            rep.catalogTokens + " tok\n"
+        )
+      }
+      process.exit(0)
+    }
+    if (args.includes("--check")) {
+      const res = digest.checkDigest()
+      if (asJson) {
+        process.stdout.write(
+          JSON.stringify(
+            { ok: res.ok, path: path.relative(ROOT, res.path).split(path.sep).join("/") },
+            null,
+            2
+          ) + "\n"
+        )
+      } else if (res.ok) {
+        process.stdout.write("catalog-digest: FRESH (" + path.relative(ROOT, res.path).split(path.sep).join("/") + ")\n")
+      } else {
+        process.stdout.write("catalog-digest: STALE or missing — regenerate with `node .opencode/bin/measure-tokens.js --digest`\n")
+      }
+      process.exit(res.ok ? 0 : 1)
+    }
+    const res = digest.writeDigest()
+    if (asJson) {
+      process.stdout.write(
+        JSON.stringify(
+          { ok: true, path: path.relative(ROOT, res.path).split(path.sep).join("/"), count: res.count },
+          null,
+          2
+        ) + "\n"
+      )
+    } else {
+      process.stdout.write(
+        "Wrote " + path.relative(ROOT, res.path).split(path.sep).join("/") + " (" + res.count + " entries)\n"
+      )
+    }
+    process.exit(0)
+  }
+
   const curComp = fsComponents()
   const useGit = baselineRef !== "none"
   const baseComp = useGit ? gitComponents(baselineRef) : null

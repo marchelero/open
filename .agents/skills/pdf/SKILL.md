@@ -1,6 +1,6 @@
 ---
 name: pdf
-description: Use when working with PDF files — reading or extracting text/tables, combining/merging, splitting, rotating, watermarks, creating new PDFs, filling forms, encrypting/decrypting, extracting images, and OCR on scanned PDFs. If the user mentions a .pdf file or asks to produce one, use this skill.
+description: "Use when working with PDF files — reading or extracting text/tables, combining/merging, splitting, rotating, watermarks, creating new PDFs, filling"
 triggers: [pdf, merge pdf, split pdf, watermark, pdf form, ocr pdf, encrypt pdf, extract pdf]
 origin: skills.sh/anthropics/skills
 license: Proprietary. LICENSE.txt has complete terms

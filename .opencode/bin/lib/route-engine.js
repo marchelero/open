@@ -24,6 +24,16 @@
 
 const { listCatalog } = require('./catalog.js');
 
+// Optional condensed catalog cache. Loaded lazily and defensively: if the
+// digest module or artifact is unavailable/stale, loadEntries() falls back to
+// listCatalog() (145 reads) so routing never breaks on a missing cache.
+let digestLib = null;
+try {
+  digestLib = require('./catalog-digest.js');
+} catch {
+  digestLib = null;
+}
+
 const K1 = 1.2;
 const B = 0.75;
 
@@ -112,7 +122,27 @@ function entryFromAgent(a) {
   };
 }
 
+function entryFromDigest(e) {
+  return {
+    name: e.name,
+    type: e.type,
+    path: e.path,
+    description: e.summary || '',
+    triggers: e.triggers || [],
+    command: e.type === 'agent' ? '@' + e.name : 'load skill ' + e.name,
+  };
+}
+
+// Single-file fast path: read the derived digest (1 file) instead of
+// re-reading + parsing 145 SKILL.md/agent files. Any problem degrades silently
+// to the authoritative source so the router stays correct.
 function loadEntries() {
+  if (digestLib) {
+    const digest = digestLib.loadDigest();
+    if (digest && digest.entries.length > 0) {
+      return digest.entries.map(entryFromDigest);
+    }
+  }
   const cat = listCatalog();
   return [...cat.skills.map(entryFromSkill), ...cat.agents.map(entryFromAgent)];
 }

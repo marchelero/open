@@ -1,6 +1,6 @@
 ---
 name: convert-documents-to-markdown
-description: Use when a task needs the contents of an office document, spreadsheet, presentation, ebook, or PDF you cannot read directly. Converts Word (.doc, .docx), PowerPoint (.ppt, .pptx), Excel (.xls, .xlsx), OpenDocument (.odt, .ods, .odp), RTF, EPUB, CSV, and PDF files to GitHub-Flavored Markdown.
+description: "Use when a task needs the contents of an office document, spreadsheet, presentation, ebook, or PDF you cannot read directly."
 license: MIT
 metadata:
   author: firecrawl

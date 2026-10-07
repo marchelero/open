@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: Use this skill when designing, reviewing, or documenting REST APIs. Covers resource naming, status codes, pagination, filtering, error responses, versioning strategies, backward compatibility, deprecation policies, and rate limiting for production APIs.
+description: "Use this skill when designing, reviewing, or documenting REST APIs."
 triggers: [REST, GraphQL, endpoint, status code, pagination, API, rate limit, version]
 origin: starter-pack
 ---

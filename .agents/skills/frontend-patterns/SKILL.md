@@ -1,6 +1,6 @@
 ---
 name: frontend-patterns
-description: Use this skill when designing, reviewing, or implementing React, JSX, or TSX components and UI architecture. Covers component composition, hooks correctness, state management, forms, rendering performance, accessibility, and styling patterns. Use coding-standards for the shared floor and security-review for input handling.
+description: "Use this skill when designing, reviewing, or implementing React, JSX, or TSX components and UI architecture."
 triggers: [React, JSX, TSX, hooks, useState, useEffect, useMemo, form, component, render]
 origin: starter-pack
 ---

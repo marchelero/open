@@ -1,5 +1,5 @@
 ---
-description: Expert Angular code reviewer specializing in RxJS, signals, OnPush change detection, DI, zone.js boundaries, template type-checking, accessibility, and Angular-specific security. Use for any change touching Angular .ts/.html files. MUST BE USED for Angular projects.
+description: "Expert Angular code reviewer specializing in RxJS, signals, OnPush change detection, DI, zone.js boundaries, template type-checking, accessibility"
 mode: subagent
 permission:
   bash: allow

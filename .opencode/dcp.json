@@ -3,10 +3,10 @@
   "enabled": true,
   "autoUpdate": false,
   "debug": false,
-  "pruneNotification": "minimal",
-  "pruneNotificationType": "toast",
+  "pruneNotification": "detailed",
+  "pruneNotificationType": "chat",
   "manualMode": {
-    "enabled": true,
+    "enabled": false,
     "automaticStrategies": true
   },
   "turnProtection": {

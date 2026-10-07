@@ -1,5 +1,5 @@
 ---
-description: Generates test fixtures, factories, seeds, and mock data for testing. Use when tests need realistic data, when setting up seed scripts, or when creating factory functions for any ORM or framework. Complements tdd-guide and testing.
+description: "Generates test fixtures, factories, seeds, and mock data for testing."
 mode: subagent
 permission:
   bash: allow

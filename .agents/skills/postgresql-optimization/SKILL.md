@@ -1,6 +1,6 @@
 ---
 name: postgresql-optimization
-description: 'Use when working with PostgreSQL — unique features, advanced data types, and Postgres-exclusive capabilities: JSONB operations, array types, custom types, range/geometric types, full-text search, window functions, and the extensions ecosystem.'
+description: "Use when working with PostgreSQL — unique features, advanced data types, and Postgres-exclusive capabilities: JSONB operations, array types, custom"
 triggers: [sql, postgres, postgresql, query optimization, index, jsonb, window function, full text search, cte, explain, database query, n+1, array type]
 origin: skills.sh/github/awesome-copilot
 ---

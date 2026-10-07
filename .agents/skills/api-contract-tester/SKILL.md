@@ -1,6 +1,6 @@
 ---
 name: api-contract-tester
-description: Use this skill when validating that API implementations match their OpenAPI/Swagger specifications, or when generating API docs from code. Detects undocumented endpoints, mismatched response schemas, incorrect status codes, and missing error responses. Works with Express, FastAPI, NestJS, Django REST, Go, and any OpenAPI-compatible framework.
+description: "Use this skill when validating that API implementations match their OpenAPI/Swagger specifications, or when generating API docs from code."
 triggers: [OpenAPI, swagger, contract, API spec, endpoint, API design, REST API, API docs, API validation, undocumented endpoint, response schema, status code, API testing]
 origin: starter-pack
 ---

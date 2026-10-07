@@ -1,6 +1,6 @@
 ---
 name: realtime-patterns
-description: Use this skill when implementing real-time features. Covers WebSockets, Server-Sent Events, Socket.io, Pusher, Ably, and real-time state synchronization patterns for collaborative and live applications.
+description: "Use this skill when implementing real-time features."
 triggers: [real-time, WebSocket, SSE, Socket.io, Pusher, live updates, collaborative editing, live chat, real-time sync]
 origin: starter-pack
 ---

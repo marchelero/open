@@ -1,6 +1,6 @@
 ---
 name: environment-config
-description: Use when setting up, reviewing, or debugging environment configuration across any project. Covers .env management, config validation, secrets handling, environment-specific settings (dev/staging/prod), Docker env injection, CI/CD variables, and config-as-code patterns.
+description: "Use when setting up, reviewing, or debugging environment configuration across any project."
 ---
 
 # Environment Config Skill

@@ -1,5 +1,5 @@
 ---
-description: Plans large-scale migrations across database schemas, monorepo splits, framework upgrades, and language ports. Produces phased migration plans with rollback gates, data integrity checks, and parallel work streams. Use when a single PR cannot hold the change, when multiple services must move in lockstep, or when a production system needs a safe cutover.
+description: "Plans large-scale migrations across database schemas, monorepo splits, framework upgrades, and language ports."
 mode: subagent
 permission:
   bash: allow

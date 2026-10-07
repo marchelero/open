@@ -1,6 +1,6 @@
 ---
 name: db-schema-visualizer
-description: Use this skill when generating Entity Relationship Diagrams (ERD) and database schema visualizations from code. Works with Prisma, Drizzle, Sequelize, TypeORM, SQLAlchemy, Django models, Go migrations, raw SQL, and Supabase. Produces Mermaid erDiagram for rendering in docs.
+description: "Use this skill when generating Entity Relationship Diagrams (ERD) and database schema visualizations from code."
 triggers: [schema, ERD, database, base de datos, tablas, relaciones, foreign key, primary key, table, column, migration, prisma, drizzle, sequelize, typeorm, sqlalchemy, django models, supabase, relational, data model]
 origin: starter-pack
 ---

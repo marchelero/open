@@ -1,6 +1,6 @@
 ---
 name: agent-evals
-description: Use when testing or regression-guarding agent/skill/command behavior in this pack — prompt-level evals with golden transcripts, assertion types (routing decision, tool calls, output format, token budget), fixture suites, and a zero-dep runner wired into /pack-doctor --json or CI. Verifies what agents DO, complementing verification-loop (which verifies what code DOES).
+description: "Use when testing or regression-guarding agent/skill/command behavior in this pack — prompt-level evals with golden transcripts, assertion types"
 triggers: [eval, evals, agent test, prompt test, regression prompt, golden transcript, routing test, skill test, behavior test, benchmark agent, prompt quality]
 origin: starter-pack
 ---

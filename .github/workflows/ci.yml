@@ -46,6 +46,9 @@ jobs:
       - name: "verify-lockfile"
         run: node .opencode/bin/verify-lockfile.js
 
+      - name: "catalog-digest --check"
+        run: node .opencode/bin/measure-tokens.js --digest --check
+
       - name: "smoke-test"
         run: node .opencode/bin/smoke-test.js
 
@@ -85,6 +88,9 @@ jobs:
 
       - name: "verify-lockfile"
         run: node .opencode/bin/verify-lockfile.js
+
+      - name: "catalog-digest --check"
+        run: node .opencode/bin/measure-tokens.js --digest --check
 
       - name: "smoke-test"
         run: node .opencode/bin/smoke-test.js

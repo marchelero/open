@@ -1,6 +1,6 @@
 ---
 name: compliance-checker
-description: Use this skill when validating code against regulatory compliance frameworks (GDPR, SOC2, HIPAA, PCI-DSS, CCPA). Covers data handling, consent management, audit logging, encryption, access controls, and privacy requirements. Produces a compliance gap analysis with remediation steps.
+description: "Use this skill when validating code against regulatory compliance frameworks (GDPR, SOC2, HIPAA, PCI-DSS, CCPA). Covers data handling, consent"
 triggers: [compliance, GDPR, SOC2, HIPAA, PCI-DSS, CCPA, regulation, regulación, privacy, privacidad, data protection, audit log, consent, PII, PHI, personal data, encrypted, retention, right to deletion, data subject]
 origin: starter-pack
 ---

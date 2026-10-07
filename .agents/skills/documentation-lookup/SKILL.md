@@ -1,6 +1,6 @@
 ---
 name: documentation-lookup
-description: Use this skill when the user asks setup questions, API references, or code examples, or names a framework (e.g. React, Next.js, Prisma). Replaces training data with up-to-date library and framework docs via Context7 MCP.
+description: "Use this skill when the user asks setup questions, API references, or code examples, or names a framework (e.g. React, Next.js, Prisma). Replaces"
 triggers: [library, framework, docs, API version, example, Context7, latest]
 origin: starter-pack
 ---

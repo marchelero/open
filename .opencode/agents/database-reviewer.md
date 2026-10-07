@@ -1,5 +1,5 @@
 ---
-description: PostgreSQL database specialist for query optimization, schema design, security, and performance. Use PROACTIVELY when writing SQL, creating migrations, designing schemas, or troubleshooting database performance. Incorporates Supabase best practices.
+description: "PostgreSQL database specialist for query optimization, schema design, and slow database performance as data grows. Reviews SQL, migrations, and indexes."
 mode: subagent
 permission:
   bash: allow

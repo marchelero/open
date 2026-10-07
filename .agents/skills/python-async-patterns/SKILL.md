@@ -1,6 +1,6 @@
 ---
 name: python-async-patterns
-description: Use this skill when working with Python async/await, FastAPI, background tasks, connection pooling, and async database operations. Covers asyncio, aiohttp, asyncpg, SQLAlchemy async, and performance optimization.
+description: "Use this skill when working with Python async/await, FastAPI, background tasks, connection pooling, and async database operations."
 triggers: [python async, asyncio, fastapi, background tasks, connection pooling, async database, aiohttp, asyncpg]
 origin: starter-pack
 ---

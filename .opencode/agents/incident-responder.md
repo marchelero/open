@@ -1,5 +1,5 @@
 ---
-description: On-call incident response specialist. Reads logs and stacktraces (from Sentry/Datadog/CloudWatch if MCP available), finds the regression that caused the incident, suggests a minimal fix, and drafts a postmortem. Use PROACTIVELY for production incidents, paged alerts, user reports of broken behavior, and post-deploy verification.
+description: "On-call incident response specialist."
 mode: subagent
 permission:
   bash: allow

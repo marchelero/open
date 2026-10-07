@@ -1,5 +1,5 @@
 ---
-description: Orchestrates ALL audit dimensions in sequence: security, code quality, dependencies, performance, database, and API contracts. Produces a unified audit report with consolidated findings. Use after /verify passes or at the end of /orchestrate flow.
+description: "Orchestrates ALL audit dimensions in sequence: security, code quality, dependencies, performance, database, and API contracts."
 mode: subagent
 permission:
   bash: allow

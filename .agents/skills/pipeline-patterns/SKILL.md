@@ -1,6 +1,6 @@
 ---
 name: pipeline-patterns
-description: Use this skill when setting up, reviewing, or optimizing CI/CD pipelines. Covers GitHub Actions, GitLab CI, CircleCI, Jenkins, and Travis CI patterns for caching, matrix builds, concurrency, secrets management, and cost optimization.
+description: "Use this skill when setting up, reviewing, or optimizing CI/CD pipelines."
 triggers: [CI, CD, pipeline, workflow, github actions, gitlab ci, jenkins, deploy, build, test, publish]
 origin: starter-pack
 ---
