@@ -196,6 +196,28 @@ node .opencode/bin/instinct.js add \
 
 **Anti-pattern**: do not add generic instincts like "always test code" or "use git commits". Only specific, actionable insights with evidence from THIS session.
 
+### Step 7b — Ingest cross-project knowledge (auto, MANDATORY)
+
+Promote the most reusable learnings of the session into the global knowledge store (`knowledge.js`, BM25 lexical, offline). Same skip rules as instincts: pure Q&A or no new learning -> skip. Max 3 entries.
+
+**CLI invocation** (run 1-3 times):
+
+```bash
+node .opencode/bin/knowledge.js add \
+  --title "<one recoverable sentence>" \
+  --body "<the lesson, gotcha or decision, with enough context to be useful in another repo>" \
+  --tags "<a,b>" \
+  --source session-end
+```
+
+- Store: `~/.config/opencode/knowledge/knowledge.json` (global, cross-project; override with `OPENCODE_KNOWLEDGE_HOME`).
+- **Tests/CI**: set `OPENCODE_KNOWLEDGE_HOME` to a temp dir so nothing is written to the real home.
+- `add` refuses obvious secrets (`sk-`, `AKIA`, `BEGIN ... PRIVATE KEY`, `password=`, long opaque tokens). Never persist credentials.
+
+**After running**, report: `Knowledge: N entrie(s) added` or `Knowledge: none (Q&A / duplicate / secret rejected)`.
+
+**User can opt out**: if the user says "skip knowledge" before this step, do not run the CLI.
+
 ### Step 8 — Report
 
 ```

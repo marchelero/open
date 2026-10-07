@@ -146,5 +146,14 @@
     "field": "gate",
     "equals": true,
     "why": "el router debe superar el baseline keyword; `route-match.js --json` sin request corre el eval y emite gate"
+  },
+  {
+    "id": "E17",
+    "kind": "metric",
+    "title": "RAG cross-proyecto: top1 >= baseline+20 y top3 >= 80% (fixture knowledge)",
+    "tool": "knowledge",
+    "field": "gate",
+    "equals": true,
+    "why": "la memoria lexica debe superar el baseline substring-en-title; `knowledge.js --json` sin subcomando corre el eval y emite gate"
   }
 ]

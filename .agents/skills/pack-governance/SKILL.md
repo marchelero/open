@@ -49,6 +49,7 @@ El instalador `init-opencode.js` puede haber **filtrado** agents de lenguajes qu
 - **Arranque** (`/session-start`): lee `docs/PROJECT.md`, `docs/sessions/LATEST.md` y `docs/state/*.json`; si hay un plan en curso (`status: in-progress`) ofrece continuar.
 - **Cierre** (`/session-end`): escribe el snapshot en `docs/sessions/`, actualiza `LATEST.md`, refresca `docs/PROJECT.md` y extrae 1–3 instintos (`node .opencode/bin/instinct.js add …`).
 - **Estado de flujos**: `state.js` persiste el progreso de flujos multi-agente en `docs/state/` (`init` / `update` / `complete` / `fail`); `/session-start` ofrece reanudar.
+- **Memoria cross-proyecto** (`knowledge.js`): al arrancar un task no trivial, busca lecciones previas con `node .opencode/bin/knowledge.js search "<query>" --json` (read-only, offline, cero red). Al cerrar, si hubo un aprendizaje reutilizable, ingiere 1-3 entradas con `add`. Store global por usuario en `~/.config/opencode/knowledge/`; en tests/CI usa el override `OPENCODE_KNOWLEDGE_HOME=<tmp>` para no tocar el home real.
 - **Regla dura**: nunca hagas commit/push sin verbo explícito del usuario ese mismo turno (conducta 3).
 
 ## See also

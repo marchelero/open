@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-10-07T04:45:18.951Z",
+  "generated": "2026-10-07T05:37:24.669Z",
   "skills": {
     "agent-evals": {
       "path": ".agents/skills/agent-evals/SKILL.md",
@@ -206,7 +206,7 @@
     },
     "pack-governance": {
       "path": ".agents/skills/pack-governance/SKILL.md",
-      "sha256": "23a7efb36013becf88ea04a698119ef08d5b3b6bceafc72fedd3f5bbe1d98196"
+      "sha256": "9df8ee16d38b70c75f78a24c8723ade79b92de8858b143093435809afbf029a1"
     },
     "pack-reference": {
       "path": ".agents/skills/pack-reference/SKILL.md",
