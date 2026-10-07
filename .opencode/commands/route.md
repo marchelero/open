@@ -151,6 +151,26 @@ Then ask the user to clarify or pick.
 | Task breakdown | `task-decomposition` |
 | Code quality | `coding-standards` |
 
+## Embeddings mode (opt-in, degradable)
+
+`route-match.js` is BM25 by default: zero-dep, no network, reports `mode: lexical`.
+To rank by cosine similarity against an OpenAI-compatible `/embeddings` endpoint,
+export ALL three (secrets via env only, never committed):
+
+```bash
+OPEN_ROUTER_EMBEDDINGS=1
+OPEN_ROUTER_EMBEDDINGS_URL=https://host/v1/embeddings
+OPEN_ROUTER_EMBEDDINGS_KEY=<bearer token>
+# optional
+OPEN_ROUTER_EMBEDDINGS_MODEL=text-embedding-3-small
+OPEN_ROUTER_EMBEDDINGS_TIMEOUT=5000
+```
+
+With the opt-in set the CLI prints `mode: embeddings`. On ANY failure (missing URL
+or key, timeout, HTTP != 2xx, invalid JSON, network down) it falls back silently to
+BM25 and prints `mode: lexical(degraded)`; `--json` carries `mode` + `degraded` and
+never exposes the key. Unset the vars to return to the default zero-dep behaviour.
+
 ## Behavior Notes
 
 - **Always show 1 + 2.** Even when confident, surface alternatives.

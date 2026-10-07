@@ -9,9 +9,11 @@
  * Lives in bin/lib/ on purpose: counts.js counts *.js directly under bin/ as
  * native CLIs (non-recursive), so this engine does NOT change counts.clis.
  *
- * Optional embeddings mode (PRD Q2=B) is intentionally NOT implemented. If
- * OPEN_ROUTER_EMBEDDINGS=1 is set, route() degrades silently to lexical and
- * reports degraded:true. It never reads or logs any key.
+ * Optional embeddings mode (Capa B / M4) is OPT-IN and degradable. The sync
+ * route() stays 100% lexical/zero-network. The async routeAsync() used by the
+ * CLI tries lib/embeddings.js ONLY when OPEN_ROUTER_EMBEDDINGS=1 (plus URL+KEY)
+ * and silently falls back to lexical with degraded:true on ANY failure. Neither
+ * path ever reads, prints or logs the key.
  *
  * Exports:
  *   loadEntries()            -> [Entry]  (type/path/command/description/triggers)
@@ -19,7 +21,8 @@
  *   buildIndex(entries)      -> index
  *   rank(index, request, n)  -> [{ entry, score, matched }]
  *   baselineRank(entries, request, n) -> [{ name, score }]
- *   route(request)           -> { request, mode, degraded, recommended, alternatives }
+ *   route(request)           -> { request, mode, degraded, recommended, alternatives }   (sync, lexical)
+ *   routeAsync(request)      -> Promise<same>  (opt-in embeddings, silent fallback)
  */
 
 const { listCatalog } = require('./catalog.js');
@@ -231,16 +234,15 @@ function baselineRank(entries, request, topN = 3) {
 }
 
 function embeddingsRequested() {
-  // Embeddings mode is deferred (PRD Q2=B). We only detect the opt-in so the
-  // CLI can report degraded:true; we never read URL/key nor log anything.
+  // Opt-in signal only. This never reads URL/key and never logs anything; the
+  // actual attempt (and its silent degradation) lives in routeAsync() +
+  // lib/embeddings.js.
   return process.env.OPEN_ROUTER_EMBEDDINGS === '1';
 }
 
-function route(request, { topN = 3, entries, index } = {}) {
-  const ents = entries || loadEntries();
-  const idx = index || buildIndex(ents);
-  const results = rank(idx, request, topN);
-  const degraded = embeddingsRequested();
+// Shape ranked results into the stable output contract. Shared by the lexical
+// and embeddings paths so route-match.js output stays identical.
+function formatRoute(request, results, mode, degraded) {
   const recommended = results[0]
     ? {
         name: results[0].entry.name,
@@ -259,13 +261,39 @@ function route(request, { topN = 3, entries, index } = {}) {
     score: round(r.score),
     matched: r.matched,
   }));
-  return {
-    request,
-    mode: 'lexical',
-    degraded,
-    recommended,
-    alternatives,
-  };
+  return { request, mode, degraded, recommended, alternatives };
+}
+
+function route(request, { topN = 3, entries, index, degraded } = {}) {
+  const ents = entries || loadEntries();
+  const idx = index || buildIndex(ents);
+  const results = rank(idx, request, topN);
+  const deg = degraded === undefined ? embeddingsRequested() : degraded;
+  return formatRoute(request, results, 'lexical', deg);
+}
+
+// Async entry point used by the CLI. In the default environment (no opt-in env
+// vars) it is exactly route(): lexical, degraded:false, zero network. With the
+// opt-in set it tries embeddings and silently falls back to lexical with
+// degraded:true on ANY failure. It never throws for embeddings problems; a
+// genuinely unreadable catalog still propagates so the CLI can exit 1.
+async function routeAsync(request, { topN = 3, entries, index } = {}) {
+  const ents = entries || loadEntries();
+  const idx = index || buildIndex(ents);
+  if (!embeddingsRequested()) {
+    return formatRoute(request, rank(idx, request, topN), 'lexical', false);
+  }
+  let emb = null;
+  try {
+    const embeddings = require('./embeddings.js');
+    emb = await embeddings.rankWithEmbeddings(request, ents, { topN });
+  } catch {
+    emb = null;
+  }
+  if (emb && Array.isArray(emb.results)) {
+    return formatRoute(request, emb.results, 'embeddings', false);
+  }
+  return formatRoute(request, rank(idx, request, topN), 'lexical', true);
 }
 
 function round(n) {
@@ -281,7 +309,9 @@ module.exports = {
   baselineScore,
   baselineRank,
   embeddingsRequested,
+  formatRoute,
   route,
+  routeAsync,
   round,
   FIELD_DEFS,
 };

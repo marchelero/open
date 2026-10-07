@@ -4,7 +4,15 @@
  *
  * Given a free-text request, prints the single best skill/agent + 2
  * alternatives + the exact invocation, backed by the BM25 lexical engine in
- * bin/lib/route-engine.js. Deterministic, no network, no secrets.
+ * bin/lib/route-engine.js. Default is deterministic, no network, no secrets.
+ *
+ * OPTIONAL embeddings mode (Capa B / M4, opt-in, degradable): when
+ * OPEN_ROUTER_EMBEDDINGS=1 AND OPEN_ROUTER_EMBEDDINGS_URL AND
+ * OPEN_ROUTER_EMBEDDINGS_KEY are all set, the request is ranked by cosine
+ * similarity against an OpenAI-compatible /embeddings endpoint. On ANY failure
+ * (missing creds, bad URL, timeout, HTTP != 2xx, bad JSON) it silently falls
+ * back to BM25. The output always reports `mode` (`lexical | embeddings |
+ * lexical(degraded)`) and a boolean `degraded`. The key is never printed.
  *
  * Usage:
  *   node .opencode/bin/route-match.js "<request>"
@@ -16,9 +24,10 @@
  *   0 = a recommendation was produced, or the eval gate passed
  *   1 = no request/usage error, unreadable catalog, no match, or eval gate failed
  *
- * The eval (`--eval`) runs evals/routing/cases.json and reports top1 / top3 /
- * baseline_top1. `--json` with no request emits the eval as JSON including a
- * boolean `gate` field (consumed by evals/cases/static.json, kind "metric").
+ * The eval (`--eval`) always runs the deterministic lexical engine and reports
+ * top1 / top3 / baseline_top1. `--json` with no request emits the eval as JSON
+ * including `mode:"lexical"` and a boolean `gate` field (consumed by
+ * evals/cases/static.json, kind "metric").
  */
 
 const fs = require('fs');
@@ -93,7 +102,9 @@ function runEval(asJson) {
   const { cases, error } = loadCases();
   if (error) {
     if (asJson) {
-      process.stdout.write(JSON.stringify({ mode: 'eval', ok: false, gate: false, error }) + '\n');
+      process.stdout.write(
+        JSON.stringify({ mode: 'lexical', kind: 'eval', degraded: false, ok: false, gate: false, error }) + '\n'
+      );
     } else {
       process.stdout.write('[route-eval] ERROR: ' + error + '\n');
     }
@@ -132,7 +143,9 @@ function runEval(asJson) {
     process.stdout.write(
       JSON.stringify(
         {
-          mode: 'eval',
+          mode: 'lexical',
+          kind: 'eval',
+          degraded: false,
           cases: n,
           ambiguous,
           top1: top1Pct,
@@ -150,6 +163,7 @@ function runEval(asJson) {
     );
   } else {
     process.stdout.write('[route-eval] cases=' + n + ' ambiguous=' + ambiguous + '\n');
+    process.stdout.write('  mode          = lexical\n');
     process.stdout.write('  top1          = ' + top1Pct + '%  (' + top1 + '/' + n + ')\n');
     process.stdout.write('  top3          = ' + top3Pct + '%  (' + top3 + '/' + n + ')\n');
     process.stdout.write('  baseline_top1 = ' + baselinePct + '%  (' + baselineTop1 + '/' + n + ')\n');
@@ -166,7 +180,7 @@ function runEval(asJson) {
   process.exit(gate ? 0 : 1);
 }
 
-function main() {
+async function main() {
   const argv = process.argv.slice(2);
   const asJson = argv.includes('--json');
   const evalFlag = argv.includes('--eval');
@@ -184,7 +198,8 @@ function main() {
 
   let res;
   try {
-    res = engine.route(request);
+    // routeAsync = lexical by default; opt-in embeddings with silent fallback.
+    res = await engine.routeAsync(request);
   } catch (e) {
     process.stderr.write('route-match: error al leer el catalogo: ' + e.message + '\n');
     process.exit(1);
@@ -192,11 +207,15 @@ function main() {
 
   if (asJson) {
     process.stdout.write(JSON.stringify(res, null, 2) + '\n');
-    process.exit(res.recommended ? 0 : 1);
+    process.exitCode = res.recommended ? 0 : 1;
+    return;
   }
 
   printRoute(res);
-  process.exit(res.recommended ? 0 : 1);
+  process.exitCode = res.recommended ? 0 : 1;
 }
 
-main();
+main().catch((e) => {
+  process.stderr.write('route-match: ' + e.message + '\n');
+  process.exit(1);
+});
