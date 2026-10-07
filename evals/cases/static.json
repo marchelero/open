@@ -96,20 +96,20 @@
   {
     "id": "E11",
     "kind": "metric",
-    "title": "counts: 78 skills presentes (no se filtran)",
+    "title": "counts: 79 skills presentes (no se filtran)",
     "tool": "counts",
     "field": "skills",
-    "equals": 78,
-    "why": "invariante propia de open: la poda del instalador NO toca skills (64 + 14 skills SaaS/stack de Fase 4)"
+    "equals": 79,
+    "why": "invariante propia de open: la poda del instalador NO toca skills (64 + 14 skills SaaS/stack de Fase 4 + llm-as-judge)"
   },
   {
     "id": "E12",
     "kind": "metric",
-    "title": "counts: 67 agents presentes",
+    "title": "counts: 68 agents presentes",
     "tool": "counts",
     "field": "agents",
-    "equals": 67,
-    "why": "invariante propia de open (59 + 8 agents de proceso de Fase 3)"
+    "equals": 68,
+    "why": "invariante propia de open (59 + 8 agents de proceso de Fase 3 + quality-judge)"
   },
   {
     "id": "E13",
@@ -132,11 +132,11 @@
   {
     "id": "E15",
     "kind": "count",
-    "title": "skills-lock.json cubre 78 skills + 67 agents (sha256 >= 145)",
+    "title": "skills-lock.json cubre 79 skills + 68 agents (sha256 >= 147)",
     "files": ["skills-lock.json"],
     "pattern": "\"sha256\"",
-    "gte": 145,
-    "why": "un lockfile casi vacio deja pasar drift de contenido (64+14 skills + 67 agents)"
+    "gte": 147,
+    "why": "un lockfile casi vacio deja pasar drift de contenido (64+14+1 skills + 68 agents)"
   },
   {
     "id": "E16",
@@ -155,5 +155,20 @@
     "field": "gate",
     "equals": true,
     "why": "la memoria lexica debe superar el baseline substring-en-title; `knowledge.js --json` sin subcomando corre el eval y emite gate"
+  },
+  {
+    "id": "E18",
+    "kind": "verdict",
+    "title": "LLM-as-judge: veredicto con forma estable validable offline (sin modelo)",
+    "schema": "evals/judge/verdict.schema.json",
+    "instance": "evals/judge/golden-verdict.json",
+    "surface": [
+      ".agents/skills/llm-as-judge/SKILL.md",
+      ".opencode/agents/quality-judge.md"
+    ],
+    "rubricFile": ".agents/skills/llm-as-judge/SKILL.md",
+    "rubricPattern": "^\\|\\s*`([a-z][a-z0-9-]+)`",
+    "minRubrics": 4,
+    "why": "el juez es no determinista: CI solo guarda la FORMA (esquema + catalogo + superficie), nunca llama al modelo"
   }
 ]

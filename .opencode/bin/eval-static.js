@@ -33,6 +33,9 @@
  *   orphan   strict reachability scan: 0 agents/skills/commands may be
  *            reachable only through a catalog
  *   metric   run a sibling CLI with --json and assert on `field`
+ *   verdict  deterministic shape check of a golden JSON verdict against a
+ *            compact schema (offline, no model) + surface files exist +
+ *            rubric catalog has >= minRubrics entries
  *
  * Usage:
  *   node .opencode/bin/eval-static.js              # run all cases
@@ -259,6 +262,102 @@ function kMetric(c) {
   return { ok: false, detail: 'case sin equals/gte/lte' }
 }
 
+function loadJsonAbs(absPath) {
+  const t = read(absPath)
+  const rel = path.relative(ROOT, absPath).split(path.sep).join('/')
+  if (t === null) return { error: 'no existe ' + rel }
+  try { return { value: JSON.parse(t) } } catch (e) { return { error: 'JSON invalido en ' + rel + ' (' + e.message + ')' } }
+}
+
+function jsonType(v) {
+  if (Array.isArray(v)) return 'array'
+  if (v === null) return 'null'
+  return typeof v
+}
+
+// Validate only the SHAPE of a verdict against the compact declarative schema in
+// evals/judge/verdict.schema.json. No model, no network: the judge is
+// non-deterministic, so CI guards the contract, never the values.
+function validateVerdictShape(instance, schema) {
+  const errors = []
+  const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v)
+  if (!isObj(instance)) return ['el veredicto no es un objeto JSON']
+  for (const key of schema.required || []) {
+    if (!(key in instance)) errors.push('falta "' + key + '"')
+  }
+  for (const [key, t] of Object.entries(schema.types || {})) {
+    if (key in instance && jsonType(instance[key]) !== t) {
+      errors.push('"' + key + '" debe ser ' + t + ' (es ' + jsonType(instance[key]) + ')')
+    }
+  }
+  for (const [key, subKeys] of Object.entries(schema.objects || {})) {
+    if (!(key in instance)) continue
+    if (!isObj(instance[key])) { errors.push('"' + key + '" debe ser un objeto'); continue }
+    for (const sk of subKeys) {
+      if (!(sk in instance[key])) errors.push('falta "' + key + '.' + sk + '"')
+    }
+  }
+  for (const [key, allowed] of Object.entries(schema.enums || {})) {
+    if (key in instance && allowed.indexOf(instance[key]) === -1) {
+      errors.push('"' + key + '" fuera de ' + allowed.join('|'))
+    }
+  }
+  for (const [key, range] of Object.entries(schema.numberRange || {})) {
+    if (!(key in instance)) continue
+    const v = instance[key]
+    if (typeof v !== 'number' || v < range[0] || v > range[1]) {
+      errors.push('"' + key + '" fuera de [' + range[0] + ',' + range[1] + ']')
+    }
+  }
+  if (schema.criteria) {
+    const arr = instance.criteria
+    if (!Array.isArray(arr) || arr.length === 0) {
+      errors.push('"criteria" debe ser un array no vacio')
+    } else {
+      arr.forEach((c, i) => {
+        if (!isObj(c)) { errors.push('criteria[' + i + '] no es objeto'); return }
+        for (const rk of schema.criteria.required || []) {
+          if (!(rk in c)) errors.push('criteria[' + i + '].' + rk + ' falta')
+        }
+        for (const [k, t] of Object.entries(schema.criteria.types || {})) {
+          if (k in c && jsonType(c[k]) !== t) errors.push('criteria[' + i + '].' + k + ' debe ser ' + t)
+        }
+      })
+    }
+  }
+  return errors
+}
+
+function kVerdict(c) {
+  const missing = (c.surface || []).filter(f => !fs.existsSync(path.join(ROOT, f)))
+  if (missing.length) return { ok: false, detail: 'faltan superficies: ' + missing.join(', ') }
+
+  const s = loadJsonAbs(path.join(ROOT, c.schema))
+  if (s.error) return { ok: false, detail: 'schema: ' + s.error }
+  const i = loadJsonAbs(path.join(ROOT, c.instance))
+  if (i.error) return { ok: false, detail: 'fixture: ' + i.error }
+
+  const errors = validateVerdictShape(i.value, s.value)
+
+  if (c.rubricFile) {
+    const t = read(path.join(ROOT, c.rubricFile))
+    if (t === null) {
+      errors.push('rubricFile ausente: ' + c.rubricFile)
+    } else {
+      const re = newRegex(c.rubricPattern, 'gm')
+      if (re.invalid) errors.push('rubricPattern invalida: ' + re.invalid)
+      else {
+        const n = countMatches(t, re)
+        const min = c.minRubrics || 1
+        if (n < min) errors.push('rubricas ' + n + ' < ' + min)
+      }
+    }
+  }
+
+  if (errors.length) return { ok: false, detail: errors.slice(0, 6).join('; ') }
+  return { ok: true, detail: 'esquema + superficie OK' }
+}
+
 const KINDS = {
   files: kFiles,
   present: kPresent,
@@ -268,6 +367,7 @@ const KINDS = {
   heading: kHeading,
   orphan: kOrphan,
   metric: kMetric,
+  verdict: kVerdict,
 }
 
 // ---------------------------------------------------------------------------

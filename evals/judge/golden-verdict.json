@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "rubric": "code-correctness",
+  "target": { "kind": "inline", "ref": "sum() snippet (known-good anchor)" },
+  "criteria": [
+    { "name": "correccion", "pass": true, "weight": 0.5, "score": 9, "note": "suma acumulada correcta; sin off-by-one" },
+    { "name": "manejo-de-errores", "pass": false, "weight": 0.2, "score": 4, "note": "no valida entradas no numericas" },
+    { "name": "seguridad", "pass": true, "weight": 0.15, "score": 9, "note": "sin eval ni shell; entrada tratada como dato" },
+    { "name": "mantenibilidad", "pass": true, "weight": 0.15, "score": 8, "note": "funcion corta, nombres claros" }
+  ],
+  "score": 82,
+  "band": "PASS-WITH-NITS",
+  "confidence": "medium",
+  "flags": [],
+  "verdict": "Correcto para el caso feliz; endurecer la validacion de entrada.",
+  "judged_by": "quality-judge",
+  "judged_at": "2026-10-07T02:19:00Z"
+}

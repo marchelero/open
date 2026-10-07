@@ -1,0 +1,26 @@
+{
+  "$comment": "Machine-readable shape of a quality-judge verdict. Deterministic: validated offline by eval-static case E18 (evals/cases/static.json). It validates FORM only, never the judge's values (the judge is non-deterministic).",
+  "version": 1,
+  "required": ["target", "rubric", "criteria", "score", "band", "verdict"],
+  "types": {
+    "rubric": "string",
+    "score": "number",
+    "band": "string",
+    "verdict": "string"
+  },
+  "objects": {
+    "target": ["kind", "ref"]
+  },
+  "enums": {
+    "band": ["PASS", "PASS-WITH-NITS", "FAIL"],
+    "confidence": ["high", "medium", "low"]
+  },
+  "numberRange": {
+    "score": [0, 100]
+  },
+  "criteria": {
+    "required": ["name", "pass", "note"],
+    "types": { "name": "string", "pass": "boolean", "note": "string" }
+  },
+  "optional": ["schema_version", "confidence", "flags", "judged_by", "judged_at", "target.kind"]
+}

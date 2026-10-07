@@ -26,6 +26,7 @@ Run structured evaluation to verify the implementation meets requirements.
 3. **Rubric Grader** - Category scores
    - Multiple dimensions evaluated
    - Good for: comprehensive review
+   - **Delegate to `quality-judge`**: load the `llm-as-judge` skill and dispatch the `quality-judge` subagent with the target + rubric (built-in or inline). It emits the stable verdict schema (`rubric`, `target`, `criteria[]`, `score`, `band`, `verdict`) using the session model. On-demand only: never auto-runs in dispatch, `/verify`, or as a CI gate.
 
 ## Evaluation Process
 

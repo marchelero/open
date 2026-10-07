@@ -6,7 +6,7 @@ triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite,
 
 # Router
 
-Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 67 agents and 78 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 145 descriptions.
+Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 68 agents and 79 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 147 descriptions.
 
 > **This is the merged `agent-router` + `skill-router`.** When you needed both before, you load just this one now. Save ~10K tokens of skill content per turn.
 
@@ -140,6 +140,7 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 | "review this code" / "code review" | `code-reviewer` | Stack-specific reviewer |
 | "review this PR" | `code-quality-analyzer` (mode: tests) | `code-reviewer` |
 | "audit report vs PRD" | `report-auditor` | — |
+| "judge output quality" / "grade this against a rubric" / "score this artifact" | `quality-judge` | `/eval` (rubric grader), `llm-as-judge` (skill) |
 | "full audit" / "audit all dimensions" / pre-release audit | `audit-orchestrator` | Consolidates security + quality + deps + perf + DB + API |
 | "security review" / "is this secure" | `security-reviewer` | `security-review` (skill) |
 | "silent failures" / "error handling review" | `code-quality-analyzer` (mode: silent-failures) | `error-handling` (skill) |
@@ -243,6 +244,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | design tokens, spacing, dark mode, theming, interactive states, type scale, component variants | `ui-design-systems` |
 | write docs, review docs, api reference, diataxis, readme, docs site, technical writing | `docs-writing` |
 | eval, agent behavior test, routing test, golden transcript, prompt regression, skill test | `agent-evals` |
+| llm as judge, judge output, rubric, grade output, quality score, evaluate quality, judge verdict, content quality | `llm-as-judge` |
 | kubernetes, k8s, helm, manifest, pod, ingress, rbac, networkpolicy, kubectl, gitops | `kubernetes-specialist` |
 | word doc, docx, memo, letter, tracked changes, report en word | `docx` |
 | pptx, deck, slides, presentacion, pitch deck | `pptx` |

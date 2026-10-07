@@ -3,20 +3,20 @@
  * installer-test.js - verifies init-opencode.js breaks nothing
  *
  * WHY THIS EXISTS
- *   init-opencode.js installs the 78-skill / 67-agent / 64-command pack into
+ *   init-opencode.js installs the 79-skill / 68-agent / 64-command pack into
  *   another project. The risks are the historical ones (nesting, over-filter,
  *   destructive merge), so this suite runs the Node installer from Node with
  *   zero dependencies and adapted assertions.
  *
  * Scenarios:
- *   T1  clean install (flutter filter) -> 0 orphans, .stack, 78 skills, no
+ *   T1  clean install (flutter filter) -> 0 orphans, .stack, 79 skills, no
  *       nesting, regenerated counts, smoke-test PASS
  *   T2  conservative merge -> does NOT overwrite .gitignore / opencode.json
  *   T3  idempotency -> 2nd run changes nothing (gitignore / opencode.json /
  *       skills-lock.json stable), no nesting
- *   T4  --all-agents -> 67 agents, no .stack marker
+ *   T4  --all-agents -> 68 agents, no .stack marker
  *   T5  bad --pack-path -> fails cleanly, installs nothing half-way
- *   T6  stack not detected -> keeps all 67 agents and all 78 skills
+ *   T6  stack not detected -> keeps all 68 agents and all 79 skills
  *   T7  scaffolders produce valid frontmatter and refresh ## Counts
  *
  * Scratch projects live under os.tmpdir() (never inside the repo) and are
@@ -47,9 +47,9 @@ const AS_JSON = process.argv.includes('--json');
 const QUIET = process.argv.includes('--quiet');
 
 // Real catalog of `open` (pinned expectations).
-const EXPECT_AGENTS_ALL = 67;
+const EXPECT_AGENTS_ALL = 68;
 const EXPECT_COMMANDS = 64;
-const EXPECT_SKILLS = 78;
+const EXPECT_SKILLS = 79;
 
 const results = [];
 let pass = 0;

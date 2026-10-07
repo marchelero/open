@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-10-07T06:02:11.257Z",
+  "generated": "2026-10-07T06:25:29.548Z",
   "skills": {
     "agent-evals": {
       "path": ".agents/skills/agent-evals/SKILL.md",
@@ -176,6 +176,10 @@
       "sourceType": "github",
       "skillPath": "skills/kubernetes-specialist/SKILL.md"
     },
+    "llm-as-judge": {
+      "path": ".agents/skills/llm-as-judge/SKILL.md",
+      "sha256": "05fa4276126608d1fe62d9556ea61ea5c5cb56877bdde3a3445426644a47d09f"
+    },
     "mcp-server-patterns": {
       "path": ".agents/skills/mcp-server-patterns/SKILL.md",
       "sha256": "09c598ae9f6ad4ba28d3166dce1edbc5a72a6d00a5ba33b1495c5497348444d3"
@@ -263,7 +267,7 @@
     },
     "router": {
       "path": ".agents/skills/router/SKILL.md",
-      "sha256": "8aa980e2c154e49f5031890fa8e58c6352a158dd64fb6310ab060b7c1e3fac5f"
+      "sha256": "bc1da8c7ceb6722f3bd853114ed5042285d4ee49a9f74e08e9bf97978f81e99d"
     },
     "security-review": {
       "path": ".agents/skills/security-review/SKILL.md",
@@ -560,6 +564,10 @@
     "pytorch-build-resolver": {
       "path": ".opencode/agents/pytorch-build-resolver.md",
       "sha256": "b21ec2e0b9a7991a14914eee5b0d7ec52b839074fe1379dbd8e7b711fc52e759"
+    },
+    "quality-judge": {
+      "path": ".opencode/agents/quality-judge.md",
+      "sha256": "9aedaa49f83a611a1e2cb5fadca5225651bfa0bbc7bc920f5561ae211bb93eca"
     },
     "react-build-resolver": {
       "path": ".opencode/agents/react-build-resolver.md",

@@ -19,9 +19,9 @@ Aplicado a tu día a día, el pack cubre **cuatro prácticas** a la vez:
 > Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
-- **67** agents (.opencode/agents)
+- **68** agents (.opencode/agents)
 - **64** commands (.opencode/commands)
-- **78** skills (.agents/skills)
+- **79** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
 - **3** npm plugins + **2** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)

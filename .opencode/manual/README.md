@@ -10,9 +10,9 @@
 > Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
-- **67** agents (.opencode/agents)
+- **68** agents (.opencode/agents)
 - **64** commands (.opencode/commands)
-- **78** skills (.agents/skills)
+- **79** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
 - **3** npm plugins + **2** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
@@ -108,11 +108,11 @@ node .opencode/bin/install-plugins.js         # postinstall npm (idempotente)
 ## Índice condensado del catálogo (digest)
 
 El router (`bin/lib/route-engine.js`) solo necesita `name` + `description` +
-`triggers` para rankear. En vez de releer y parsear los 145 `SKILL.md`/agentes
+`triggers` para rankear. En vez de releer y parsear los 147 `SKILL.md`/agentes
 en cada dispatch, lee **un único fichero derivado**:
-`.opencode/catalog-digest.json` (145 entradas: `name`, `type`, `summary`,
+`.opencode/catalog-digest.json` (147 entradas: `name`, `type`, `summary`,
 `triggers`, `bytes`, `hash`). Si el digest falta o está stale, el router degrada
-automáticamente a `listCatalog()` (145 lecturas) para no romperse.
+automáticamente a `listCatalog()` (147 lecturas) para no romperse.
 
 ```bash
 # Regenerar el digest (hazlo junto con los índices: build-skills-index / build-agents-index)

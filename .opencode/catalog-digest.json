@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "count": 145,
-  "descriptionBytes": 17889,
+  "count": 147,
+  "descriptionBytes": 18344,
   "entries": [
     {
       "name": "agent-evals",
@@ -708,6 +708,29 @@
       ],
       "bytes": 52,
       "hash": "8bfdcee40f2aae0d0bf56aaec0845988f1bf0a4ef9af441c0af463a8364e7b24"
+    },
+    {
+      "name": "llm-as-judge",
+      "type": "skill",
+      "path": ".agents/skills/llm-as-judge/SKILL.md",
+      "summary": "Use when you must score the QUALITY (not just pass/fail) of an agent output, artifact, diff, or report against explicit criteria — rubric-based grading with a stable verdict schema, on-demand via",
+      "triggers": [
+        "llm as judge",
+        "judge output",
+        "rubric",
+        "rubric grading",
+        "grade output",
+        "quality score",
+        "evaluate quality",
+        "score artifact",
+        "content quality",
+        "judge verdict",
+        "calibration",
+        "hallucination risk",
+        "anti leniency"
+      ],
+      "bytes": 242,
+      "hash": "3cf058d23d370fe59da12ecff3e97c696a048b3c8ad33404f32891aa90d6082c"
     },
     {
       "name": "mcp-server-patterns",
@@ -2006,6 +2029,15 @@
       "triggers": [],
       "bytes": 64,
       "hash": "cab52c2488046bfe15785c79a1e013b47b646312279f45aedd84a8c82653ebfd"
+    },
+    {
+      "name": "quality-judge",
+      "type": "agent",
+      "path": ".opencode/agents/quality-judge.md",
+      "summary": "On-demand rubric judge. Scores a target (artifact, diff, output, or report) against a rubric and emits a stable verdict using the session model. Never runs in dispatch, /verify, or as a CI gate",
+      "triggers": [],
+      "bytes": 213,
+      "hash": "e7ea4f29c1b3df9e57cb91554058d86ae3af533f0892e10fb72e6c5262d1b69d"
     },
     {
       "name": "react-build-resolver",

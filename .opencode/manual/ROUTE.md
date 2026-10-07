@@ -1,6 +1,6 @@
 # Ruteo de agentes
 
-> 67 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
+> 68 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
 > Descripciones completas en `.opencode/agents/<nombre>.md`.
 
 > **Nota (2026)**: el primary agent ahora auto-rutea via el skill `router` (Mandatory Routing Protocol, AGENTS.md comportamiento #8; merged `agent-router` + `skill-router` en pack 1.1). Este archivo es la versión "manual lookup" — útil para entender el catálogo, pero el primary ya no necesita que le digas qué agente invocar.
@@ -40,6 +40,7 @@
 | `code-quality-analyzer` (mode: silent-failures) | Errores silenciados, fallbacks peligrosos | Tras fusionar un fix crítico, auditorías de robustez |
 | `code-quality-analyzer` (mode: types) | Encapsulación, invariantes, uniones discriminadas | Refactors de modelo de dominio, diseño de APIs internas |
 | `code-quality-analyzer` (mode: tests) | Calidad de cobertura de tests, cobertura conductual | Antes de aprobar un PR |
+| `quality-judge` | Juez de calidad por rúbrica (corrección, cobertura, adherencia, claridad) sobre un artefacto/diff/report; veredicto en esquema estable | On-demand vía `/eval` (rubric grader); tie-in opt-in desde `/audit-report`. Nunca en dispatch/`/verify`/CI |
 | `performance-optimizer` | Perfilado, fugas de memoria, rendimiento de render, bundle | Quejas de latencia, pre-release, frame drops |
 
 ### Revisores por stack (OBLIGATORIOS cuando el stack coincide)

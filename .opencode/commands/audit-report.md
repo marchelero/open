@@ -66,6 +66,14 @@ Si el usuario aprueba, la seccion se persiste en `docs/reports/{name}.report.md`
 Si el usuario quiere la auditoria en archivo separado, usar:
 `/audit-report {name} --separate` → escribe `docs/audits/{YYYY-MM-DD_HHMM}-{name}.audit.md`.
 
+## Tie-in opcional: criterios cualitativos (llm-as-judge)
+
+Cuando un criterio del PRD es **cualitativo** (calidad, profundidad, adherencia, sin alucinacion), `report-auditor` puede **delegar** su evaluacion al subagent `quality-judge` (skill `llm-as-judge`) en vez de solo chequear que el report lo afirme.
+
+- Es **opt-in**: sin delegacion, la auditoria base no cambia.
+- El juez devuelve el esquema de veredicto estable; el auditor lo resume como evidencia del criterio.
+- **No** es un gate de CI ni corre en el hot path: solo cuando el usuario lo pide o hay un criterio que lo justifica.
+
 ## Cuándo correr
 
 - Despues de cerrar un plan que produjo cambios.
