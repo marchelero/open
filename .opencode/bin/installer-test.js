@@ -3,7 +3,7 @@
  * installer-test.js - verifies init-opencode.js breaks nothing
  *
  * WHY THIS EXISTS
- *   init-opencode.js installs the 64-skill / 59-agent / 58-command pack into
+ *   init-opencode.js installs the 64-skill / 67-agent / 64-command pack into
  *   another project. The risks are the historical ones (nesting, over-filter,
  *   destructive merge), so this suite runs the Node installer from Node with
  *   zero dependencies and adapted assertions.
@@ -14,9 +14,9 @@
  *   T2  conservative merge -> does NOT overwrite .gitignore / opencode.json
  *   T3  idempotency -> 2nd run changes nothing (gitignore / opencode.json /
  *       skills-lock.json stable), no nesting
- *   T4  --all-agents -> 59 agents, no .stack marker
+ *   T4  --all-agents -> 67 agents, no .stack marker
  *   T5  bad --pack-path -> fails cleanly, installs nothing half-way
- *   T6  stack not detected -> keeps all 59 agents and all 64 skills
+ *   T6  stack not detected -> keeps all 67 agents and all 64 skills
  *   T7  scaffolders produce valid frontmatter and refresh ## Counts
  *
  * Scratch projects live under os.tmpdir() (never inside the repo) and are
@@ -47,8 +47,8 @@ const AS_JSON = process.argv.includes('--json');
 const QUIET = process.argv.includes('--quiet');
 
 // Real catalog of `open` (pinned expectations).
-const EXPECT_AGENTS_ALL = 59;
-const EXPECT_COMMANDS = 58;
+const EXPECT_AGENTS_ALL = 67;
+const EXPECT_COMMANDS = 64;
 const EXPECT_SKILLS = 64;
 
 const results = [];
@@ -193,8 +193,8 @@ function t1() {
   runInit(t1);
 
   const ag = listMd(path.join(t1, '.opencode', 'agents')).length;
-  if (ag >= 30 && ag <= 58) ok('agents filtrados: ' + ag + ' (pack completo=' + EXPECT_AGENTS_ALL + ')');
-  else bad('agents=' + ag + ', se esperaba 30..58');
+  if (ag >= 30 && ag < EXPECT_AGENTS_ALL) ok('agents filtrados: ' + ag + ' (pack completo=' + EXPECT_AGENTS_ALL + ')');
+  else bad('agents=' + ag + ', se esperaba 30..' + (EXPECT_AGENTS_ALL - 1));
 
   const cm = listMd(path.join(t1, '.opencode', 'commands')).length;
   if (cm === EXPECT_COMMANDS) ok('commands: ' + cm);

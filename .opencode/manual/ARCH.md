@@ -119,7 +119,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 ├── CHANGELOG.md                     historial de versiones
 ├── .gitignore                       ignora node_modules, .opencode/state, .opencode/node_modules, OS junk
 ├── .agents/                         skills del proyecto (pack + user-installed)
-│   └── skills/                      66 skills portables (<nombre>/SKILL.md)
+│   └── skills/                      64 skills portables (<nombre>/SKILL.md)
 │       ├── router/                  matriz intent → agent + skill (merged, auto-loaded por primary)
 │       ├── api-design/
 │       ├── backend-patterns/
@@ -133,7 +133,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 │       ├── mcp-server-patterns/
 │       ├── security-review/
 │       ├── task-decomposition/
-│       ├── tdd-workflow/
+│       ├── testing/
 │       └── verification-loop/
 ├── docs/                            project docs (UN solo lugar, fácil de llevar con rsync/tar)
 │   ├── README.md                    index de docs/ (qué vive dónde)
@@ -147,14 +147,14 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 │   └── instincts/                   patrones aprendidos del proyecto (machine-local, gitignored)
 └── .opencode/                       pack template portable (cp -r a otros proyectos)
     ├── AGENTS.md                    capa 1: 9 comportamientos obligatorios + reglas globales
-    ├── AGENTS_INDEX.md              índice de los 76 agents (auto-gen, movido aquí en 1.2.1)
+    ├── AGENTS_INDEX.md              índice de los 67 agents (auto-gen, movido aquí en 1.2.1)
     ├── CONVENTIONS.md               naming + path conventions
     ├── package.json                 plugin deps (npm install una vez)
     ├── package-lock.json
     ├── .gitignore                   ignora node_modules y bun.lock
-    ├── agents/                      76 sub-agentes (.md)
-    ├── commands/                    59 slash commands (.md)
-    ├── bin/                         15 CLIs cero-deps (solo Node stdlib)
+    ├── agents/                      67 sub-agentes (.md)
+    ├── commands/                    64 slash commands (.md)
+    ├── bin/                         20 CLIs cero-deps (solo Node stdlib)
     │   ├── instinct.js
     │   ├── context.js
     │   ├── refresh-project.js       --status, --auto, --dry-run, --check

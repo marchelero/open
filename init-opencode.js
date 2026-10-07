@@ -101,6 +101,12 @@ const STACK_KEEP = {
 // history and must not leak into the target project.
 const SKIP_DIR_NAMES = new Set(['node_modules', '.git']);
 
+// Pack-maintenance-only files that must NOT land in an installed project:
+// eval-static.js asserts full-pack invariants (agents == 67, etc.) and needs
+// `evals/`, which is not shipped. Running it in a stack-filtered install would
+// always fail. It stays in the pack repo / CI, not in user projects.
+const SKIP_FILE_NAMES = new Set(['eval-static.js']);
+
 const SEP = '='.repeat(52);
 const DASH = '-'.repeat(52);
 
@@ -267,7 +273,7 @@ function detectStack(p) {
 function copyDirChildren(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    if (SKIP_DIR_NAMES.has(entry.name)) continue;
+    if (SKIP_DIR_NAMES.has(entry.name) || SKIP_FILE_NAMES.has(entry.name)) continue;
     const s = path.join(src, entry.name);
     const d = path.join(dest, entry.name);
     let st = null;

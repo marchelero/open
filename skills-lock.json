@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-10-07T03:16:28.163Z",
+  "generated": "2026-10-07T04:04:34.791Z",
   "skills": {
     "agent-evals": {
       "path": ".agents/skills/agent-evals/SKILL.md",
@@ -227,7 +227,7 @@
     },
     "router": {
       "path": ".agents/skills/router/SKILL.md",
-      "sha256": "ed912135b384a88f1658003b104a23dd3aa2b6f3edf56fcf58c26c879ec664b5"
+      "sha256": "9cb9de82e74022ce7dba058046d1c541c732b838cca062df98b3bcbac8016de9"
     },
     "security-review": {
       "path": ".agents/skills/security-review/SKILL.md",
@@ -309,9 +309,21 @@
       "path": ".opencode/agents/angular-reviewer.md",
       "sha256": "33f9f39b6f6d2e81532cdbe7244c9c7d5708eb1298f47a598cb8b2e794714e8b"
     },
+    "api-integrator": {
+      "path": ".opencode/agents/api-integrator.md",
+      "sha256": "e6939688c2497639dcd586c6982cd971f2fb96df8a7bf02c0591c60002cb3b71"
+    },
     "api-mocker": {
       "path": ".opencode/agents/api-mocker.md",
       "sha256": "a25105d414d66e1884f3a2d8701978ad1bd848672b8902be9f873c56e07da842"
+    },
+    "architect": {
+      "path": ".opencode/agents/architect.md",
+      "sha256": "29baafc93902589bc17a1e9f5a92e8272c469627c3c3b87a0e97df87930f0486"
+    },
+    "audit-orchestrator": {
+      "path": ".opencode/agents/audit-orchestrator.md",
+      "sha256": "64b00be2fde16bc11bb60cccacec17addb2be240cb3d6c138404f685b7424fbf"
     },
     "build-error-resolver": {
       "path": ".opencode/agents/build-error-resolver.md",
@@ -393,6 +405,10 @@
       "path": ".opencode/agents/flutter-reviewer.md",
       "sha256": "81bede35b770a950549a025846a495ad48b5e70f2c4db5f84c00aebccdaf0374"
     },
+    "fullstack-builder": {
+      "path": ".opencode/agents/fullstack-builder.md",
+      "sha256": "8596a9f68e7bcec813278970d93f2ebc44b987e8c68ddaacafbd0aa66a4bdf43"
+    },
     "go-build-resolver": {
       "path": ".opencode/agents/go-build-resolver.md",
       "sha256": "99ba1c1c1e551188b6fa74296e1b4edd3bf485ce14786af31728ec48d1b20906"
@@ -437,9 +453,17 @@
       "path": ".opencode/agents/kotlin-reviewer.md",
       "sha256": "3846204fbc8ab1c382e40a2bc69e01c6e813e29685360d9a9872d8fffa25e0c0"
     },
+    "legacy-modernizer": {
+      "path": ".opencode/agents/legacy-modernizer.md",
+      "sha256": "58674f95b38b649ae2872b4ec4a5b1ed0aebc53291a5da81b8f8d36e419cd03f"
+    },
     "loop-operator": {
       "path": ".opencode/agents/loop-operator.md",
       "sha256": "415415bd5e19d816e7d1827f7d5a240e6d921dc5d97be8764ee3cb64984058fb"
+    },
+    "manual-writer": {
+      "path": ".opencode/agents/manual-writer.md",
+      "sha256": "dbfad7c45e239f3765759473e6488b0f74df1e7fbabd14715ef55a536bf52f1a"
     },
     "migration-planner": {
       "path": ".opencode/agents/migration-planner.md",
@@ -467,7 +491,7 @@
     },
     "prd-agent": {
       "path": ".opencode/agents/prd-agent.md",
-      "sha256": "41c69270cd8db873a2877735ccf512ec34f18304d20cbfa07ee87f2d81cdc229"
+      "sha256": "725dc4573d81dc2781d58d8f9f40bc26e39f20fb9f04fd563746987865f59971"
     },
     "prd-reviewer": {
       "path": ".opencode/agents/prd-reviewer.md",
@@ -488,6 +512,10 @@
     "react-reviewer": {
       "path": ".opencode/agents/react-reviewer.md",
       "sha256": "0d0676b40fdde980c11f0bfa825b566413563e58ff222bbe458607f50acf00f6"
+    },
+    "refactor-cleaner": {
+      "path": ".opencode/agents/refactor-cleaner.md",
+      "sha256": "9477a6a3566219ed09aebbbdeed600a7da39f20b48ef2c66b16d0dc17782e4d6"
     },
     "report-auditor": {
       "path": ".opencode/agents/report-auditor.md",
@@ -524,6 +552,10 @@
     "test-data-generator": {
       "path": ".opencode/agents/test-data-generator.md",
       "sha256": "212787d0af71dd50c18ca5530e95383af33a1631da1e1a0f4821138ae0446b0d"
+    },
+    "testing-auto": {
+      "path": ".opencode/agents/testing-auto.md",
+      "sha256": "3fb08188407204a698298ca18623fe9c9669511f58f174231afdb06a3385384b"
     },
     "typescript-reviewer": {
       "path": ".opencode/agents/typescript-reviewer.md",

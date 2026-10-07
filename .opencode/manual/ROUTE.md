@@ -1,6 +1,6 @@
 # Ruteo de agentes
 
-> 59 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
+> 67 sub-agentes, agrupados por intención. Elige por lo que quieres hacer, no por el nombre del agente.
 > Descripciones completas en `.opencode/agents/<nombre>.md`.
 
 > **Nota (2026)**: el primary agent ahora auto-rutea via el skill `router` (Mandatory Routing Protocol, AGENTS.md comportamiento #8; merged `agent-router` + `skill-router` en pack 1.1). Este archivo es la versión "manual lookup" — útil para entender el catálogo, pero el primary ya no necesita que le digas qué agente invocar.
@@ -17,14 +17,23 @@
 |--------|----------|---------------|
 | `planner` | Plan por fases con riesgos, dependencias y validación | Features complejos, refactors, cambios arquitectónicos |
 | `code-architect` | Diseño de sistema, decisiones tecnológicas, escalabilidad, plano de archivos | Decisiones arquitectónicas, features en repos existentes |
+| `architect` | Arquitectura genérica, trade-offs, escalabilidad, ADRs | Diseño new-feature, decisiones de plataforma, crecimiento |
 | `event-driven-architect` | Diseño event-driven: RabbitMQ/Kafka/Redis Streams, event sourcing, CQRS, sagas | Sistemas asíncronos, colas, DLQ, idempotencia, orden de mensajes |
 | `monorepo-architect` | Turborepo/Nx/pnpm workspaces, boundaries, build caching, code sharing | Cambios en `turbo.json`/`nx.json`/`pnpm-workspace.yaml`, diseño de workspaces |
+
+## "Quiero construir / integrar"
+
+| Agente | Qué hace | Cuándo usarlo |
+|--------|----------|---------------|
+| `fullstack-builder` | Genera stack completo (frontend + backend + DB) desde cero | Apps nuevas, MVPs, features end-to-end |
+| `api-integrator` | Conecta APIs externas (Stripe, Twilio, Resend, OpenAI…) y webhooks | Integración de servicios de terceros, handlers de webhook |
 
 ## "Quiero revisar código"
 
 | Agente | Qué hace | Cuándo usarlo |
 |--------|----------|---------------|
 | `code-reviewer` | Calidad, seguridad, mantenibilidad | **OBLIGATORIO** en cada cambio de código |
+| `audit-orchestrator` | Auditoría multi-dimensión unificada (seguridad, calidad, deps, performance, DB, API) en un report | Pre-release, tras `/verify`, cuando pides una auditoría completa |
 | `security-reviewer` | OWASP Top 10, secretos, SSRF, inyección, criptografía insegura | Tras tocar auth, pagos, datos de usuario o secretos |
 | `a11y-architect` | WCAG 2.2, diseño inclusivo | Componentes de UI, design systems |
 | `code-quality-analyzer` (mode: comments) | Comentarios obsoletos, doc desactualizada | Codebases maduros, antes de un PR |
@@ -77,6 +86,7 @@
 | Agente | Qué hace | Cuándo usarlo |
 |--------|----------|---------------|
 | `tdd-guide` | ROJO→VERDE→REFACTOR, cobertura 80%+ | **PROACTIVAMENTE** en features nuevas, fix de bugs o refactors |
+| `testing-auto` | Genera tests unit/integration/E2E desde el spec o el código | Falta cobertura, `/spec-to-tests`, validar una implementación |
 | `e2e-runner` | Playwright/Vercel Agent Browser E2E | Flujos críticos de usuario, pre-release |
 | `api-mocker` | Genera mocks de API (REST/GraphQL) con MSW, json-server o Express | Tests de frontend sin backend, fixtures E2E, desarrollo contra un spec de API |
 
@@ -99,6 +109,9 @@
 | Agente | Qué hace | Cuándo usarlo |
 |--------|----------|---------------|
 | `code-quality-analyzer` | Código muerto, duplicados (knip/depcheck/ts-prune) | Mantenimiento periódico, pre-release |
+| `refactor-cleaner` | Elimina código muerto/duplicados y limpia dependencias con cambio seguro | Mantenimiento, pre-release, reducir bundle |
+| `legacy-modernizer` | Migra entre frameworks/lenguajes/versiones (Angular→React, JS→TS, hooks) | Código heredado, upgrades de framework |
+| `manual-writer` | Compila PRDs/planes/reports/código en `docs/MANUAL.md` | Handoff, entrega, documentación final |
 | `doc-updater` | Codemaps, `/update-codemaps`, `/update-docs` | Tras cambios estructurales |
 | `code-quality-analyzer` (mode: simplify) | Claridad, consistencia, sin cambio de comportamiento | Tras un PR pero antes del merge |
 | `harness-optimizer` | Ajusta la configuración local del harness de agentes | Cuando el ruteo o los permisos se sienten mal |

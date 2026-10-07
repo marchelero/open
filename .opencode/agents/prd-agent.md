@@ -154,10 +154,13 @@ DRAFT — awaiting /plan handoff
 {1-2 sentences. Concrete, testable, observable from outside the system.}
 
 ## Success Criteria
-The work is complete when ALL of the following are true (each independently verifiable):
-- [ ] {criterion 1 — observable behavior or measurable metric}
-- [ ] {criterion 2}
-- [ ] {criterion N}
+The work is complete when ALL of the following are true (each independently verifiable).
+Tag each criterion with a stable sequential ID `AC-NN` (`AC-01`, `AC-02`, …) so `/trace`,
+`/spec-to-tests` and `/definition-of-done` can reference it. Bullets without an ID remain
+valid: their ID is derived by order (1st bullet → `AC-01`, 2nd → `AC-02`, …).
+- [ ] **AC-01** — {observable behavior or measurable metric}
+- [ ] **AC-02** — {criterion 2}
+- [ ] **AC-NN** — {criterion N}
 
 ## Out of Scope
 - {item 1} — {why deferred or excluded}

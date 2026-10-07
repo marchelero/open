@@ -26,6 +26,7 @@ const CATEGORIES = [
   { name: 'Build Resolvers',    match: /-resolver\.md$/ },
   { name: 'Specialized',        match: /^(database-reviewer|fastapi-reviewer|healthcare-reviewer|harmonyos-app-resolver|marketing-agent|seo-specialist|mle-reviewer|performance-optimizer|network-architect|network-config-reviewer|network-troubleshooter|iac-reviewer|k8s-reviewer|homelab-architect|docs-lookup|a11y-architect)\.md$/ },
   { name: 'Quality / Process',  match: /^(tdd-guide|e2e-runner|doc-updater|conversation-analyzer|harness-optimizer|opensource-forker|opensource-sanitizer|opensource-packager|loop-operator|report-auditor|chief-of-staff)\.md$/ },
+  { name: 'Process / SDD',      match: /^(audit-orchestrator|legacy-modernizer|fullstack-builder|api-integrator|manual-writer|testing-auto)\.md$/ },
   { name: 'Meta / Harness',     match: /^(gan-planner|gan-evaluator|gan-generator)\.md$/ },
 ];
 

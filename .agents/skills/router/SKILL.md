@@ -1,12 +1,12 @@
 ---
 name: router
-description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 76-agent catalog AND the right skill from the 65-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
+description: Use when the primary agent must dispatch a subagent and/or load a knowledge skill for any non-Q&A request (building, adding, fixing, reviewing, testing, refactoring, planning, documenting, deploying, or auditing work). Triggers on action verbs (build/add/create/fix/review/test/refactor/plan/deploy/ship/audit/document, plus Spanish crear/agregar/arreglar/revisar/testear/refactorizar/planear/desplegar/auditar/documentar) and on natural-language patterns ("I need to...", "in this folder...", "this project...", "me ayudas con...", "como puedo...", "le pedi sobre un proyecto hacer alguna modificacion"). Also fires on meta-routing questions ("what agent should I use for X", "que skill uso para..."). Maps request intent + domain to the right agent from the 67-agent catalog AND the right skill from the 64-skill catalog. Single combined skill — replaces the legacy `agent-router` + `skill-router` pair.
 triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite, modify, change, update, improve, optimize, review, audit, test, debug, document, deploy, ship, scaffold, setup, configure, install, migrate, design, plan, analyze, investigate, simplify, clean, verify, validate, check, explicar, explain, "show me", "muéstrame", "what is", "qué es", "how does", "cómo funciona", "what's in", "qué hay", list, lista, describe, describe, estructura, structure, overview, resumen, summary, crear, agregar, añadir, hacer, implementar, arreglar, reparar, refactorizar, reescribir, cambiar, modificar, actualizar, mejorar, optimizar, revisar, auditar, probar, testear, debuggear, documentar, desplegar, configurar, instalar, migrar, diseñar, planear, analizar, investigar, simplificar, limpiar, verificar, validar, "I need to", "I want to", "can you", "could you", "this folder", "this project", "in this repo", "puedo agregar", "me ayudas", "podes ayudarme", "como puedo", "como hago", "le pedi", "en esta carpeta", "este proyecto", "agent", "agents", "which agent", "what agent", "que agente", "subagent", "dispatch", "delegate", "skill", "skills", "route", "routing", "which skill", "what skill", "load", "knowledge"]
 ---
 
 # Router
 
-Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 76 agents and 65 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 141 descriptions.
+Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 67 agents and 64 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 131 descriptions.
 
 > **This is the merged `agent-router` + `skill-router`.** When you needed both before, you load just this one now. Save ~10K tokens of skill content per turn.
 
@@ -119,6 +119,8 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 | Request | Primary agent | Notes |
 |---------|---------------|-------|
 | "implement X" (after PRD/plan) | `build` (primary) | Routes to sub-agents as needed |
+| "build full-stack app" / "create MVP" / "scaffold project" | `fullstack-builder` | Frontend + backend + DB from scratch |
+| "integrate Stripe/Twilio/Resend/OpenAI" / "webhook handler" | `api-integrator` | Pair with `security-reviewer` on webhooks |
 | "fix this build error" | `build-error-resolver` | Falls back to language-specific |
 | Language-specific build error | `{lang}-build-resolver` | cpp, csharp, dart, django, go, java, kotlin, python, pytorch, react, rust, swift |
 
@@ -129,6 +131,7 @@ For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewe
 | "review this code" / "code review" | `code-reviewer` | Stack-specific reviewer |
 | "review this PR" | `code-quality-analyzer` (mode: tests) | `code-reviewer` |
 | "audit report vs PRD" | `report-auditor` | — |
+| "full audit" / "audit all dimensions" / pre-release audit | `audit-orchestrator` | Consolidates security + quality + deps + perf + DB + API |
 | "security review" / "is this secure" | `security-reviewer` | `security-review` (skill) |
 | "silent failures" / "error handling review" | `code-quality-analyzer` (mode: silent-failures) | `error-handling` (skill) |
 | "review comments / are docs accurate" | `code-quality-analyzer` (mode: comments) | `doc-updater` |
@@ -167,6 +170,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | Request | Primary agent | Notes |
 |---------|---------------|-------|
 | "write tests for X" / "TDD" | `tdd-guide` | Load `testing` skill too |
+| "generate tests" / "/spec-to-tests" | `testing-auto` | From spec criteria or existing code |
 | "run E2E tests" | `e2e-runner` | — |
 | "improve test coverage" | `tdd-guide` | — |
 
@@ -178,12 +182,14 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | "simplify this code" | `code-quality-analyzer` (mode: simplify) | `refactoring-patterns` (skill) |
 | "find dead code" | `refactor-cleaner` | — |
 | "remove duplicate Y" | `code-quality-analyzer` (mode: simplify) | — |
+| "migrate Angular to React" / "JS to TS" / "modernize legacy" | `legacy-modernizer` | Pair with `migration-planner` |
 
 ## Documentation
 
 | Request | Primary agent | Notes |
 |---------|---------------|-------|
 | "update docs" / "regenerate codemaps" | `doc-updater` | — |
+| "write the user manual" / handoff docs | `manual-writer` | Compiles PRDs/plans/reports into `docs/MANUAL.md` |
 | "find docs for library X" | `docs-lookup` | Uses Context7 MCP |
 | "find existing skill for X" | `find-skills` (skill) | — |
 

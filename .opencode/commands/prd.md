@@ -39,6 +39,7 @@ task { subagent_type: "prd-agent", prompt: "$ARGUMENTS" }
 ## Behavior notes
 
 - prd-agent may ask up to 3 ambiguity questions at a time
+- Success Criteria use stable sequential IDs `AC-NN` (`AC-01`, `AC-02`, …); bullets without an ID stay valid (ID derived by order)
 - prd-agent writes the PRD to `docs/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md` (date+time stamp)
 - After PRD confirmed, next step is `/plan docs/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md`
 - If `docs/PROJECT.md` is missing, prd-agent auto-generates it from existing project files (README, package.json, etc.)

@@ -54,6 +54,37 @@ task { subagent_type: "prd-agent", prompt: "$ARGUMENTS" }
 | go-reviewer | Go code | Go-specific review |
 | go-build-resolver | Go builds | Go build errors |
 | database-reviewer | Database | Query optimization |
+| architect | System design + trade-offs | Architecture decisions, scalability |
+| audit-orchestrator | Unified multi-dimension audit | Pre-release, full audit |
+| fullstack-builder | Full frontend+backend+DB | New apps, MVPs |
+| api-integrator | External APIs + webhooks | Third-party integrations |
+| testing-auto | Generate tests from spec/code | `/spec-to-tests`, coverage gaps |
+| legacy-modernizer | Framework/language migrations | Legacy upgrades |
+| refactor-cleaner | Dead code + duplicates | Cleanup, pre-release |
+| manual-writer | Compile `docs/MANUAL.md` | Handoff, delivery |
+
+## SDD Flow Gates (ciclo encadenado)
+
+El ciclo Spec-Driven de este pack encadena gates verificables. `/orchestrate` los referencia y los puede invocar entre fases:
+
+```
+/prd → /spec-lint → /plan → /tasks → /spec-to-tests → /verify → /audit-report → /trace → /definition-of-done
+```
+
+| Gate | Comando | Agent | Cuándo |
+|------|---------|-------|--------|
+| Clarificar intención | `/prd` | `prd-agent` | Phase 0 (obligatorio) |
+| Lint preventivo del spec | `/spec-lint` | `prd-agent` | Post-PRD, pre-plan (bloquea `/plan` si FAIL) |
+| Plan | `/plan` | `planner` | Phase 1 |
+| Desglose en tareas | `/tasks` | `planner` | Post-plan, pre-implementación |
+| Tests desde criterios | `/spec-to-tests` | `testing-auto` | Post-tasks, pre-verify |
+| Verificación | `/verify` | `build` | Tras implementar |
+| Auditoría vs PRD | `/audit-report` | `report-auditor` | Tras verify |
+| Trazabilidad AC↔código | `/trace` | `planner` | Antes de cerrar |
+| Cierre único | `/definition-of-done` | `report-auditor` | Gate final |
+| Cambio de spec | `/change-request` | `prd-agent` | Si el requisito cambia tras aprobar el PRD |
+
+> Los PRDs nuevos usan criterios con ID estable `AC-NN` (compatibles con bullets sin ID, cuyo ID se deriva por orden). `/trace`, `/spec-to-tests` y `/definition-of-done` operan sobre esa base.
 
 ## Orchestration Patterns
 

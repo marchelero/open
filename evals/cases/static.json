@@ -64,11 +64,17 @@
   {
     "id": "E8",
     "kind": "files",
-    "title": "Los gates SDD existentes estan presentes",
+    "title": "Los gates SDD de Fase 3 estan presentes",
     "files": [
-      ".opencode/commands/verify.md"
+      ".opencode/commands/verify.md",
+      ".opencode/commands/spec-lint.md",
+      ".opencode/commands/tasks.md",
+      ".opencode/commands/trace.md",
+      ".opencode/commands/definition-of-done.md",
+      ".opencode/commands/change-request.md",
+      ".opencode/commands/spec-to-tests.md"
     ],
-    "why": "este pack solo shippea el gate /verify; spec-lint/trace/definition-of-done son Fase 3"
+    "why": "el ciclo SDD /prd -> /spec-lint -> /plan -> /tasks -> /spec-to-tests -> /verify -> /audit-report -> /trace -> /definition-of-done"
   },
   {
     "id": "E9",
@@ -99,20 +105,20 @@
   {
     "id": "E12",
     "kind": "metric",
-    "title": "counts: 59 agents presentes",
+    "title": "counts: 67 agents presentes",
     "tool": "counts",
     "field": "agents",
-    "equals": 59,
-    "why": "invariante propia de open"
+    "equals": 67,
+    "why": "invariante propia de open (59 + 8 agents de proceso de Fase 3)"
   },
   {
     "id": "E13",
     "kind": "metric",
-    "title": "counts: 58 commands presentes",
+    "title": "counts: 64 commands presentes",
     "tool": "counts",
     "field": "commands",
-    "equals": 58,
-    "why": "invariante propia de open"
+    "equals": 64,
+    "why": "invariante propia de open (58 + 6 comandos SDD de Fase 3)"
   },
   {
     "id": "E14",
@@ -126,10 +132,10 @@
   {
     "id": "E15",
     "kind": "count",
-    "title": "skills-lock.json cubre 64 skills + 59 agents (sha256 >= 122)",
+    "title": "skills-lock.json cubre 64 skills + 67 agents (sha256 >= 131)",
     "files": ["skills-lock.json"],
     "pattern": "\"sha256\"",
-    "gte": 122,
+    "gte": 131,
     "why": "un lockfile casi vacio deja pasar drift de contenido"
   }
 ]

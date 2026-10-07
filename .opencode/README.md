@@ -8,8 +8,8 @@ Pack portable de opencode. Cópialo a cualquier proyecto, reinicia opencode y em
 > Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
 > Regenerate: `node .opencode/bin/counts.js --update <files...>`
 
-- **59** agents (.opencode/agents)
-- **58** commands (.opencode/commands)
+- **67** agents (.opencode/agents)
+- **64** commands (.opencode/commands)
 - **64** skills (.agents/skills)
 - **20** native CLIs (.opencode/bin)
 - **3** npm plugins + **2** local plugin(s)
@@ -57,7 +57,7 @@ Toda la documentación del pack vive dentro de `.opencode/manual/`, así se copi
 
 - **[.opencode/manual/README.md](./manual/README.md)** — punto de entrada, instalación, comandos principales
 - **[.opencode/manual/ROUTE.md](./manual/ROUTE.md)** — qué sub-agente usar según la intención
-- **[.opencode/manual/COMMANDS.md](./manual/COMMANDS.md)** — los 58 slash commands por intención
+- **[.opencode/manual/COMMANDS.md](./manual/COMMANDS.md)** — los 64 slash commands por intención
 - **[.opencode/manual/EXAMPLES.md](./manual/EXAMPLES.md)** — 5 flujos completos de proyectos reales
 - **[.opencode/manual/ARCH.md](./manual/ARCH.md)** — 4 capas de memoria, flujo PRD, ciclo de instintos
 - **[.opencode/manual/SURFACES.md](./manual/SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI
