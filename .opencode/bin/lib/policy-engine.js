@@ -20,11 +20,21 @@
  *   { id, severity: "warn"|"ask"|"deny", match: "<regex>", tool: "bash"
  *     | ["edit","write"], message: "<human text>", flags?: "i",
  *     ignore?: ["<regex>", ...] }
+ *
+ * Confinement block (optional, same JSON):
+ *   "confinement": { "mode": "off"|"audit"|"enforce", "roots": ["."],
+ *                    "allow": [], "readTools": ["edit","write","read"],
+ *                    "denyNetwork": false }
+ *   A JSON without the block behaves exactly as before (logical confinement
+ *   disabled). This is a LOGICAL boundary, not a kernel sandbox: it decides on
+ *   the tool arguments only and can be evaded by obfuscation or child
+ *   processes. See .opencode/manual/SANDBOX.md.
  */
 
 "use strict"
 
 const fs = require("node:fs")
+const os = require("node:os")
 const path = require("node:path")
 
 // .opencode/bin/lib/policy-engine.js -> .opencode/policy-rules.json
@@ -73,6 +83,35 @@ function compileRule(raw) {
   }
 }
 
+const CONFINEMENT_MODES = ["off", "audit", "enforce"]
+const DEFAULT_READ_TOOLS = ["edit", "write", "read"]
+
+function asStringList(v) {
+  if (!Array.isArray(v)) return null
+  const out = v.filter((x) => typeof x === "string" && x.length > 0)
+  return out.length === v.length ? out : null
+}
+
+/**
+ * Normalize the optional `confinement` block. Returns null when the block is
+ * absent or malformed (a malformed block degrades to "off", i.e. the behaviour
+ * before this feature — it must never block a session by accident).
+ */
+function compileConfinement(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null
+  const mode = CONFINEMENT_MODES.indexOf(raw.mode) !== -1 ? raw.mode : "off"
+  const roots = asStringList(raw.roots)
+  const allow = Array.isArray(raw.allow) ? raw.allow.filter((x) => typeof x === "string") : []
+  const readTools = asStringList(raw.readTools)
+  return {
+    mode,
+    roots: roots && roots.length > 0 ? roots : ["."],
+    allow,
+    readTools: readTools || DEFAULT_READ_TOOLS.slice(),
+    denyNetwork: raw.denyNetwork === true,
+  }
+}
+
 /**
  * Read + parse + compile policy-rules.json. Always returns a shaped object,
  * never throws: a broken file degrades to an empty (allow-all) rule set so a
@@ -84,20 +123,21 @@ function loadRules(opts) {
   try {
     raw = fs.readFileSync(p, "utf8")
   } catch (e) {
-    return { ok: false, error: "no se pudo leer " + p, mode: "enforce", rules: [] }
+    return { ok: false, error: "no se pudo leer " + p, mode: "enforce", rules: [], confinement: null }
   }
   let data
   try {
     data = JSON.parse(raw)
   } catch (e) {
-    return { ok: false, error: "JSON invalido: " + e.message, mode: "enforce", rules: [] }
+    return { ok: false, error: "JSON invalido: " + e.message, mode: "enforce", rules: [], confinement: null }
   }
   if (!data || typeof data !== "object" || !Array.isArray(data.rules)) {
-    return { ok: false, error: "schema invalido: falta rules[]", mode: "enforce", rules: [] }
+    return { ok: false, error: "schema invalido: falta rules[]", mode: "enforce", rules: [], confinement: null }
   }
   const mode = MODES.indexOf(data.mode) !== -1 ? data.mode : "enforce"
   const rules = data.rules.map(compileRule).filter(Boolean)
-  return { ok: true, version: data.version, mode, rules }
+  const confinement = compileConfinement(data.confinement)
+  return { ok: true, version: data.version, mode, rules, confinement }
 }
 
 // mtime cache so editing policy-rules.json takes effect without a restart and
@@ -164,6 +204,140 @@ function redact(target) {
   return s
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Confinement (LOGICAL boundary; not a kernel sandbox)
+// ────────────────────────────────────────────────────────────────────────────
+
+/** Best-effort real path: resolve symlinks when the path exists, otherwise
+ *  realpath the nearest existing ancestor. Never throws. */
+function realpathBest(p) {
+  try {
+    return fs.realpathSync(p)
+  } catch {
+    try {
+      const dir = path.dirname(p)
+      if (dir && dir !== p) return path.join(fs.realpathSync(dir), path.basename(p))
+    } catch {
+      /* keep the lexical path */
+    }
+    return p
+  }
+}
+
+/** Expand a leading `~` to the home directory (POSIX shell convention). */
+function expandHome(target) {
+  if (typeof target !== "string") return target
+  if (target === "~") return os.homedir()
+  if (target.startsWith("~/") || target.startsWith("~\\")) {
+    return path.join(os.homedir(), target.slice(2))
+  }
+  return target
+}
+
+/** True when `child` is `root` itself or lives beneath it (cross-drive safe). */
+function isInside(child, root) {
+  const rel = path.relative(root, child)
+  if (rel === "") return true
+  if (path.isAbsolute(rel)) return false
+  // Only a real parent segment escapes: ".." or "../x", not a file named "...".
+  return rel !== ".." && !rel.startsWith(".." + path.sep)
+}
+
+/**
+ * Candidate destinations a tool would touch. Deliberately conservative:
+ *  - edit/write/read: the declared file path, when the tool is in readTools.
+ *  - bash: every non-flag, non-URL, non-single-letter-switch token. Plain
+ *    words resolve inside the cwd and are allowed, so the benign suite stays
+ *    clean; absolute/parent/`~` targets outside the roots are reported.
+ */
+function confinementTargets(tool, args, conf) {
+  if (!args || typeof args !== "object") return []
+  if (conf.readTools.indexOf(tool) !== -1) {
+    const t = extractTarget(tool, args)
+    return typeof t === "string" && t ? [t] : []
+  }
+  if (tool === "bash") {
+    return bashPathCandidates(typeof args.command === "string" ? args.command : "")
+  }
+  return []
+}
+
+const BASH_TOKEN_RE = /"[^"]*"|'[^']*'|[^\s;&|<>()]+/g
+
+function bashPathCandidates(command) {
+  const out = []
+  if (typeof command !== "string" || command === "") return out
+  BASH_TOKEN_RE.lastIndex = 0
+  let m
+  while ((m = BASH_TOKEN_RE.exec(command)) !== null) {
+    let tok = m[0]
+    if (tok.length >= 2 && (tok[0] === '"' || tok[0] === "'")) tok = tok.slice(1, -1)
+    if (!tok) continue
+    if (tok.startsWith("-")) continue // option/flag
+    if (tok.indexOf("://") !== -1) continue // URL, not a filesystem path
+    if (/^\/[A-Za-z]$/.test(tok)) continue // Windows switch such as /S
+    if (out.indexOf(tok) === -1) out.push(tok)
+  }
+  return out
+}
+
+/** Best-effort network egress detection (opt-in; never a real network fence). */
+const NETWORK_RE = /(^|[\s;&|(])(curl|wget|scp|sftp|ssh|nc|ncat|netcat|telnet|ftp|rsync|socat|nslookup|dig|ping)(?=[\s;&|)]|$)/
+
+function networkCommand(command) {
+  if (typeof command !== "string") return null
+  const m = NETWORK_RE.exec(command)
+  return m ? m[2] : null
+}
+
+/** True when the resolved target is inside any root or allow entry. */
+function isWithinRoots(target, conf, base) {
+  const abs = realpathBest(path.resolve(base, expandHome(target)))
+  const entries = conf.roots.concat(conf.allow)
+  for (const entry of entries) {
+    const root = realpathBest(path.resolve(base, expandHome(entry)))
+    if (abs === root || isInside(abs, root)) return true
+  }
+  return false
+}
+
+/**
+ * Decide the confinement boundary for one tool call. Pure and deterministic:
+ * same tool + args + config + cwd => same decision.
+ *   { severity: "allow"|"deny"|"audit", ruleId, message, target }
+ * `enforce` blocks (deny); `audit` reports ("would deny") without blocking;
+ * `off`/absent config allows everything.
+ */
+function checkConfinement(tool, args, conf, cwd) {
+  const base = cwd || process.cwd()
+  if (!conf || conf.mode === "off") return { severity: "allow" }
+  const sev = conf.mode === "enforce" ? "deny" : "audit"
+  for (const t of confinementTargets(tool, args, conf)) {
+    if (!isWithinRoots(t, conf, base)) {
+      return {
+        severity: sev,
+        ruleId: "confine-path-outside-root",
+        message: "path resolves outside the confinement roots/allow list: " + t,
+        target: t,
+      }
+    }
+  }
+  if (conf.denyNetwork && tool === "bash") {
+    const cmd = typeof args.command === "string" ? args.command : ""
+    const net = networkCommand(cmd)
+    if (net) {
+      return {
+        severity: sev,
+        ruleId: "confine-network-egress",
+        message:
+          "network egress command '" + net + "' (best-effort, opt-in; not a real network fence)",
+        target: cmd,
+      }
+    }
+  }
+  return { severity: "allow" }
+}
+
 /** Append one audit line: timestamp, rule id, severity, tool, redacted target. */
 function logEvent(entry) {
   try {
@@ -193,6 +367,11 @@ module.exports = {
   evaluate,
   redact,
   logEvent,
+  compileConfinement,
+  checkConfinement,
+  isWithinRoots,
+  bashPathCandidates,
+  networkCommand,
   SEVERITIES,
   MODES,
   RANK,

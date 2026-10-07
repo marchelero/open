@@ -136,7 +136,7 @@ Maintaining:
 Discovery:
   /list-agents   browse the agent catalog
   /list-skills   browse the skill catalog
-  /context       context budget report
+  /context-budget context budget report
   /help          this help
 ```
 

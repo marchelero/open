@@ -2,6 +2,13 @@
   "version": 1,
   "mode": "enforce",
   "description": "Declarative tool-call policy for the open pack. Edit this file to change enforcement without touching JS. severity: warn (log + console.warn, never blocks) | ask (native permission.ask prompt, degrades to warn if the event does not fire for bash) | deny (throws in tool.execute.before, blocks the call). Default is conservative: only catastrophic/irreversible operations are deny.",
+  "confinement": {
+    "mode": "audit",
+    "roots": ["."],
+    "allow": [],
+    "readTools": ["edit", "write", "read"],
+    "denyNetwork": false
+  },
   "rules": [
     {
       "id": "fs-rm-rf-abs",
@@ -51,6 +58,94 @@
       "match": ":\\(\\)\\s*\\{\\s*:\\|:\\&\\s*\\}\\s*;\\s*:",
       "tool": "bash",
       "message": "Fork bomb; it will exhaust the machine."
+    },
+    {
+      "id": "win-del-recursive",
+      "severity": "deny",
+      "match": "\\b(del|erase)\\b[^\\n]*\\/s\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "del/erase /s recursively deletes files on Windows; irreversible for the tree."
+    },
+    {
+      "id": "win-del-force-quiet",
+      "severity": "warn",
+      "match": "\\b(del|erase)\\b[^\\n]*\\/(f|q)\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "del with /f or /q force-deletes or silences prompts; confirm the target."
+    },
+    {
+      "id": "win-remove-item-recurse",
+      "severity": "deny",
+      "match": "\\b(remove-item|ri)\\b[^\\n]*-(recurse|r)\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "Remove-Item -Recurse deletes a whole tree on Windows."
+    },
+    {
+      "id": "win-remove-item-force",
+      "severity": "warn",
+      "match": "\\b(remove-item|ri)\\b[^\\n]*-(force|fo)\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "Remove-Item -Force removes read-only/hidden files; confirm."
+    },
+    {
+      "id": "win-rmdir-s",
+      "severity": "deny",
+      "match": "\\b(rmdir|rd)\\b[^\\n]*\\/s\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "rmdir /s deletes a directory tree on Windows."
+    },
+    {
+      "id": "win-format-drive",
+      "severity": "deny",
+      "match": "\\bformat\\s+[a-z]:",
+      "tool": "bash",
+      "flags": "i",
+      "message": "format erases a Windows drive."
+    },
+    {
+      "id": "win-diskpart",
+      "severity": "deny",
+      "match": "\\bdiskpart\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "diskpart can wipe partitions and disks."
+    },
+    {
+      "id": "win-clear-disk",
+      "severity": "deny",
+      "match": "\\b(clear-disk|format-volume|remove-partition)\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "PowerShell storage cmdlet that wipes a disk or partition."
+    },
+    {
+      "id": "win-vssadmin-delete",
+      "severity": "deny",
+      "match": "\\bvssadmin\\b[^\\n]*\\bdelete\\b[^\\n]*\\bshadows\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "deleting shadow copies destroys backups/restore points."
+    },
+    {
+      "id": "win-stop-computer",
+      "severity": "ask",
+      "match": "\\bstop-computer\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "Stop-Computer powers off the machine; confirm it is intended."
+    },
+    {
+      "id": "win-restart-computer",
+      "severity": "ask",
+      "match": "\\brestart-computer\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "Restart-Computer restarts the machine; confirm it is intended."
     },
     {
       "id": "git-push-force",

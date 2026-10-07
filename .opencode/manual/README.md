@@ -14,7 +14,7 @@
 - **64** commands (.opencode/commands)
 - **79** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **3** npm plugins + **2** local plugin(s)
+- **3** npm plugins + **3** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->
 
@@ -70,7 +70,7 @@ cd /ruta/a/tu/proyecto && opencode .
 | `/security` | Auditoría de seguridad puntual |
 | `/project-status` | Check freshness de `docs/PROJECT.md` sin escribir |
 | `/session-start` / `/session-end` | Memoria entre sessions (automática al cerrar) |
-| `/context` | Audita el presupuesto de contexto (skills, agentes, sessions) |
+| `/context-budget` | Audita el presupuesto de contexto (skills, agentes, sessions) |
 
 Lista completa: `node .opencode/bin/context.js` o explora `.opencode/commands/`.
 

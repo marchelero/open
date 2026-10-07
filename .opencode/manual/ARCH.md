@@ -61,10 +61,10 @@ Paso 7: persistir en docs/instincts/instincts.json (proyecto) o
 Próxima sesión:
   - El agente primary lee LATEST.md en /session-start
   - Los instintos aparecen contextualmente cuando los patrones coinciden
-  - /instinct-status muestra los acumulados, /instinct-export los comparte entre proyectos
+  - `node .opencode/bin/instinct.js status` muestra los acumulados, `... export` los comparte entre proyectos
 ```
 
-**Promoción de instintos**: los instintos de proyecto con alta confianza pueden promoverse al ámbito global (`/promote`) y compartirse entre todos tus proyectos.
+**Promoción de instintos**: los instintos de proyecto con alta confianza pueden promoverse al ámbito global (`node .opencode/bin/instinct.js promote`) y compartirse entre todos tus proyectos.
 
 ## Superficies de capacidad (dónde vive cada prompt)
 

@@ -75,3 +75,12 @@ node .opencode/bin/eval-static.js
 - The engine never uses the network and never reads credentials.
 - The secret-file guard (`secretBlocker`) is retained and independent of this
   file, so a bad JSON edit cannot silently disable secret protection.
+
+## Confinement (logical boundary)
+
+The same JSON carries an optional `confinement` block that adds a **path and
+best-effort network** boundary (deny in `enforce`, `would deny` log in `audit`,
+no-op when absent). It is a logical fence, not a kernel sandbox. See
+[SANDBOX.md](./SANDBOX.md) for the configuration reference, real container
+recipes, and an explicit "NO garantiza" section.
+

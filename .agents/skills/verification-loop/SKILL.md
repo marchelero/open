@@ -32,7 +32,8 @@ If build fails, STOP and fix before continuing.
 ### Phase 2: Type Check
 ```bash
 # TypeScript projects
-npx tsc --noEmit 2>&1 | head -30
+set -o pipefail
+npx --no-install tsc --noEmit 2>&1 | head -30
 
 # Python projects
 pyright . 2>&1 | head -30

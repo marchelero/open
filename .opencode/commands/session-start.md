@@ -29,7 +29,7 @@ ls -t docs/sessions/*.md 2>/dev/null | head -1
 
 Or on Windows PowerShell:
 ```
-Get-ChildItem .agents\sessions\*.md -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+Get-ChildItem docs\sessions\*.md -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
 ```
 
 If a file is found, read it. If none: "No previous session recorded."

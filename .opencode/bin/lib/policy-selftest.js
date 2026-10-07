@@ -17,6 +17,7 @@
 
 "use strict"
 
+const path = require("node:path")
 const engine = require("./policy-engine.js")
 const hookifyFactory = require("../../plugins/hookify.js")
 
@@ -66,6 +67,89 @@ async function run() {
   console.log("")
   console.log("[Schema]")
   for (const [name, cond, detail] of checks) cond ? ok(name, detail) : bad(name, detail)
+
+  // ---- confinement config schema ----------------------------------------
+  const confChecks = []
+  const conf = loaded.confinement
+  confChecks.push(["confinement block present", !!conf, conf ? "mode=" + conf.mode : "missing"])
+  confChecks.push(["confinement mode valid",
+    conf && ["off", "audit", "enforce"].indexOf(conf.mode) !== -1, conf && conf.mode])
+  confChecks.push(["confinement default mode is audit", conf && conf.mode === "audit", conf && conf.mode])
+  confChecks.push(["confinement roots non-empty",
+    conf && Array.isArray(conf.roots) && conf.roots.length > 0, conf && conf.roots.join(",")])
+  confChecks.push(["confinement readTools has edit/write/read",
+    conf && ["edit", "write", "read"].every((t) => conf.readTools.indexOf(t) !== -1),
+    conf && conf.readTools.join(",")])
+  confChecks.push(["confinement denyNetwork is boolean",
+    conf && typeof conf.denyNetwork === "boolean", conf && String(conf.denyNetwork)])
+  console.log("")
+  console.log("[Confinement: config schema]")
+  for (const [name, cond, detail] of confChecks) cond ? ok(name, detail) : bad(name, detail)
+
+  // ---- confinement decision engine (pure, offline) ----------------------
+  const cwd = process.cwd()
+  const base = { roots: ["."], allow: [], readTools: ["edit", "write", "read"], denyNetwork: false }
+  const ENFORCE = Object.assign({}, base, { mode: "enforce" })
+  const AUDIT = Object.assign({}, base, { mode: "audit" })
+  const NETCFG = Object.assign({}, ENFORCE, { denyNetwork: true })
+  const OUTSIDE_REL = path.join("..", "zz-outside-" + process.pid + ".txt")
+  const OUTSIDE_ABS = path.resolve(cwd, "..", "zz-outside-abs.txt")
+
+  const dec = []
+  const decide = (tool, args, cfg) => engine.checkConfinement(tool, args, cfg, cwd)
+
+  dec.push(["enforce allows write inside root",
+    decide("write", { filePath: "src/app.js" }, ENFORCE).severity === "allow"])
+  dec.push(["enforce denies write outside root (..)",
+    decide("write", { filePath: OUTSIDE_REL }, ENFORCE).severity === "deny"])
+  dec.push(["enforce denies write to absolute outside root",
+    decide("write", { filePath: OUTSIDE_ABS }, ENFORCE).severity === "deny"])
+  dec.push(["enforce denies read outside root",
+    decide("read", { filePath: OUTSIDE_ABS }, ENFORCE).severity === "deny"])
+  dec.push(["enforce ignores tools not in readTools",
+    decide("glob", { filePath: OUTSIDE_ABS }, ENFORCE).severity === "allow"])
+  dec.push(["audit reports (does not deny) write outside root",
+    decide("write", { filePath: OUTSIDE_REL }, AUDIT).severity === "audit"])
+  dec.push(["audit reports read outside root",
+    decide("read", { filePath: OUTSIDE_ABS }, AUDIT).severity === "audit"])
+  dec.push(["enforce denies bash target outside root",
+    decide("bash", { command: "cat /etc/passwd" }, ENFORCE).severity === "deny"])
+  dec.push(["enforce denies bash parent redirect",
+    decide("bash", { command: "echo hi > ../zz-out.txt" }, ENFORCE).severity === "deny"])
+  dec.push(["denyNetwork off leaves curl alone",
+    decide("bash", { command: "curl https://example.com" }, ENFORCE).severity === "allow"])
+  dec.push(["denyNetwork on flags curl",
+    decide("bash", { command: "curl https://example.com" }, NETCFG).severity === "deny"])
+  dec.push(["allow[] entry is inside the fence",
+    decide("write", { filePath: OUTSIDE_ABS },
+      Object.assign({}, ENFORCE, { allow: [path.resolve(cwd, "..")] })).severity === "allow"])
+  dec.push(["off mode allows everything",
+    decide("write", { filePath: OUTSIDE_ABS }, Object.assign({}, ENFORCE, { mode: "off" })).severity === "allow"])
+
+  console.log("")
+  console.log("[Confinement: decision engine (enforce/audit/network)]")
+  for (const [name, cond] of dec) cond ? ok(name) : bad(name)
+
+  // ---- confinement false-positive guard (benign suite) ------------------
+  let confDenies = 0
+  for (const cmd of [
+    "git commit -m 'feat: policy engine'",
+    "git push origin main",
+    "npm test",
+    "npm ci",
+    "node .opencode/bin/counts.js --check",
+    "node .opencode/bin/eval-static.js",
+    "pytest -q",
+    "go test ./...",
+    "rm -rf ./build",
+    "ls -la",
+  ]) {
+    const r = decide("bash", { command: cmd }, ENFORCE)
+    if (r.severity === "deny") { confDenies++; bad("confinement benign: " + cmd, "DENIED: " + r.target) }
+  }
+  confDenies === 0
+    ? ok("confinement benign suite: 0 deny (enforce)")
+    : bad("confinement benign suite: 0 deny", confDenies + " denied")
 
   // ---- runtime hooks ----------------------------------------------------
   const hooks = await hookifyFactory()
@@ -178,6 +262,38 @@ async function run() {
   benignDenies === 0
     ? ok("benign suite has 0 deny", BENIGN.length + " commands")
     : bad("benign suite has 0 deny", benignDenies + " denied")
+
+  console.log("")
+  console.log("[confinement runtime: audit never blocks]")
+  const OUT_RT = path.join("..", "zz-runtime-escape-" + process.pid + ".txt")
+  try {
+    await before({ tool: "write", sessionID: "selftest-conf" }, { args: { filePath: OUT_RT } })
+    ok("audit write outside root does NOT block")
+  } catch (e) {
+    bad("audit write outside root does NOT block", e.message.slice(0, 60))
+  }
+  try {
+    await before({ tool: "read", sessionID: "selftest-conf" }, { args: { filePath: OUTSIDE_ABS } })
+    ok("audit read outside root does NOT block")
+  } catch (e) {
+    bad("audit read outside root does NOT block", e.message.slice(0, 60))
+  }
+  try {
+    await before({ tool: "bash", sessionID: "selftest-conf" }, { args: { command: "cat /etc/passwd" } })
+    ok("audit bash outside root does NOT block")
+  } catch (e) {
+    bad("audit bash outside root does NOT block", e.message.slice(0, 60))
+  }
+  const auditLogged = engine.logEvent({
+    tool: "write",
+    severity: "audit",
+    rule: { id: "confine-path-outside-root", message: "would deny" },
+    target: OUT_RT,
+    note: "would deny (audit mode); not blocked",
+  })
+  auditLogged
+    ? ok("audit writes a 'would deny' line to policy.log")
+    : bad("audit writes a 'would deny' line to policy.log", "write failed")
 
   console.log("")
   console.log("[secret guard retained]")

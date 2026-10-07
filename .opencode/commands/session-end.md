@@ -164,7 +164,7 @@ Review the session and add 1-3 key insights to the instinct store. This is part 
 **Skip automatically** if:
 - Session was pure Q&A (no code, no decisions, no debug sessions)
 - No new patterns, fixes, or mistakes were observed
-- All potential insights would duplicate existing instincts (run `/instinct-status` first to check)
+- All potential insights would duplicate existing instincts (run `node .opencode/bin/instinct.js status` first to check)
 
 **Confidence calibration**:
 - `0.5` — "this worked once in this session" (low confidence, needs more evidence)

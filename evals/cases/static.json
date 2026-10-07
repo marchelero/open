@@ -177,5 +177,37 @@
     "title": "policy-rules.json es JSON valido con schema correcto (offline, sin ejecutar el plugin)",
     "file": ".opencode/policy-rules.json",
     "why": "el motor aplica reglas por datos; CI valida la forma (version/mode + {id,severity,match,tool,message} por regla) de forma determinista y sin red"
+  },
+  {
+    "id": "E20",
+    "kind": "confinement",
+    "title": "confinement: bloque JSON valido y opcional (schema, offline, sin ejecutar el plugin)",
+    "file": ".opencode/policy-rules.json",
+    "why": "el aislamiento logico se configura por datos; CI valida la forma (mode off|audit|enforce, roots[], allow[], readTools[], denyNetwork boolean) de forma determinista y sin red, y el plugin decide la frontera en runtime"
+  },
+  {
+    "id": "E21",
+    "kind": "files",
+    "title": "Tools nativas portadas de ECC presentes (7) + store de changed-files",
+    "files": [
+      ".opencode/tools/git-summary.ts",
+      ".opencode/tools/run-tests.ts",
+      ".opencode/tools/check-coverage.ts",
+      ".opencode/tools/format-code.ts",
+      ".opencode/tools/lint-check.ts",
+      ".opencode/tools/security-audit.ts",
+      ".opencode/tools/changed-files.ts",
+      ".opencode/plugins/lib/changed-files-store.ts"
+    ],
+    "why": "AC-01: el pack expone tools nativas de OpenCode portadas y adaptadas; el store es dependencia de changed-files"
+  },
+  {
+    "id": "E22",
+    "kind": "files",
+    "title": "Detector destructivo cross-platform presente",
+    "files": [
+      ".opencode/plugins/gateguard.js"
+    ],
+    "why": "AC-02: un mismo detector cubre POSIX y Windows, con perfiles y modos warn/block"
   }
 ]

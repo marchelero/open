@@ -1,6 +1,6 @@
 ---
 name: intent-driven-development
-description: "Use this skill when the user asks to clarify a feature, define acceptance criteria, de-risk a security/data/migration/integration change, prepare"
+description: "Use when a request needs scoping into verifiable acceptance criteria before or alongside implementation — clarifying a feature, defining acceptance criteria, de-risking a security/data/migration/integration change, preparing implementation requirements for another agent, or making a complex request testable. Do not trigger for trivial edits, straightforward fixes, active debugging, code review, or requests whose acceptance conditions are already clear unless the user explicitly invokes this skill."
 triggers: [PRD, requirement, acceptance criteria, scope, objective, success criteria, intention]
 origin: starter-pack
 ---

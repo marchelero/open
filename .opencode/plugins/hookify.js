@@ -17,6 +17,9 @@
 //                degrades to a visible warn (never a silent block)
 //      Editing the JSON changes behaviour without touching this file
 //      (mtime cache reloads it live).
+//      A second pass (`applyConfinement`) applies the optional `confinement`
+//      block: a LOGICAL path/network boundary (deny in `enforce`, "would deny"
+//      log in `audit`, no-op when absent). It is not a kernel sandbox.
 //
 //   3. PermissionAsk       (permission.ask)
 //      Surfaces a native confirmation prompt when the engine requested an
@@ -129,48 +132,104 @@ function takeAsk(sessionID) {
 
 async function policyEngine(input, output) {
   const loaded = engine.cachedRules()
-  if (!loaded || loaded.mode === "off") return
+  if (!loaded) return
   const args = output && output.args
-  const target = engine.extractTarget(input.tool, args)
-  const res = engine.evaluate(input.tool, target, loaded.rules, loaded.mode)
-  if (res.severity === "allow" || !res.rule) return
-  const rule = res.rule
+
+  // 1. Content rules (danger of the operation itself).
+  if (loaded.mode !== "off") {
+    const target = engine.extractTarget(input.tool, args)
+    const res = engine.evaluate(input.tool, target, loaded.rules, loaded.mode)
+    if (res.severity !== "allow" && res.rule) {
+      const rule = res.rule
+
+      if (res.severity === "deny") {
+        engine.logEvent({ tool: input.tool, severity: "deny", rule, target })
+        throw new Error(
+          "[hookify:policy:" + rule.id + "] denied '" + input.tool + "' call. " +
+            rule.message + " " +
+            "This rule is enforced by .opencode/policy-rules.json. " +
+            "If the operation is intentional and safe, the user must run it " +
+            "outside the agent or relax the rule."
+        )
+      }
+
+      if (res.severity === "ask") {
+        rememberAsk(input.sessionID, { rule, tool: input.tool, target })
+        // Degrade-safe: always leave a visible, audited trail. If the native
+        // permission.ask event fires, PermissionAsk also shows the prompt.
+        engine.logEvent({
+          tool: input.tool,
+          severity: "ask",
+          rule,
+          target,
+          note: "confirmation requested; degrades to warn if no native prompt",
+        })
+        console.warn(
+          "[hookify:policy:" + rule.id + "] ask ('" + input.tool + "'): " +
+            rule.message + " Confirmation requested; treated as a warning if no " +
+            "native prompt appears."
+        )
+      } else {
+        // warn
+        engine.logEvent({ tool: input.tool, severity: "warn", rule, target })
+        console.warn(
+          "[hookify:policy:" + rule.id + "] warn ('" + input.tool + "'): " +
+            rule.message + " Logged to .opencode/logs/policy.log."
+        )
+      }
+    }
+  }
+
+  // 2. Confinement boundary (is the operation inside its allowed scope?).
+  //    Runs after the content rules; independent of the top-level `mode` so a
+  //    `mode: "off"` on the danger rules does not silently disable the fence.
+  applyConfinement(input, args, loaded)
+}
+
+/**
+ * Logical confinement: deny (enforce) or report "would deny" (audit) when a
+ * path or a best-effort network command falls outside the declared roots.
+ * Never a kernel boundary; see .opencode/manual/SANDBOX.md.
+ */
+function applyConfinement(input, args, loaded) {
+  const conf = loaded && loaded.confinement
+  if (!conf || conf.mode === "off") return
+  let res
+  try {
+    res = engine.checkConfinement(input.tool, args, conf, process.cwd())
+  } catch {
+    return // never crash a session over the fence
+  }
+  if (res.severity === "allow") return
+  const rule = { id: res.ruleId, message: res.message }
 
   if (res.severity === "deny") {
-    engine.logEvent({ tool: input.tool, severity: "deny", rule, target })
-    throw new Error(
-      "[hookify:policy:" + rule.id + "] denied '" + input.tool + "' call. " +
-        rule.message + " " +
-        "This rule is enforced by .opencode/policy-rules.json. " +
-        "If the operation is intentional and safe, the user must run it " +
-        "outside the agent or relax the rule."
-    )
-  }
-
-  if (res.severity === "ask") {
-    rememberAsk(input.sessionID, { rule, tool: input.tool, target })
-    // Degrade-safe: always leave a visible, audited trail. If the native
-    // permission.ask event fires, PermissionAsk also shows the prompt.
     engine.logEvent({
       tool: input.tool,
-      severity: "ask",
+      severity: "deny",
       rule,
-      target,
-      note: "confirmation requested; degrades to warn if no native prompt",
+      target: res.target,
+      note: "confinement",
     })
-    console.warn(
-      "[hookify:policy:" + rule.id + "] ask ('" + input.tool + "'): " +
-        rule.message + " Confirmation requested; treated as a warning if no " +
-        "native prompt appears."
+    throw new Error(
+      "[hookify:policy:" + res.ruleId + "] denied '" + input.tool + "' call. " +
+        res.message + " The destination is outside the confinement roots in " +
+        ".opencode/policy-rules.json. Set confinement.mode to \"audit\" to " +
+        "preview without blocking, or add the path to confinement.allow."
     )
-    return
   }
 
-  // warn
-  engine.logEvent({ tool: input.tool, severity: "warn", rule, target })
+  // audit: visible, never blocks
+  engine.logEvent({
+    tool: input.tool,
+    severity: "audit",
+    rule,
+    target: res.target,
+    note: "would deny (audit mode); not blocked",
+  })
   console.warn(
-    "[hookify:policy:" + rule.id + "] warn ('" + input.tool + "'): " +
-      rule.message + " Logged to .opencode/logs/policy.log."
+    "[hookify:confinement:" + res.ruleId + "] would deny ('" + input.tool + "'): " +
+      res.message + " Audit mode: NOT blocked. Logged to .opencode/logs/policy.log."
   )
 }
 

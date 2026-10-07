@@ -14,7 +14,7 @@ Single landing for all project-generated documentation. Anything `.opencode/` pr
 | `audits/` | Audit verdicts (output of `/audit-report`) | Cross-checking report vs PRD |
 | `sessions/` | Session-end snapshots (auto + manual via `/session-end`) | Resuming work |
 | `state/` | Recovery state for resumable flows (machine-local) | Mid-flow crash recovery |
-| `instincts/` | Learned project patterns (auto via `/learn`) | Pattern review |
+| `instincts/` | Learned project patterns (via `node .opencode/bin/instinct.js`) | Pattern review |
 
 ## Conventions
 

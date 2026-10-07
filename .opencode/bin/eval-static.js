@@ -39,6 +39,10 @@
  *   policy   offline shape check of `.opencode/policy-rules.json`: valid JSON,
  *            version/mode, and a compilable {id,severity,match,tool,message}
  *            per rule (no plugin execution, no commands run)
+ *   confinement  offline shape check of the optional `confinement` block in
+ *            the same JSON (mode off|audit|enforce, roots[], allow[],
+ *            readTools[], denyNetwork boolean). No plugin execution, no
+ *            commands run, no network
  *
  * Usage:
  *   node .opencode/bin/eval-static.js              # run all cases
@@ -410,6 +414,44 @@ function kPolicy(c) {
   return { ok: true, detail: data.rules.length + ' reglas, mode=' + data.mode }
 }
 
+// Validate the optional `confinement` block of policy-rules.json offline: it is
+// DATA read from disk, never executed and never network-touching. The block is
+// optional — a JSON without it keeps the pre-confinement behaviour — but when
+// present every field must have the documented shape.
+const CONFINEMENT_MODES = ['off', 'audit', 'enforce']
+
+function kConfinement(c) {
+  const file = c.file || '.opencode/policy-rules.json'
+  const raw = read(path.join(ROOT, file))
+  if (raw === null) return { ok: false, detail: 'no existe ' + file }
+  let data
+  try { data = JSON.parse(raw) } catch (e) { return { ok: false, detail: 'JSON invalido: ' + e.message } }
+
+  const cfg = data.confinement
+  if (cfg === undefined) return { ok: true, detail: 'sin bloque confinement (comportamiento actual)' }
+  if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
+    return { ok: false, detail: 'confinement debe ser un objeto' }
+  }
+
+  const errors = []
+  const arrStr = (v) => Array.isArray(v) && v.every((x) => typeof x === 'string' && x.length > 0)
+  if (CONFINEMENT_MODES.indexOf(cfg.mode) === -1) {
+    errors.push('confinement.mode invalido (esperado: ' + CONFINEMENT_MODES.join('|') + ')')
+  }
+  if (!arrStr(cfg.roots)) errors.push('confinement.roots debe ser array de strings no vacios')
+  if (!Array.isArray(cfg.allow) || !cfg.allow.every((x) => typeof x === 'string')) {
+    errors.push('confinement.allow debe ser un array de strings')
+  }
+  if (!arrStr(cfg.readTools)) errors.push('confinement.readTools debe ser array de strings no vacios')
+  if (typeof cfg.denyNetwork !== 'boolean') errors.push('confinement.denyNetwork debe ser boolean')
+
+  if (errors.length) return { ok: false, detail: errors.slice(0, 6).join('; ') }
+  return {
+    ok: true,
+    detail: 'mode=' + cfg.mode + ' roots=' + cfg.roots.length + ' readTools=' + cfg.readTools.length + ' denyNetwork=' + cfg.denyNetwork,
+  }
+}
+
 const KINDS = {
   files: kFiles,
   present: kPresent,
@@ -421,6 +463,7 @@ const KINDS = {
   metric: kMetric,
   verdict: kVerdict,
   policy: kPolicy,
+  confinement: kConfinement,
 }
 
 // ---------------------------------------------------------------------------
