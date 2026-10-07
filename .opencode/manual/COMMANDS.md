@@ -120,6 +120,7 @@
 | Comando | Qué hace | Agent |
 |---------|----------|-------|
 | `/setup-pm` | Configura la preferencia de package manager. | build |
+| `/env-sync` | Sincroniza `.env.example` con las variables reales detectadas en el código. | build |
 | `/skill-create` | Genera skills a partir del análisis de git history. | build |
 
 ## "Quiero descubrir el pack"

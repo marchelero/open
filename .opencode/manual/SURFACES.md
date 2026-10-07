@@ -56,7 +56,7 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 **Úsala para**:
 - Conocimiento de dominio que el agente aplica cuando el contexto encaja (diseño REST, TDD, manejo de errores, revisión de seguridad)
 - Patrones de referencia que el agente lee una vez y reutiliza muchas veces
-- Convenciones demasiado extensas para `INSTRUCTIONS.md` pero que no justifican un agente
+- Convenciones demasiado extensas para `AGENTS.md` pero que no justifican un agente
 
 **Reglas de frontmatter** (las aplica `validate-frontmatter.js`):
 - `name` (requerido, kebab-case)
@@ -94,6 +94,8 @@ system prompt y permisos (revisión de código, auditoría de seguridad, plannin
 **Slash command vs CLI**:
 - CLI: cuando el output son datos que el usuario lee (`instinct status`, `context --recommend`)
 - Slash command: cuando el output es un prompt que el agente luego ejecuta (`/prd` → prd-agent corre)
+
+**CLIs de validación del pack** (zero-deps, exit 0/1, `--json` donde aplica): `counts.js`, `validate-frontmatter.js`, `verify-lockfile.js`, `smoke-test.js`, `lint-docs.js` (con baseline), `wiring-test.js`, `eval-static.js` (invariantes), `measure-tokens.js` (presupuesto de tokens), `installer-test.js` (verificación del instalador). El instalador `init-opencode.js` vive en la raíz (no en `bin/`).
 
 ### 5. Sub-agente (capa 3, contexto aislado)
 

@@ -105,7 +105,17 @@ const skills = fs.existsSync('.agents/skills') ? fs.readdirSync('.agents/skills'
 const commands = countFiles('.opencode/commands', '.md');
 const binScripts = countFiles('.opencode/bin', '.js');
 
-check(`agents (got ${agents}, expected 55+)`, () => agents >= 55);
+// A stack-filtered install keeps only the core + language agents (~33-38),
+// so the master threshold (55) would fail. `.opencode/.stack` records the
+// detected stack; `--all-agents` (and unknown stacks) leave no marker.
+let agentsMin = 55;
+try {
+  if (fs.existsSync('.opencode/.stack')) {
+    const s = fs.readFileSync('.opencode/.stack', 'utf8').trim();
+    if (s && s !== 'all') agentsMin = 30;
+  }
+} catch { /* sin marcador -> umbral del pack maestro */ }
+check(`agents (got ${agents}, expected ${agentsMin}+)`, () => agents >= agentsMin);
 check(`skills (got ${skills}, expected 10+)`, () => skills >= 10);
 check(`commands (got ${commands}, expected 47+)`, () => commands >= 47);
 check(`bin scripts (got ${binScripts}, expected 2+)`, () => binScripts >= 2);

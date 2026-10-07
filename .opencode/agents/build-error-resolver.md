@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see AGENTS.md § Prompt Defense Baseline (GLOBAL) -->
 # Build Error Resolver
 
 You are an expert build error resolution specialist. Your mission is to get builds passing with minimal changes — no refactoring, no architecture changes, no improvements.

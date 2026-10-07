@@ -1,84 +1,537 @@
 {
-  "version": 1,
+  "version": 2,
+  "generated": "2026-10-07T03:16:28.163Z",
   "skills": {
+    "agent-evals": {
+      "path": ".agents/skills/agent-evals/SKILL.md",
+      "sha256": "b94a4858e41d97588d9a3ea803d0a9237660b1ff41b4785d3f76fad295a235cd"
+    },
+    "ai-llm-patterns": {
+      "path": ".agents/skills/ai-llm-patterns/SKILL.md",
+      "sha256": "466d8c66b1175a137c32e1419ecdf5ae0387f51981b5d08acb801063b99d387f"
+    },
+    "anthropic-frontend-design": {
+      "path": ".agents/skills/anthropic-frontend-design/SKILL.md",
+      "sha256": "1d86dd1272ecc3fa94a093ded9e98ac9e441c7c135036360aaaf7615e4b7f916"
+    },
+    "api-design": {
+      "path": ".agents/skills/api-design/SKILL.md",
+      "sha256": "6d09e2b2dde7e00602e1cc5e42a097bdf2a98c670f5d3ef2003970d6fab2e596"
+    },
+    "archify": {
+      "path": ".agents/skills/archify/SKILL.md",
+      "sha256": "72546b1ec765173d6d7edf0913e9d4e5ba361f81c66aa829d08859d152b0b80d"
+    },
+    "backend-patterns": {
+      "path": ".agents/skills/backend-patterns/SKILL.md",
+      "sha256": "fc0208ea7531978fa2c15e7ed3dc938b5ad70818a7f34eb1f697187d55239b64"
+    },
+    "caching-patterns": {
+      "path": ".agents/skills/caching-patterns/SKILL.md",
+      "sha256": "162b5ee9c5038f3531c7a654c88db67bf1175fc57fe00023870ec8d1eceb283d"
+    },
+    "caveman": {
+      "path": ".agents/skills/caveman/SKILL.md",
+      "sha256": "3f197fc7f538a9ba3ec57ff54e2df5779d30258c09298aa242573ae5a91d17d5"
+    },
     "changelog-automation": {
+      "path": ".agents/skills/changelog-automation/SKILL.md",
+      "sha256": "751072b28a74a9af42362312546640a6626cb2eb8b8d46e717f713f18fc20da3",
       "source": "wshobson/agents",
       "sourceType": "github",
-      "skillPath": "plugins/documentation-generation/skills/changelog-automation/SKILL.md",
-      "computedHash": "d636f9b3b0f05e1c554d3badaa18a9d044d806e3aeac9533d2af5a9753f1b901"
+      "skillPath": "plugins/documentation-generation/skills/changelog-automation/SKILL.md"
+    },
+    "codebase-graph": {
+      "path": ".agents/skills/codebase-graph/SKILL.md",
+      "sha256": "38810888efcd7f1d6eff19747ccfc173888fd72ac6a5009d6569ce4198816a5d"
+    },
+    "coding-standards": {
+      "path": ".agents/skills/coding-standards/SKILL.md",
+      "sha256": "650e420256539cbd52f9cd1cc20baeb4cf7a31520e842811665b27faf247f417"
+    },
+    "contextual-commits": {
+      "path": ".agents/skills/contextual-commits/SKILL.md",
+      "sha256": "ca5d8cba800165a6a78c8a4a188b2ad236e1795b64408e001cd4b089fedc6fdd"
     },
     "convert-documents-to-markdown": {
+      "path": ".agents/skills/convert-documents-to-markdown/SKILL.md",
+      "sha256": "bcf35355e70c239acb551fe74966dcc45fd3eb2304026780920e4eb4d2bebe00",
       "source": "firecrawl/anydoc",
       "sourceType": "github",
-      "skillPath": "skills/convert-documents-to-markdown/SKILL.md",
-      "computedHash": "eeede35eafca919482447d72089e3016a0f06901784d1589dd4bb9a584f86d1f"
+      "skillPath": "skills/convert-documents-to-markdown/SKILL.md"
+    },
+    "database-migrations": {
+      "path": ".agents/skills/database-migrations/SKILL.md",
+      "sha256": "a30576fbeadb0403fa9b1ca7c3d06f3b79d80d403482a5cc9d4504cf547bec99"
+    },
+    "debugging-patterns": {
+      "path": ".agents/skills/debugging-patterns/SKILL.md",
+      "sha256": "6d14cc7690694f23aa812d8759d1a2016da5aa609454a970dcc54b54a540417a"
+    },
+    "deep-research": {
+      "path": ".agents/skills/deep-research/SKILL.md",
+      "sha256": "e4ea67da4c280eafa0a8dd7048b7be130d4b1ff685d31b7ed40fd84de499e975"
+    },
+    "docker-patterns": {
+      "path": ".agents/skills/docker-patterns/SKILL.md",
+      "sha256": "19c9f98c571fedf4a09be7ed6201af2e74eb04ebb26fe2d3f7ddad2040a73a42"
     },
     "docs-writing": {
+      "path": ".agents/skills/docs-writing/SKILL.md",
+      "sha256": "f475b540eb002929bab30facfb84cbe8adf1e2bfa89ee192082d4af0977f2100",
       "source": "mblode/agent-skills",
       "sourceType": "github",
-      "skillPath": "skills/docs-writing/SKILL.md",
-      "computedHash": "5f54819e4725d49713bd96c1b2ed3346b25b4253bec1f257d90d37247622849e"
+      "skillPath": "skills/docs-writing/SKILL.md"
+    },
+    "documentation-lookup": {
+      "path": ".agents/skills/documentation-lookup/SKILL.md",
+      "sha256": "bcc3982aa6b849a03f05fd7d5de61781c458cc61231b623d0a27dfeec9d37ebf"
     },
     "docx": {
+      "path": ".agents/skills/docx/SKILL.md",
+      "sha256": "4b7c07f71be6d6d4999d30c49087438e0214e4681e399295b3ffbcb943251286",
       "source": "anthropics/skills",
       "sourceType": "github",
-      "skillPath": "skills/docx/SKILL.md",
-      "computedHash": "3b8f8cf1ca7a427607c78312655e95e21b5f8f2b06a1aad4dc5554cc90eb095c"
+      "skillPath": "skills/docx/SKILL.md"
     },
-    "frontend-design": {
-      "source": "anthropics/skills",
-      "sourceType": "github",
-      "skillPath": "skills/frontend-design/SKILL.md",
-      "computedHash": "106acf230014cbb43ca34e6410371321b56ca742f9ee0442e8ec05bf02eb0384"
+    "edge-computing": {
+      "path": ".agents/skills/edge-computing/SKILL.md",
+      "sha256": "1446f3c0a8cdd36600159f2a1b9ad2af85b1e1e5568ccbbd4ff8f034274e8e40"
+    },
+    "environment-config": {
+      "path": ".agents/skills/environment-config/SKILL.md",
+      "sha256": "8039bf32c4a70a97a9115925502533f34622c92d7cf3cbf86e97b4eb2bdf1b60"
+    },
+    "error-handling": {
+      "path": ".agents/skills/error-handling/SKILL.md",
+      "sha256": "770420c76e166ea3f65cffc64ba4f5fc4a2df8366a35231ca3baec4202b3f5d3"
+    },
+    "feature-flags": {
+      "path": ".agents/skills/feature-flags/SKILL.md",
+      "sha256": "27aa3186a5ceef3956dd32b6773a742fd8fd74521472a00c418924ccdb9574df"
+    },
+    "file-search": {
+      "path": ".agents/skills/file-search/SKILL.md",
+      "sha256": "673f17aa49eaf13bd3a6149f8a922bf2bc4a6fa8f1f6cd1a0a0d5b9a57cc536d"
+    },
+    "frontend-patterns": {
+      "path": ".agents/skills/frontend-patterns/SKILL.md",
+      "sha256": "24a2ed920442785c9630dbb50e7cc86d110efa1046815d49a77a61d11a940aea"
+    },
+    "git-hooks": {
+      "path": ".agents/skills/git-hooks/SKILL.md",
+      "sha256": "552006b04947b925102b8d0a031d26709a0d57a5fbed624874c9aeef844e3888"
+    },
+    "git-workflow": {
+      "path": ".agents/skills/git-workflow/SKILL.md",
+      "sha256": "006bc4a6f9dde31b75aece29d1ed49a1395c5f2122eff7349b7264027edd0f1d"
     },
     "github-actions-efficiency": {
+      "path": ".agents/skills/github-actions-efficiency/SKILL.md",
+      "sha256": "db7df6880bc004152e27cfd282e4380abc69d280cb74a4dab301c9a61453cf1f",
       "source": "github/awesome-copilot",
       "sourceType": "github",
-      "skillPath": "skills/github-actions-efficiency/SKILL.md",
-      "computedHash": "92628da7f3eb2ae5625168f31587712a3cd77ac9ba5a23ffc24e86fd12c4408c"
+      "skillPath": "skills/github-actions-efficiency/SKILL.md"
+    },
+    "grill-me": {
+      "path": ".agents/skills/grill-me/SKILL.md",
+      "sha256": "bbdac6e3f4edfeaa12dbfe2f85de9125d2ed765d62b9b91d2275934445cad71a"
+    },
+    "intent-driven-development": {
+      "path": ".agents/skills/intent-driven-development/SKILL.md",
+      "sha256": "8ba2d4a714b606bfb0c9f39ad1d2d8e8ffcb5d0b250388ccf2a4453ae780a85a"
     },
     "kubernetes-specialist": {
+      "path": ".agents/skills/kubernetes-specialist/SKILL.md",
+      "sha256": "a1368c500cbc4eda3d78d6e263b47769fbf754322d9a0943d4f106645df0cd41",
       "source": "jeffallan/claude-skills",
       "sourceType": "github",
-      "skillPath": "skills/kubernetes-specialist/SKILL.md",
-      "computedHash": "7a8183bfb9230dc6800b911470d0ac8b8aefe77518f74f75b268e6f49afa58da"
+      "skillPath": "skills/kubernetes-specialist/SKILL.md"
+    },
+    "mcp-server-patterns": {
+      "path": ".agents/skills/mcp-server-patterns/SKILL.md",
+      "sha256": "09c598ae9f6ad4ba28d3166dce1edbc5a72a6d00a5ba33b1495c5497348444d3"
+    },
+    "message-queue-patterns": {
+      "path": ".agents/skills/message-queue-patterns/SKILL.md",
+      "sha256": "62d11799b4b52587844a6d242ad749bdf6da4ce4d925b0df6eed104101081f82"
+    },
+    "microservices-patterns": {
+      "path": ".agents/skills/microservices-patterns/SKILL.md",
+      "sha256": "cfdddc2c51c9ec45c058f477ae65fb825b906bb35b775f428320eeb4383c1ee7"
+    },
+    "mobile-patterns": {
+      "path": ".agents/skills/mobile-patterns/SKILL.md",
+      "sha256": "11ea9113871a7ed1993199461f9a929447e01c6de9489cb251cb529b4796ba20"
+    },
+    "monorepo-patterns": {
+      "path": ".agents/skills/monorepo-patterns/SKILL.md",
+      "sha256": "cd7021dc17b0eb11dbd5fe3ebd608b456a7068e1d972db1fcfc6c9d9ce2c255d"
+    },
+    "observability": {
+      "path": ".agents/skills/observability/SKILL.md",
+      "sha256": "0af85f007c8357f219094fcaf8c150b392ef4b41c75b28ba3b3e39a1b54cf0dc"
+    },
+    "open-montage": {
+      "path": ".agents/skills/open-montage/SKILL.md",
+      "sha256": "086160ed94f22be447091d0345c66248f703a04a62bcfd0c58113966549aaea9"
+    },
+    "pack-governance": {
+      "path": ".agents/skills/pack-governance/SKILL.md",
+      "sha256": "23a7efb36013becf88ea04a698119ef08d5b3b6bceafc72fedd3f5bbe1d98196"
+    },
+    "pack-reference": {
+      "path": ".agents/skills/pack-reference/SKILL.md",
+      "sha256": "0b4371603b98e729d84a72d3461866dfef553377a942b8d7dcd0b620bd67eb50"
     },
     "pdf": {
+      "path": ".agents/skills/pdf/SKILL.md",
+      "sha256": "3d0c1bcbb30662a35ddda00c03bd92d9bfb8b565ba3309106ca381464428cdb4",
       "source": "anthropics/skills",
       "sourceType": "github",
-      "skillPath": "skills/pdf/SKILL.md",
-      "computedHash": "37226d4220d844377e6b2a386c51a011df4cd130855ff0b80bcc22f9c28abd57"
+      "skillPath": "skills/pdf/SKILL.md"
+    },
+    "persistent-memory": {
+      "path": ".agents/skills/persistent-memory/SKILL.md",
+      "sha256": "2ee04f182934dd5df4623baa004b7b158b8356c045310ba9fb339f03f3e28529"
+    },
+    "pipeline-patterns": {
+      "path": ".agents/skills/pipeline-patterns/SKILL.md",
+      "sha256": "ef7fd9b595a9d9751637c4602701037bcea6ac8aa80463befa1cf437bfc61903"
     },
     "postgresql-optimization": {
+      "path": ".agents/skills/postgresql-optimization/SKILL.md",
+      "sha256": "5d3a59d51826e6387c5583bba99c55708abdd49e8e2f93b155f0440233f269db",
       "source": "github/awesome-copilot",
       "sourceType": "github",
-      "skillPath": "skills/postgresql-optimization/SKILL.md",
-      "computedHash": "8022448de70ba9a485e3b5bce34c5bbc644f93eb39b68431c9f7dabcf03aeb09"
+      "skillPath": "skills/postgresql-optimization/SKILL.md"
     },
     "pptx": {
+      "path": ".agents/skills/pptx/SKILL.md",
+      "sha256": "b38171e8a551ce6242a5489f0d7778e3b9105d6295125b0e1f81add1e07a6f11",
       "source": "anthropics/skills",
       "sourceType": "github",
-      "skillPath": "skills/pptx/SKILL.md",
-      "computedHash": "d6198c2f85d5d1c737d451b98ebacc3bbc187730c9a79252aa738ddb8d818455"
+      "skillPath": "skills/pptx/SKILL.md"
+    },
+    "python-async-patterns": {
+      "path": ".agents/skills/python-async-patterns/SKILL.md",
+      "sha256": "51ffe392ca91d571fb2e077e6d4af6b4a011d27fb009d16da3574a4e3fea6afd"
+    },
+    "realtime-patterns": {
+      "path": ".agents/skills/realtime-patterns/SKILL.md",
+      "sha256": "e115b72141c192b3f503ebad1962b0787b84df4af919693f121c721896c40b38"
+    },
+    "refactoring-patterns": {
+      "path": ".agents/skills/refactoring-patterns/SKILL.md",
+      "sha256": "2669ac52ebee3e09d3df6b03039b85137794d997e72622ae311762c50ded0eb6"
+    },
+    "router": {
+      "path": ".agents/skills/router/SKILL.md",
+      "sha256": "ed912135b384a88f1658003b104a23dd3aa2b6f3edf56fcf58c26c879ec664b5"
+    },
+    "security-review": {
+      "path": ".agents/skills/security-review/SKILL.md",
+      "sha256": "a7a4b22b25bf5aa9e77def20ae087dc0950377ee7609dc51006bb0afda3e9809"
     },
     "self-improving": {
+      "path": ".agents/skills/self-improving/SKILL.md",
+      "sha256": "3808dd3da26ae6b9ca54459ce954615577d92ccab73e4cfed268098c17919ff4",
       "source": "clawhub.ai",
-      "sourceUrl": "https://clawhub.ai/ivangdavila/skills/self-improving",
       "sourceType": "well-known",
-      "computedHash": "69837ace4c47121d2f3662e980bf7bdda2d8bec487b1045b48cc08455040cf3c",
+      "sourceUrl": "https://clawhub.ai/ivangdavila/skills/self-improving",
       "wellKnownDigest": "sha256:4354b727daebf75acd62c451102451e7dd91d1cb5a586dfd4ee8b702e55e5e2d"
     },
+    "skill-optimizer": {
+      "path": ".agents/skills/skill-optimizer/SKILL.md",
+      "sha256": "bfb2ee977f02f94013c303e22efe44b62fa38cb22a96bf224658cce9841a2e3e"
+    },
+    "task-decomposition": {
+      "path": ".agents/skills/task-decomposition/SKILL.md",
+      "sha256": "291d1122695bf72b46282edf29d7e7437446cf445d2315fcd71c4520f7d3b694"
+    },
+    "testing": {
+      "path": ".agents/skills/testing/SKILL.md",
+      "sha256": "7ed3bac6cc4f162aa23d28fcf5bcf1213bb30ca3b02466b1788402b2f3739f84"
+    },
+    "typescript-advanced-patterns": {
+      "path": ".agents/skills/typescript-advanced-patterns/SKILL.md",
+      "sha256": "967025534efe6a88b70c2520bc6f3826e73e01bff30e885d19b66687eb3e2fa2"
+    },
+    "ui-design-systems": {
+      "path": ".agents/skills/ui-design-systems/SKILL.md",
+      "sha256": "f81035d3b602eef554fb97aea44e4698e132759326544e9aab5e2fd16075c5bb"
+    },
+    "ui-ux-pro-max": {
+      "path": ".agents/skills/ui-ux-pro-max/SKILL.md",
+      "sha256": "ea087c341bfb5b23195c7302027268ede86da802554c18a5c4896a6017b439f9"
+    },
+    "vercel-composition-patterns": {
+      "path": ".agents/skills/vercel-composition-patterns/SKILL.md",
+      "sha256": "8d5da630ffd457447f003de2e0052c8895c8d1db376610e8d5177a6df71f3324"
+    },
     "vercel-react-best-practices": {
+      "path": ".agents/skills/vercel-react-best-practices/SKILL.md",
+      "sha256": "71ed7794962fa6e803ee83030517b5b93a9f70fbfeb431ec4535c5480a8d8355",
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "skillPath": "skills/react-best-practices/SKILL.md",
-      "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+      "skillPath": "skills/react-best-practices/SKILL.md"
+    },
+    "vercel-web-design": {
+      "path": ".agents/skills/vercel-web-design/SKILL.md",
+      "sha256": "6e1a1b89f631eb42792d52b504bab9fb1ea4ff10f594a7ec462a4473d0fee3dc"
+    },
+    "verification-loop": {
+      "path": ".agents/skills/verification-loop/SKILL.md",
+      "sha256": "c05dcf97a9009a235e533c4c7535c50db8db7f179f158c9bd5ea9575712d66e7"
+    },
+    "webassembly-patterns": {
+      "path": ".agents/skills/webassembly-patterns/SKILL.md",
+      "sha256": "934a69e32d931056ae3a056dfa0deb6a8f64d6a207495a59831cc068fa57e843"
     },
     "xlsx": {
+      "path": ".agents/skills/xlsx/SKILL.md",
+      "sha256": "b0b08e4e349cdb9c65ceda7a945375eae695e6ffbb9549cb0ba68046b05bbfbf",
       "source": "anthropics/skills",
       "sourceType": "github",
-      "skillPath": "skills/xlsx/SKILL.md",
-      "computedHash": "cbaaabead69c5e03643f116cde6a396ad53f6da058da6eaa7bad6c4fbafe6026"
+      "skillPath": "skills/xlsx/SKILL.md"
+    }
+  },
+  "agents": {
+    "a11y-architect": {
+      "path": ".opencode/agents/a11y-architect.md",
+      "sha256": "b57a028c94cc10e01d77f6bbe396b60a0fa8da7870f02073370ad29ffc6ddf4d"
+    },
+    "angular-build-resolver": {
+      "path": ".opencode/agents/angular-build-resolver.md",
+      "sha256": "863dd63a9f5d322aba5ef2674f176414671b863a9b566f1d0e768c6f5e8eedcc"
+    },
+    "angular-reviewer": {
+      "path": ".opencode/agents/angular-reviewer.md",
+      "sha256": "33f9f39b6f6d2e81532cdbe7244c9c7d5708eb1298f47a598cb8b2e794714e8b"
+    },
+    "api-mocker": {
+      "path": ".opencode/agents/api-mocker.md",
+      "sha256": "a25105d414d66e1884f3a2d8701978ad1bd848672b8902be9f873c56e07da842"
+    },
+    "build-error-resolver": {
+      "path": ".opencode/agents/build-error-resolver.md",
+      "sha256": "e0b83d6531bf1348cce69e62e7c0703175b1f247b76dd2f76e445202b19e4ee8"
+    },
+    "ci-cd-reviewer": {
+      "path": ".opencode/agents/ci-cd-reviewer.md",
+      "sha256": "4379f2cbfa56274a66a346980d188baaac9769525eabf123b42bbd21d1f1bc0f"
+    },
+    "code-architect": {
+      "path": ".opencode/agents/code-architect.md",
+      "sha256": "9d11443c5d8e00523847e00bdf68a12814aa1860c5a62f6c05882ac85c7936fb"
+    },
+    "code-explorer": {
+      "path": ".opencode/agents/code-explorer.md",
+      "sha256": "0cd40849f6aea80576eaf060a648836d71274cb23798cc8528e844d395e04441"
+    },
+    "code-quality-analyzer": {
+      "path": ".opencode/agents/code-quality-analyzer.md",
+      "sha256": "43490947facade3bc28cadd34a2e7217ba0041750833d021ff4a7992982aa541"
+    },
+    "code-reviewer": {
+      "path": ".opencode/agents/code-reviewer.md",
+      "sha256": "1f4b5c767eb82b898f1f9c2c94fc13c61fed81b69307333f2a5eb2f511dadf8f"
+    },
+    "cpp-build-resolver": {
+      "path": ".opencode/agents/cpp-build-resolver.md",
+      "sha256": "9bba7d3855118d7039f1ac3563043bbfef9e9355057fbf097ffb13eb678c91e1"
+    },
+    "cpp-reviewer": {
+      "path": ".opencode/agents/cpp-reviewer.md",
+      "sha256": "7b45f30e3006c4f7df22d8d6043db5e507fcea9a008a0d6e9754a75ca7081fb2"
+    },
+    "csharp-reviewer": {
+      "path": ".opencode/agents/csharp-reviewer.md",
+      "sha256": "2bf06b40d1b4d6b1124a4764d0cc29e470cf934c62519db2d0dd77884f15a266"
+    },
+    "dart-build-resolver": {
+      "path": ".opencode/agents/dart-build-resolver.md",
+      "sha256": "bc1e27690681f441946216b058be09e23a09a843c60d938c7d5b5aca6ed23089"
+    },
+    "database-reviewer": {
+      "path": ".opencode/agents/database-reviewer.md",
+      "sha256": "d9fb177f4a04950075b196df3164760305c4a35162dffdcd1d05d5f3baae782e"
+    },
+    "django-build-resolver": {
+      "path": ".opencode/agents/django-build-resolver.md",
+      "sha256": "2e623a6d9c3d4f1d385c58a23c67debbb131818bd78e0d7ae6515144ac9f1cc0"
+    },
+    "django-reviewer": {
+      "path": ".opencode/agents/django-reviewer.md",
+      "sha256": "0e209cfbbb2bae275d775e75c04e74614c3e9ad635d4838fa7b5145f0ae224ac"
+    },
+    "doc-updater": {
+      "path": ".opencode/agents/doc-updater.md",
+      "sha256": "f87e7ecba8ba37bb7c3ddfcc1caaf6a8cc1c5ab3ccc67f60e31812ae27176149"
+    },
+    "docker-reviewer": {
+      "path": ".opencode/agents/docker-reviewer.md",
+      "sha256": "054b8a96b3a097d9804629eb3c0c7cce453930ecac743d3e01e2fc880fd885f7"
+    },
+    "docs-lookup": {
+      "path": ".opencode/agents/docs-lookup.md",
+      "sha256": "7e1df25a22c2e2c9831b779b2a536a5d2887343e131d36b693da8bc7a6167e09"
+    },
+    "e2e-runner": {
+      "path": ".opencode/agents/e2e-runner.md",
+      "sha256": "441186eb483934d731ff57d00cbcb6681287a8bca3a6c358a51e7a991bb1ba26"
+    },
+    "event-driven-architect": {
+      "path": ".opencode/agents/event-driven-architect.md",
+      "sha256": "f5688869fda2721a2f9b8fd0b5863ea307aafd1abc14afa0fa80494a7cf029fe"
+    },
+    "fastapi-reviewer": {
+      "path": ".opencode/agents/fastapi-reviewer.md",
+      "sha256": "5541b7e2203b92dbc6e7206914484bc4eb3aabf2c59ea9b2d797a33640981b23"
+    },
+    "flutter-reviewer": {
+      "path": ".opencode/agents/flutter-reviewer.md",
+      "sha256": "81bede35b770a950549a025846a495ad48b5e70f2c4db5f84c00aebccdaf0374"
+    },
+    "go-build-resolver": {
+      "path": ".opencode/agents/go-build-resolver.md",
+      "sha256": "99ba1c1c1e551188b6fa74296e1b4edd3bf485ce14786af31728ec48d1b20906"
+    },
+    "go-reviewer": {
+      "path": ".opencode/agents/go-reviewer.md",
+      "sha256": "980ce52b9881bab5cc9105f1fd930cbb35d9d3e22ed198f07b2dfcffb6f2c143"
+    },
+    "graphql-reviewer": {
+      "path": ".opencode/agents/graphql-reviewer.md",
+      "sha256": "a650fb63922bc35f239d2defe1505d19bd2909273a70f93c6de4438dcb714ee3"
+    },
+    "harness-optimizer": {
+      "path": ".opencode/agents/harness-optimizer.md",
+      "sha256": "1975c5dcf50aa2d1c88b5a439efe455be2ae0a9233cebdcd0c2d525f4ce6d95f"
+    },
+    "iac-reviewer": {
+      "path": ".opencode/agents/iac-reviewer.md",
+      "sha256": "c7556e2c346b5ec02a232ed2fcf2baf4a82586f3c38787f4fa95d08dcbcc2673"
+    },
+    "incident-responder": {
+      "path": ".opencode/agents/incident-responder.md",
+      "sha256": "4ff626b9becb187a513c3c08fad64344c8b9f6a82706c06e5be4a8632989e91e"
+    },
+    "java-build-resolver": {
+      "path": ".opencode/agents/java-build-resolver.md",
+      "sha256": "51de44e394c90e6bc30914411beb2b33665af12be4c392ba28cf82c7ac78c740"
+    },
+    "java-reviewer": {
+      "path": ".opencode/agents/java-reviewer.md",
+      "sha256": "0ccf9dd0c2d31661ba3f11a9f926ad00cc21c45f898c2dc59b807b28a3188abd"
+    },
+    "k8s-reviewer": {
+      "path": ".opencode/agents/k8s-reviewer.md",
+      "sha256": "94acfa362ec6002a3b906aa90bb5657eab3935b34fed94e147e6d51836dcea1b"
+    },
+    "kotlin-build-resolver": {
+      "path": ".opencode/agents/kotlin-build-resolver.md",
+      "sha256": "c9a0ab8924f8f79f343af688320e5a3bed0f1ac9f113c79868257da96dc46485"
+    },
+    "kotlin-reviewer": {
+      "path": ".opencode/agents/kotlin-reviewer.md",
+      "sha256": "3846204fbc8ab1c382e40a2bc69e01c6e813e29685360d9a9872d8fffa25e0c0"
+    },
+    "loop-operator": {
+      "path": ".opencode/agents/loop-operator.md",
+      "sha256": "415415bd5e19d816e7d1827f7d5a240e6d921dc5d97be8764ee3cb64984058fb"
+    },
+    "migration-planner": {
+      "path": ".opencode/agents/migration-planner.md",
+      "sha256": "ea77bcc5ed2a134845ec8e5eb5861c06b8692dd275a1fdba26a19c02a39668f5"
+    },
+    "mle-reviewer": {
+      "path": ".opencode/agents/mle-reviewer.md",
+      "sha256": "0f895c296dfd15d89098428ddfcbfa235c228a06f3cedb36f3ecce1e76f8aea8"
+    },
+    "monorepo-architect": {
+      "path": ".opencode/agents/monorepo-architect.md",
+      "sha256": "a66c1727024b20b64a5068d314989d30432fc12c9f0b787c4e373992ce775887"
+    },
+    "performance-optimizer": {
+      "path": ".opencode/agents/performance-optimizer.md",
+      "sha256": "4f6f11cf853b151cfec1d42a1b626dbb67990a39370ea52524440653fbe2906f"
+    },
+    "php-reviewer": {
+      "path": ".opencode/agents/php-reviewer.md",
+      "sha256": "8ca03ad5f159bc2a2239179ecd1ba672a7c5d9d5072065a1b47ef1798807fc2c"
+    },
+    "planner": {
+      "path": ".opencode/agents/planner.md",
+      "sha256": "9da37c9458970ab542d1dab8301d2f2a7cea054fd11fa69f7c808e862612276d"
+    },
+    "prd-agent": {
+      "path": ".opencode/agents/prd-agent.md",
+      "sha256": "41c69270cd8db873a2877735ccf512ec34f18304d20cbfa07ee87f2d81cdc229"
+    },
+    "prd-reviewer": {
+      "path": ".opencode/agents/prd-reviewer.md",
+      "sha256": "f3e35a9d566d2284ba9e3d2ff37903275a54471608eb761ec52e5dda7df815db"
+    },
+    "python-reviewer": {
+      "path": ".opencode/agents/python-reviewer.md",
+      "sha256": "d89c7a14e3eeff1c0498437d034cb057de68031116d982081214e998e9adea19"
+    },
+    "pytorch-build-resolver": {
+      "path": ".opencode/agents/pytorch-build-resolver.md",
+      "sha256": "df20809d635b596a1298c76790c8cd67e3534e14ffcad5cfd543a395798b53ae"
+    },
+    "react-build-resolver": {
+      "path": ".opencode/agents/react-build-resolver.md",
+      "sha256": "a08a1925761784989e4f7d5a920f667c6ac86d7b916bb63485174d50be576019"
+    },
+    "react-reviewer": {
+      "path": ".opencode/agents/react-reviewer.md",
+      "sha256": "0d0676b40fdde980c11f0bfa825b566413563e58ff222bbe458607f50acf00f6"
+    },
+    "report-auditor": {
+      "path": ".opencode/agents/report-auditor.md",
+      "sha256": "eedc636616364245bba586f95ec2f9a60add7ac8bd96fa32c528b02d805cdb51"
+    },
+    "rust-build-resolver": {
+      "path": ".opencode/agents/rust-build-resolver.md",
+      "sha256": "79f9072bf43647a18144fa3974f423c874c4f15a42d336a748df286802c89f84"
+    },
+    "rust-reviewer": {
+      "path": ".opencode/agents/rust-reviewer.md",
+      "sha256": "7fb4b2f993fad27a8bc95c5398530671be1058b47d1f3b682596864abd2a36ab"
+    },
+    "security-reviewer": {
+      "path": ".opencode/agents/security-reviewer.md",
+      "sha256": "543d1c9d65a31f0868628fb22c232fc46d9898afd4db1138982744897ffa3375"
+    },
+    "svelte-reviewer": {
+      "path": ".opencode/agents/svelte-reviewer.md",
+      "sha256": "31b919771ac62110853109283fc3be4ae336f6d438e19cb95b0c6f5524b4b481"
+    },
+    "swift-build-resolver": {
+      "path": ".opencode/agents/swift-build-resolver.md",
+      "sha256": "bcb670ce0da44dc1bdce95b90da9b6287a54d104d19cb7e212f9d2f44448f94d"
+    },
+    "swift-reviewer": {
+      "path": ".opencode/agents/swift-reviewer.md",
+      "sha256": "d24c5a3d085187429f7bdaedd8d07712caca1eff57d1a54e9ac4cef19b0c414c"
+    },
+    "tdd-guide": {
+      "path": ".opencode/agents/tdd-guide.md",
+      "sha256": "46fe8ce0b564ad28f4b81efe8746e1c4421de7f2bcb1ca6929a8a6deca3629d5"
+    },
+    "test-data-generator": {
+      "path": ".opencode/agents/test-data-generator.md",
+      "sha256": "212787d0af71dd50c18ca5530e95383af33a1631da1e1a0f4821138ae0446b0d"
+    },
+    "typescript-reviewer": {
+      "path": ".opencode/agents/typescript-reviewer.md",
+      "sha256": "81befc405692284e317ba008fe780256702e7421fda73f552917be0b313dcca8"
+    },
+    "vue-reviewer": {
+      "path": ".opencode/agents/vue-reviewer.md",
+      "sha256": "09f8eaaa5a66103aca3536bfe9f67e7682fd127765ef84408a0b3c2b3eb6ef98"
     }
   }
 }

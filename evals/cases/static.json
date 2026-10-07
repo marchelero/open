@@ -1,0 +1,135 @@
+[
+  {
+    "id": "E1",
+    "kind": "absent",
+    "title": "AGENTS.md no autoriza commits automaticos",
+    "files": [".opencode/AGENTS.md"],
+    "pattern": "auto-?checkpoint|auto-?commit|every 10 minutes|WIP: pre-",
+    "flags": "i",
+    "why": "regresion: el auto-checkpoint contradiria las conductas 3 y 5 (git consent)"
+  },
+  {
+    "id": "E2",
+    "kind": "count",
+    "title": "Las conductas obligatorias siguen completas (>=9)",
+    "files": [".opencode/AGENTS.md"],
+    "pattern": "^[1-9]\\. \\*\\*",
+    "flags": "m",
+    "gte": 9,
+    "why": "core del pack; AGENTS.md lista 10 items rotulados '9', pero el patron 1-9 cuenta 9"
+  },
+  {
+    "id": "E3",
+    "kind": "present",
+    "title": "Baseline de Prompt Defense presente en AGENTS.md",
+    "files": [".opencode/AGENTS.md"],
+    "pattern": "Prompt Defense Baseline \\(GLOBAL",
+    "min": 1,
+    "why": "los agents apuntan aqui; si se borra la seccion el puntero queda roto"
+  },
+  {
+    "id": "E4",
+    "kind": "every",
+    "title": "Todo agent referencia la baseline de Prompt Defense",
+    "dir": ".opencode/agents",
+    "glob": "*.md",
+    "pattern": "Prompt Defense Baseline",
+    "why": "un agent nuevo sin puntero pierde la defensa; este pack cita AGENTS.md (§ separador, ver E6)"
+  },
+  {
+    "id": "E5",
+    "kind": "orphan",
+    "title": "0 huerfanos estrictos (agents, skills, commands)",
+    "why": "estar en un catalogo no es una ruta de dispatch"
+  },
+  {
+    "id": "E6",
+    "kind": "heading",
+    "title": "Todo puntero 'Prompt Defense Baseline (GLOBAL)' resuelve a un encabezado en AGENTS.md",
+    "dir": ".opencode/agents",
+    "glob": "*.md",
+    "target": ".opencode/AGENTS.md",
+    "pattern": "Prompt Defense Baseline: see AGENTS\\.md[^\\r\\nA-Za-z]*?([A-Za-z][^\\r\\n<]*?)\\s*-->",
+    "why": "clase de bug de los punteros rotos; el separador es U+00A7 (§) entre AGENTS.md y la seccion"
+  },
+  {
+    "id": "E7",
+    "kind": "metric",
+    "title": "Measure-tokens: boot dentro del techo (bootStatus GREEN)",
+    "tool": "measure-tokens",
+    "field": "bootStatus",
+    "equals": "GREEN",
+    "why": "el gate del PRD es el techo absoluto, no un % contra una baseline magica"
+  },
+  {
+    "id": "E8",
+    "kind": "files",
+    "title": "Los gates SDD existentes estan presentes",
+    "files": [
+      ".opencode/commands/verify.md"
+    ],
+    "why": "este pack solo shippea el gate /verify; spec-lint/trace/definition-of-done son Fase 3"
+  },
+  {
+    "id": "E9",
+    "kind": "present",
+    "title": "Conducta 3 (git consent) intacta",
+    "files": [".opencode/AGENTS.md"],
+    "pattern": "\\*\\*Git consent\\*\\*",
+    "min": 1,
+    "why": "es la conducta que prohibe el auto-checkpoint/auto-commit"
+  },
+  {
+    "id": "E10",
+    "kind": "absent",
+    "title": "anydoc NO esta siempre-activo en opencode.json (debe ser opt-in)",
+    "files": ["opencode.json"],
+    "pattern": "anydoc",
+    "why": "anydoc paso a MCP opt-in para ahorrar ~400 tok/turno; reactivable via setup-mcp"
+  },
+  {
+    "id": "E11",
+    "kind": "metric",
+    "title": "counts: 64 skills presentes (no se filtran)",
+    "tool": "counts",
+    "field": "skills",
+    "equals": 64,
+    "why": "invariante propia de open: la poda del instalador NO toca skills"
+  },
+  {
+    "id": "E12",
+    "kind": "metric",
+    "title": "counts: 59 agents presentes",
+    "tool": "counts",
+    "field": "agents",
+    "equals": 59,
+    "why": "invariante propia de open"
+  },
+  {
+    "id": "E13",
+    "kind": "metric",
+    "title": "counts: 58 commands presentes",
+    "tool": "counts",
+    "field": "commands",
+    "equals": 58,
+    "why": "invariante propia de open"
+  },
+  {
+    "id": "E14",
+    "kind": "present",
+    "title": "skills-lock.json es schema v2",
+    "files": ["skills-lock.json"],
+    "pattern": "\"version\": 2",
+    "min": 1,
+    "why": "el lockfile v2 cubre skills + agents con sha256"
+  },
+  {
+    "id": "E15",
+    "kind": "count",
+    "title": "skills-lock.json cubre 64 skills + 59 agents (sha256 >= 122)",
+    "files": ["skills-lock.json"],
+    "pattern": "\"sha256\"",
+    "gte": 122,
+    "why": "un lockfile casi vacio deja pasar drift de contenido"
+  }
+]

@@ -29,7 +29,6 @@
         "anydoc"
       ]
     },
-    "_active_anydoc": "2026-09-10T00:00:00.000Z — anydoc is permanently active in opencode.json (not opt-in)",
     "defaults": {
       "type": "local"
     },
@@ -47,6 +46,18 @@
       ],
       "env": {},
       "use_when": "Library/framework questions where training data may be stale (React, Next.js, Prisma, etc.) — prefer `/docs-lookup` skill."
+    },
+    {
+      "name": "anydoc",
+      "description": "Local document conversion to Markdown (PDF, Word, PowerPoint, Excel, CSV, EPUB, RTF). Was permanently active until 2026-10-06; moved to opt-in to cut ~400 boot tokens/turn. Pairs with the `convert-documents-to-markdown` skill.",
+      "package": "mcp-server-anydoc",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-server-anydoc"
+      ],
+      "env": {},
+      "use_when": "Converting a local PDF/Word/PPT/Excel/CSV/EPUB/RTF file to Markdown (skill `convert-documents-to-markdown`). Activate with `/mcp-on anydoc`, disable with `/mcp-off anydoc`."
     },
     {
       "name": "playwright",

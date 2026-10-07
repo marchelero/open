@@ -222,19 +222,19 @@ In all other cases, Phase 0 is mandatory. The cost of a clear PRD is one extra r
 
 This flow writes to `docs/state/` so it can be resumed after interruption. See `docs/state/README.md` for the schema.
 
-``bash
+```bash
 # At flow start
 node .opencode/bin/state.js init orchestrate "" [<prd-path>]
-# Capture the printed path as 
+# Capture the printed path as $STATE
 
 # After each phase
-node .opencode/bin/state.js update "" <phase> '{"agentsInvoked":["..."],"filesModified":["..."]}'
+node .opencode/bin/state.js update "$STATE" <phase> '{"agentsInvoked":["..."],"filesModified":["..."]}'
 
 # On success
-node .opencode/bin/state.js complete ""
+node .opencode/bin/state.js complete "$STATE"
 
 # On error
-node .opencode/bin/state.js fail "" "<error message>"
-``
+node .opencode/bin/state.js fail "$STATE" "<error message>"
+```
 
 The flow is resumable: if interrupted, `/session-start` detects active states in `docs/state/` and offers to resume from `currentPhase`.

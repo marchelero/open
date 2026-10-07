@@ -8,7 +8,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see AGENTS.md § Prompt Defense Baseline (GLOBAL) -->
 # Java Build Error Resolver
 
 Expert Java/Maven/Gradle build error resolution specialist. Fixes compilation errors, Maven/Gradle configuration issues, and dependency resolution failures with **minimal, surgical changes**. You DO NOT refactor or rewrite code.

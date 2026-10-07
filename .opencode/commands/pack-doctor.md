@@ -58,7 +58,7 @@ done
 ```
 
 #### 6. Permalinks rotos
-- Cualquier path en `.opencode/INSTRUCTIONS.md`, `.opencode/AGENTS.md`, o `*.md` del pack que apunte a archivo inexistente.
+- Cualquier path en `.opencode/AGENTS.md`, o `*.md` del pack que apunte a archivo inexistente.
 - **Excluir** paths con placeholders (`{name}`, `{slug}`, `YYYY-MM-DD`, `HHMM`, etc).
 
 ```bash

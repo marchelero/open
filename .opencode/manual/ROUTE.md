@@ -17,6 +17,8 @@
 |--------|----------|---------------|
 | `planner` | Plan por fases con riesgos, dependencias y validación | Features complejos, refactors, cambios arquitectónicos |
 | `code-architect` | Diseño de sistema, decisiones tecnológicas, escalabilidad, plano de archivos | Decisiones arquitectónicas, features en repos existentes |
+| `event-driven-architect` | Diseño event-driven: RabbitMQ/Kafka/Redis Streams, event sourcing, CQRS, sagas | Sistemas asíncronos, colas, DLQ, idempotencia, orden de mensajes |
+| `monorepo-architect` | Turborepo/Nx/pnpm workspaces, boundaries, build caching, code sharing | Cambios en `turbo.json`/`nx.json`/`pnpm-workspace.yaml`, diseño de workspaces |
 
 ## "Quiero revisar código"
 
@@ -76,6 +78,7 @@
 |--------|----------|---------------|
 | `tdd-guide` | ROJO→VERDE→REFACTOR, cobertura 80%+ | **PROACTIVAMENTE** en features nuevas, fix de bugs o refactors |
 | `e2e-runner` | Playwright/Vercel Agent Browser E2E | Flujos críticos de usuario, pre-release |
+| `api-mocker` | Genera mocks de API (REST/GraphQL) con MSW, json-server o Express | Tests de frontend sin backend, fixtures E2E, desarrollo contra un spec de API |
 
 ## "Quiero revisar infra (IaC / K8s)"
 

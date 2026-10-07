@@ -19,9 +19,10 @@ Every agent inherits this baseline. No own copy — reference this section. Exte
 7. **Flow suggestions** — matchea /flow-feature|bugfix|refactor|security → ofrecer UNA vez. → `router`
 8. **Conditional routing** — dispatcha solo si implementar/corregir/revisar/planear, **o** >1 archivo. Q&A pura → directo. → `router`
 9. **Project context** — `docs/PROJECT.md` vigente antes de task no-trivial. → `task-decomposition`
-10. **Context cut-off** — si el contexto se llena o se comprime, SIEMPRE dejar resumen: qué se hizo, qué queda pendiente, dónde continuar. Nunca cortar sin leave-context para el próximo turno.
 ## Pointers (on-demand → skill catalog)
-Security secrets/OWASP → `security-review`. Tool truncation >200 líneas → `pack-reference`. TDD → `testing`.
+Security secrets/OWASP → `security-review`. Tool truncation >200 líneas → `pack-reference`. TDD → `testing`. Continuidad/gobernanza → `pack-governance`.
+
+> **Continuidad tras compactación**: si el contexto se comprime o se llena, o al retomar una sesión, carga el skill `pack-governance` (recuperación, handoff entre agentes, memoria de sesión). Nunca cortes sin dejar resumen para el próximo turno.
 
 ## External Tools (integrados)
 - **Archify** — diagramas de arquitectura/workflow/sequence/dataflow/lifecycle → HTML/SVG/PNG autocontenido. Skill: `archify`. CLI: `node .agents/skills/archify/bin/archify.mjs`. Uso: "analiza el repo y crea un diagrama de arquitectura con archify".

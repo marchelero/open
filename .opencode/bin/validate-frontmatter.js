@@ -233,7 +233,7 @@ function validateCrossRefs() {
     path.join(CWD, '.opencode', 'agents'),
     path.join(CWD, '.opencode', 'commands'),
     MANUAL_DIR,
-    path.join(CWD, 'INSTRUCTIONS.md'.replace(/^/, CWD)),
+    path.join(CWD, '.opencode', 'AGENTS.md'),
     path.join(CWD, 'AGENTS.md'),
     path.join(CWD, 'README.md'),
   ].filter(p => fs.existsSync(p));

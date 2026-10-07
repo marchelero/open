@@ -83,6 +83,13 @@ Create `docs/sessions/{DATE}-{SLUG}.md` with this template:
 - {skill-name} — {por qué fue útil}
 (Revisar qué skills se cargaron durante la sesión. Si ninguno, escribir "None — Q&A only")
 
+## Cost this session
+
+> Ledger file: `docs/state/cost-{ts}.json` (auto-written by `cost-ledger.js` on session idle).
+> If none exists, write "None — cost-ledger did not fire".
+
+- Agent: {agent} · Model: {model} · Tokens in/out: {N}/{M} · Cost: {USD | n/a} · estimated: {true|false}
+
 ## Open questions
 - {question 1}
 - {question 2}
@@ -110,6 +117,19 @@ cp "{FILE}" "docs/sessions/LATEST.md"
 ```
 
 This makes the next `/session-start` find it without scanning by date.
+
+### Step 5b — Reference the cost ledger
+
+The `cost-ledger.js` plugin writes `docs/state/cost-<ISO-ts>.json` when the session goes idle. Surface the most recent one in the snapshot (and thus in `LATEST.md`):
+
+```bash
+# POSIX
+LATEST_COST=$(ls -t docs/state/cost-*.json 2>/dev/null | head -1)
+# Windows PowerShell
+Get-ChildItem docs/state/cost-*.json -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+```
+
+Read that JSON and fill the `## Cost this session` section (agent, model, tokens in/out, cost, `estimated`). If no file exists yet, write `None — cost-ledger did not fire`.
 
 ### Step 6 — Refresh `docs/PROJECT.md` (auto-detect staleness)
 

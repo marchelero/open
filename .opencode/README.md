@@ -10,10 +10,10 @@ Pack portable de opencode. Cópialo a cualquier proyecto, reinicia opencode y em
 
 - **59** agents (.opencode/agents)
 - **58** commands (.opencode/commands)
-- **63** skills (.agents/skills)
-- **15** native CLIs (.opencode/bin)
-- **3** npm plugins + **1** local plugin(s)
-- **2** active MCPs + **12** optional MCP(s)
+- **64** skills (.agents/skills)
+- **20** native CLIs (.opencode/bin)
+- **3** npm plugins + **2** local plugin(s)
+- **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->
 
 > Las cifras exactas (agentes, commands, skills, plugins, MCPs, CLIs) están en el bloque `## Counts` de abajo. Se regenera con `node .opencode/bin/counts.js --update .opencode/README.md .opencode/manual/README.md .agents/skills/INDEX.md`.
@@ -55,9 +55,9 @@ Baja los plugins (vibeguard, pty, dcp) + `@opencode-ai/plugin` peer. Sin esto op
 
 Toda la documentación del pack vive dentro de `.opencode/manual/`, así se copia junto con el resto al instalar:
 
-- **[.opencode/manual/README.md](./.opencode/manual/README.md)** — punto de entrada, instalación, comandos principales
-- **[.opencode/manual/ROUTE.md](./.opencode/manual/ROUTE.md)** — qué sub-agente usar según la intención
-- **[.opencode/manual/COMMANDS.md](./.opencode/manual/COMMANDS.md)** — los 64 slash commands por intención
-- **[.opencode/manual/EXAMPLES.md](./.opencode/manual/EXAMPLES.md)** — 5 flujos completos de proyectos reales
-- **[.opencode/manual/ARCH.md](./.opencode/manual/ARCH.md)** — 4 capas de memoria, flujo PRD, ciclo de instintos
-- **[.opencode/manual/SURFACES.md](./.opencode/manual/SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI
+- **[.opencode/manual/README.md](./manual/README.md)** — punto de entrada, instalación, comandos principales
+- **[.opencode/manual/ROUTE.md](./manual/ROUTE.md)** — qué sub-agente usar según la intención
+- **[.opencode/manual/COMMANDS.md](./manual/COMMANDS.md)** — los 58 slash commands por intención
+- **[.opencode/manual/EXAMPLES.md](./manual/EXAMPLES.md)** — 5 flujos completos de proyectos reales
+- **[.opencode/manual/ARCH.md](./manual/ARCH.md)** — 4 capas de memoria, flujo PRD, ciclo de instintos
+- **[.opencode/manual/SURFACES.md](./manual/SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI

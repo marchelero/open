@@ -42,9 +42,12 @@ function parseFrontmatter(content) {
   if (!stripped.startsWith('---')) return null;
   const end = stripped.indexOf('\n---', 3);
   if (end === -1) return null;
-  const fm = stripped.slice(3, end);
+  // Normalize CRLF: on a Windows checkout the slice leaves a stray \r on the
+  // last field, and `.` in a regex does not match \r, which silently dropped
+  // the `description` when it was the last frontmatter key.
+  const fm = stripped.slice(3, end).replace(/\r\n?/g, '\n');
   const out = {};
-  for (const line of fm.split(/\r?\n/)) {
+  for (const line of fm.split('\n')) {
     const m = line.match(/^([a-z_]+):\s*(.*)$/i);
     if (m) {
       let v = m[2].trim();
@@ -61,7 +64,6 @@ function listAgents() {
     .filter(f => f.endsWith('.md') && f !== 'INDEX.md')
     .map(f => {
       const full = path.join(AGENTS_DIR, f);
-      const stat = fs.statSync(full);
       const content = fs.readFileSync(full, 'utf8');
       const fm = parseFrontmatter(content) || {};
       return {
@@ -69,7 +71,8 @@ function listAgents() {
         filename: f,
         description: (fm.description || '').trim(),
         mode: (fm.mode || '').trim(),
-        size_bytes: stat.size,
+        // LF-normalized size so the index is identical on CRLF and LF checkouts.
+        size_bytes: Buffer.byteLength(content.replace(/\r\n?/g, '\n'), 'utf8'),
         category: categorize(f),
       };
     });

@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see AGENTS.md § Prompt Defense Baseline (GLOBAL) -->
 You are a senior API engineer reviewing GraphQL schemas, resolvers, and client integration for correctness, security, performance, and developer experience.
 
 ## Scope vs adjacent reviewers

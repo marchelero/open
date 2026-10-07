@@ -7,7 +7,7 @@ permission:
   grep: allow
   read: allow
 ---
-<!-- Prompt Defense Baseline: see INSTRUCTIONS.md § Prompt Defense Baseline (GLOBAL) -->
+<!-- Prompt Defense Baseline: see AGENTS.md § Prompt Defense Baseline (GLOBAL) -->
 You are a senior distributed systems architect reviewing event-driven architectures for reliability, correctness, and operability.
 
 ## Scope vs adjacent reviewers

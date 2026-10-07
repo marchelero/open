@@ -33,6 +33,11 @@ const PKG = path.join(__dirname, '..', 'package.json');
 const ROOT_OPENCODE = path.join(ROOT, 'opencode.json');
 const MCP_OPTIONAL = path.join(__dirname, '..', 'mcp.optional.json');
 
+// Canonical files carrying an auto-managed `## Counts` block. Used as the
+// default target for `--check`/`--update` so a bare `counts.js --check` is not
+// a silent no-op (which it was until this default was added).
+const DEFAULT_COUNTS_FILES = ['.opencode/README.md', '.opencode/manual/README.md'];
+
 function countMdFiles(dir) {
   if (!fs.existsSync(dir)) return 0;
   return fs.readdirSync(dir).filter(f => f.endsWith('.md') && f !== 'INDEX.md').length;
@@ -131,7 +136,10 @@ function main() {
   const asJson = args.includes('--json');
   const check = args.includes('--check');
   const updateIdx = args.indexOf('--update');
-  const updateFiles = updateIdx >= 0 ? args.slice(updateIdx + 1).filter(a => !a.startsWith('--')) : [];
+  let updateFiles = updateIdx >= 0 ? args.slice(updateIdx + 1).filter(a => !a.startsWith('--')) : [];
+  if (updateIdx >= 0 && updateFiles.length === 0) {
+    updateFiles = DEFAULT_COUNTS_FILES.map(f => path.join(ROOT, f)).filter(p => fs.existsSync(p));
+  }
 
   const counts = compute();
 
@@ -155,8 +163,13 @@ function main() {
   }
 
   if (check) {
-    // Verify each candidate file matches what counts.js would emit
-    const files = args.filter(a => !a.startsWith('--') && fs.existsSync(a));
+    // Verify each candidate file matches what counts.js would emit.
+    // With no explicit files, default to the canonical counts files so a bare
+    // `counts --check` actually checks something.
+    let files = args.filter(a => !a.startsWith('--') && fs.existsSync(a));
+    if (files.length === 0) {
+      files = DEFAULT_COUNTS_FILES.map(f => path.join(ROOT, f)).filter(p => fs.existsSync(p));
+    }
     let bad = 0;
     for (const f of files) {
       const text = fs.readFileSync(f, 'utf8');

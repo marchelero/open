@@ -43,9 +43,9 @@ Mitigation: Treat exported archives as sensitive data and manage or delete them 
 - [ClawHub skill page](https://clawhub.ai/ivangdavila/skills/self-improving)
 - [Publisher profile](https://clawhub.ai/user/ivangdavila)
 - [Skill homepage](https://clawic.com/skills/self-improving)
-- [Security boundaries](artifact/boundaries.md)
-- [Setup guide](artifact/setup.md)
-- [Memory operations](artifact/operations.md)
+- [Security boundaries](boundaries.md)
+- [Setup guide](setup.md)
+- [Memory operations](operations.md)
 
 ## Skill Output:
 

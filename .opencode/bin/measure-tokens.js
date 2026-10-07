@@ -1,38 +1,61 @@
 #!/usr/bin/env node
 /**
- * measure-tokens.js — estimate boot/turn token consumption of the opencode pack
+ * measure-tokens.js — honest token estimate of the opencode pack
  *
  * Zero deps, Node 18+ stdlib only. CommonJS.
  *
- * Purpose (PRD: 2026-08-12-optimize-pack-token-consumption):
- *   - AC-6 / G-6: report estimated boot bytes/tokens + savings vs baseline (>=40%)
- *   - NFR-008: `--scenario=greeting` asserts an empty/"hola" first request stays
- *     within a token budget (default threshold 50, overridable) so the Zen free
- *     tier "Free usage exceeded" on first greeting is closed.
+ * Reports THREE components plus a total (not just a boot number vs a magic
+ * constant):
+ *   boot     = AGENTS.md + 400/MCP + plugins      (always loaded at boot)
+ *   catalog  = frontmatter `description` bytes of every skill + agent
+ *              (feeds the system prompt's skill/agent catalog)
+ *   router   = `.agents/skills/router/SKILL.md`    (loaded on every dispatch)
+ *
+ * Baseline is measured from a git ref (default `HEAD`), NOT a hardcoded
+ * constant. `--baseline=none` skips it. If git is unavailable a documented
+ * emergency snapshot is used for the greeting scenario only.
  *
  * Usage:
  *   node .opencode/bin/measure-tokens.js
- *   node .opencode/bin/measure-tokens.js --scenario=greeting
- *   node .opencode/bin/measure-tokens.js --threshold=80
  *   node .opencode/bin/measure-tokens.js --json
+ *   node .opencode/bin/measure-tokens.js --cap=2000
+ *   node .opencode/bin/measure-tokens.js --baseline=HEAD~1
+ *   node .opencode/bin/measure-tokens.js --baseline=none
+ *   node .opencode/bin/measure-tokens.js --scenario=greeting
  */
 
 const fs = require("fs")
 const path = require("path")
+const { spawnSync } = require("child_process")
+const {
+  listCatalog,
+  parseFrontmatter,
+  estimateTokens,
+  bytesPerToken,
+} = require("./lib/catalog.js")
 
 const ROOT = process.cwd()
-const BYTES_PER_TOKEN = 4 // ~4 bytes/token heuristic (mixed EN/ES prose)
+const BYTES_PER_TOKEN = bytesPerToken // 4
 
-// ---- baseline (PRE-change, documented in PRD) ----
-const BASELINE = {
-  agentsBytes: 7192, // AGENTS.md before compaction (61 lines)
-  mcpCount: 2,       // context7 + playwright always-on
-  plugins: 3,        // vibeguard on, dcp auto-nudges, pty
-  vibeguardOn: true,
-}
+const TOKENS_PER_MCP = 400
+const DEFAULT_CAP = 2000
+const DEFAULT_BASELINE_REF = "HEAD"
 
-// ---- helpers ----
-function readJson(p) {
+const AGENTS_MD = ".opencode/AGENTS.md"
+const OPENCODE_JSON = "opencode.json"
+const VIBEGUARD_CFG = ".opencode/vibeguard.config.json"
+const DCP_CFG = ".opencode/dcp.json"
+const ROUTER_MD = ".agents/skills/router/SKILL.md"
+
+// Emergency snapshot used ONLY when git is unavailable (no repo / no commits).
+// Documented historical pre-change state from PRD
+// 2026-08-12-optimize-pack-token-consumption. Boot-only.
+const EMERGENCY_BASELINE_BOOT =
+  estimateTokens(7192) + 2 * TOKENS_PER_MCP + (150 + 150 + 50) // ~2948
+
+// ------------------------------------------------------------------ helpers
+
+function readJsonSafe(p) {
   try {
     return JSON.parse(fs.readFileSync(p, "utf8"))
   } catch {
@@ -48,134 +71,319 @@ function fileBytes(p) {
   }
 }
 
-function estimateTokens(bytes) {
-  return Math.round(bytes / BYTES_PER_TOKEN)
+function byteLen(s) {
+  return s ? Buffer.byteLength(s, "utf8") : 0
 }
 
-function loadCurrent() {
-  const agents = path.join(ROOT, ".opencode", "AGENTS.md")
-  const opencode = readJson(path.join(ROOT, "opencode.json"))
-  const dcp = readJson(path.join(ROOT, ".opencode", "dcp.json"))
-  const vibeguard = readJson(path.join(ROOT, ".opencode", "vibeguard.config.json"))
+function git(args, { input } = {}) {
+  const res = spawnSync("git", args, {
+    cwd: ROOT,
+    input,
+    encoding: "utf8",
+    maxBuffer: 256 * 1024 * 1024,
+  })
+  if (res.error || res.status !== 0) return null
+  return res.stdout
+}
 
-  const mcp = opencode && opencode.mcp ? Object.keys(opencode.mcp) : []
+// ------------------------------------------------------------------ current
+
+function fsComponents() {
+  const opencode = readJsonSafe(path.join(ROOT, OPENCODE_JSON))
+  const vibeguard = readJsonSafe(path.join(ROOT, VIBEGUARD_CFG))
+  const dcp = readJsonSafe(path.join(ROOT, DCP_CFG))
+
+  const mcpNames = opencode && opencode.mcp ? Object.keys(opencode.mcp) : []
   const plugins = opencode && Array.isArray(opencode.plugin) ? opencode.plugin : []
-
-  const dcpManualMode = !!(dcp && dcp.manualMode && dcp.manualMode.enabled === true)
   const vibeguardOn = !!(vibeguard && vibeguard.enabled === true)
+  const dcpManualMode = !!(dcp && dcp.manualMode && dcp.manualMode.enabled === true)
+
+  const cat = listCatalog()
+  let catalogDescBytes = 0
+  for (const e of [...cat.skills, ...cat.agents]) {
+    catalogDescBytes += byteLen(e.description)
+  }
 
   return {
-    agentsBytes: fileBytes(agents),
-    mcpNames: mcp,
-    mcpCount: mcp.length,
-    plugins: plugins,
-    dcpManualMode,
+    agentsBytes: fileBytes(path.join(ROOT, AGENTS_MD)),
+    mcpNames,
+    mcpCount: mcpNames.length,
+    plugins,
     vibeguardOn,
+    dcpManualMode,
+    catalogDescBytes,
+    catalogCount: cat.skills.length + cat.agents.length,
+    routerBytes: fileBytes(path.join(ROOT, ROUTER_MD)),
   }
 }
 
-function buildReport(cur) {
-  const agentsTokens = estimateTokens(cur.agentsBytes)
-  const mcpTokens = cur.mcpCount * 400 // ~400 tokens/tool descriptor
-  const pluginTokens = (cur.vibeguardOn ? 150 : 20) + (cur.dcpManualMode ? 30 : 150) + 50 // pty
+function computeTokens(c) {
+  const agentsTokens = estimateTokens(c.agentsBytes)
+  const mcpTokens = c.mcpCount * TOKENS_PER_MCP
+  const pluginTokens =
+    (c.vibeguardOn ? 150 : 20) + (c.dcpManualMode ? 30 : 150) + 50
   const bootTokens = agentsTokens + mcpTokens + pluginTokens
-
-  const baseAgentsTokens = estimateTokens(BASELINE.agentsBytes)
-  const baseMcpTokens = BASELINE.mcpCount * 400
-  const basePluginTokens = 150 + 150 + 50
-  const baseBootTokens = baseAgentsTokens + baseMcpTokens + basePluginTokens
-
-  const savings = Math.round(((baseBootTokens - bootTokens) / baseBootTokens) * 100)
-
+  const catalogTokens = estimateTokens(c.catalogDescBytes)
+  const routerTokens = estimateTokens(c.routerBytes)
   return {
-    current: {
-      agentsBytes: cur.agentsBytes,
-      agentsTokens,
-      mcpNames: cur.mcpNames,
-      mcpCount: cur.mcpCount,
-      plugins: cur.plugins,
-      dcpManualMode: cur.dcpManualMode,
-      vibeguardOn: cur.vibeguardOn,
-      bootTokens,
-    },
-    baseline: {
-      agentsBytes: BASELINE.agentsBytes,
-      agentsTokens: baseAgentsTokens,
-      mcpCount: BASELINE.mcpCount,
-      vibeguardOn: BASELINE.vibeguardOn,
-      bootTokens: baseBootTokens,
-    },
-    savingsPct: savings,
+    agentsTokens,
+    mcpTokens,
+    pluginTokens,
+    bootTokens,
+    catalogTokens,
+    routerTokens,
+    totalTokens: bootTokens + catalogTokens + routerTokens,
   }
 }
 
-// ---- greeting scenario (NFR-008) ----
-// First request with empty/"hola": boot (AGENTS.md + MCPs + plugins) + 0 user
-// tokens + minimal model response. Baseline-only system prompt of the runtime
-// is out of scope (pack cannot control it); we measure the pack's own weight.
-// NOTE: the PRD's absolute 50-token bound is unreachable while AGENTS.md is
-// loaded verbatim via `instructions:` (~750 tokens alone). The meaningful,
-// verifiable assertion is the >=40% reduction vs baseline greeting (G-1/G-8).
-function greetingReport(rep, threshold) {
-  const userTokens = 2 // "hola" ≈ 1-2 tokens
-  const minResponseTokens = 12 // absolute minimal model reply
-  const greetingTokens = rep.current.bootTokens + userTokens + minResponseTokens
-  const baselineGreeting = rep.baseline.bootTokens + userTokens + minResponseTokens
-  const savingsPct = Math.round(((baselineGreeting - greetingTokens) / baselineGreeting) * 100)
-  const pass = savingsPct >= 40
-  return { greetingTokens, baselineGreeting, savingsPct, userTokens, minResponseTokens, pass }
+// ------------------------------------------------------------------ baseline
+
+function gitListTree(ref) {
+  const out = git(["ls-tree", "-r", "--name-only", ref])
+  if (out === null) return null
+  return out.split(/\r?\n/).filter(Boolean)
 }
 
-// ---- main ----
+// One `git cat-file --batch` process for every path (fast on Windows too).
+function gitCatBatch(ref, paths) {
+  if (paths.length === 0) return new Map()
+  const input = paths.map((p) => `${ref}:${p}`).join("\n") + "\n"
+  const res = spawnSync("git", ["cat-file", "--batch"], {
+    cwd: ROOT,
+    input,
+    maxBuffer: 256 * 1024 * 1024,
+  })
+  if (res.error || res.status !== 0 || !res.stdout) return null
+  const buf = res.stdout
+  const map = new Map()
+  let i = 0
+  let idx = 0
+  while (i < buf.length && idx < paths.length) {
+    const nl = buf.indexOf(0x0a, i)
+    if (nl === -1) break
+    const header = buf.toString("utf8", i, nl)
+    const parts = header.split(" ")
+    if (parts.length < 3) {
+      // "<path> missing"
+      idx++
+      i = nl + 1
+      continue
+    }
+    const size = parseInt(parts[2], 10)
+    const start = nl + 1
+    const end = start + size
+    if (!Number.isFinite(size) || end > buf.length) break
+    map.set(paths[idx], buf.toString("utf8", start, end))
+    i = end + 1 // skip the trailing LF
+    idx++
+  }
+  return map
+}
+
+function gitComponents(ref) {
+  const tree = gitListTree(ref)
+  if (!tree) return null
+  const skillPaths = tree.filter((p) =>
+    /^\.agents\/skills\/[^/]+\/SKILL\.md$/.test(p)
+  )
+  const agentPaths = tree.filter(
+    (p) => /^\.opencode\/agents\/[^/]+\.md$/.test(p) && !p.endsWith("/INDEX.md")
+  )
+  const files = [
+    AGENTS_MD,
+    OPENCODE_JSON,
+    VIBEGUARD_CFG,
+    DCP_CFG,
+    ROUTER_MD,
+    ...skillPaths,
+    ...agentPaths,
+  ]
+  const contents = gitCatBatch(ref, files)
+  if (!contents) return null
+  const get = (p) => (contents.has(p) ? contents.get(p) : null)
+
+  let mcpCount = 0
+  let plugins = []
+  let vibeguardOn = false
+  let dcpManualMode = false
+  try {
+    const o = JSON.parse(get(OPENCODE_JSON) || "{}")
+    mcpCount = o.mcp ? Object.keys(o.mcp).length : 0
+    plugins = Array.isArray(o.plugin) ? o.plugin : []
+  } catch {}
+  try {
+    vibeguardOn = JSON.parse(get(VIBEGUARD_CFG) || "{}").enabled === true
+  } catch {}
+  try {
+    const d = JSON.parse(get(DCP_CFG) || "{}")
+    dcpManualMode = !!(d.manualMode && d.manualMode.enabled === true)
+  } catch {}
+
+  let catalogDescBytes = 0
+  let catalogCount = 0
+  for (const p of [...skillPaths, ...agentPaths]) {
+    const c = get(p)
+    if (!c) continue
+    const fm = parseFrontmatter(c) || {}
+    catalogDescBytes += byteLen((fm.description || "").trim())
+    catalogCount++
+  }
+
+  const agentsContent = get(AGENTS_MD)
+  const routerContent = get(ROUTER_MD)
+  return {
+    agentsBytes: byteLen(agentsContent),
+    mcpNames: [],
+    mcpCount,
+    plugins,
+    vibeguardOn,
+    dcpManualMode,
+    catalogDescBytes,
+    catalogCount,
+    routerBytes: byteLen(routerContent),
+  }
+}
+
+// ------------------------------------------------------------------ report
+
+function buildReport(curComp, baseComp, ref) {
+  const current = computeTokens(curComp)
+  const baseline = baseComp ? computeTokens(baseComp) : null
+  const savingsPct = baseline
+    ? Math.round(
+        ((baseline.totalTokens - current.totalTokens) / baseline.totalTokens) * 100
+      )
+    : null
+  return { current, baseline, savingsPct, baselineRef: ref }
+}
+
+function greetingReport(current, baseBootTokens, cap) {
+  const userTokens = 2
+  const minResponseTokens = 12
+  const greetingTokens = current.bootTokens + userTokens + minResponseTokens
+  const baselineGreeting = baseBootTokens + userTokens + minResponseTokens
+  const savingsPct = Math.round(
+    ((baselineGreeting - greetingTokens) / baselineGreeting) * 100
+  )
+  return {
+    greetingTokens,
+    baselineGreeting,
+    savingsPct,
+    userTokens,
+    minResponseTokens,
+    // Gate = absolute cap (PRD: "techo absoluto"), not a magic % vs a constant.
+    pass: current.bootTokens <= cap,
+  }
+}
+
+// ------------------------------------------------------------------ main
+
 function main() {
   const args = process.argv.slice(2)
-  const scenario = args.find((a) => a.startsWith("--scenario="))?.split("=")[1] || "default"
-  const threshold = parseInt(args.find((a) => a.startsWith("--threshold="))?.split("=")[1] || "50", 10)
+  const getArg = (name) =>
+    args.find((a) => a.startsWith(`--${name}=`))?.split("=")[1]
+  const scenario = getArg("scenario") || "default"
+  const cap = parseInt(getArg("cap") || String(DEFAULT_CAP), 10)
+  const baselineRef = getArg("baseline") || DEFAULT_BASELINE_REF
   const asJson = args.includes("--json")
 
-  const cur = loadCurrent()
-  const rep = buildReport(cur)
+  const curComp = fsComponents()
+  const useGit = baselineRef !== "none"
+  const baseComp = useGit ? gitComponents(baselineRef) : null
+
+  const rep = buildReport(curComp, baseComp, baseComp ? baselineRef : null)
+  const bootStatus = rep.current.bootTokens <= cap ? "GREEN" : "RED"
+
+  // Greeting needs a boot baseline for the informational reduction; fall back
+  // to the emergency snapshot when git is unavailable.
+  const baseBoot = rep.baseline
+    ? rep.baseline.bootTokens
+    : EMERGENCY_BASELINE_BOOT
+  const greeting =
+    scenario === "greeting" ? greetingReport(rep.current, baseBoot, cap) : null
+
+  // Gate: absolute cap on boot (PRD "techo absoluto"). The greeting scenario
+  // reports the reduction info, but its gate is the same absolute cap.
+  const ok = bootStatus === "GREEN"
 
   if (asJson) {
-    console.log(JSON.stringify({ ...rep, scenario }, null, 2))
-    process.exit(rep.savingsPct >= 40 ? 0 : 1)
+    const out = {
+      scenario,
+      current: {
+        agentsBytes: curComp.agentsBytes,
+        agentsTokens: rep.current.agentsTokens,
+        mcpNames: curComp.mcpNames,
+        mcpCount: curComp.mcpCount,
+        plugins: curComp.plugins,
+        vibeguardOn: curComp.vibeguardOn,
+        dcpManualMode: curComp.dcpManualMode,
+        bootTokens: rep.current.bootTokens,
+        catalogTokens: rep.current.catalogTokens,
+        catalogCount: curComp.catalogCount,
+        routerTokens: rep.current.routerTokens,
+        totalTokens: rep.current.totalTokens,
+      },
+      baseline: rep.baseline
+        ? {
+            ref: rep.baselineRef,
+            bootTokens: rep.baseline.bootTokens,
+            catalogTokens: rep.baseline.catalogTokens,
+            routerTokens: rep.baseline.routerTokens,
+            totalTokens: rep.baseline.totalTokens,
+          }
+        : null,
+      total: rep.current.totalTokens,
+      savingsPct: rep.savingsPct,
+      cap,
+      bootStatus,
+    }
+    if (greeting) out.greeting = greeting
+    process.stdout.write(JSON.stringify(out, null, 2) + "\n")
+    process.exit(ok ? 0 : 1)
   }
 
+  const line = (label, val) => `  ${label.padEnd(9)}: ${val}`
   console.log("openpack token measurement")
   console.log("=========================")
   console.log("")
-  console.log("CURRENT (after optimization)")
-  console.log(`  AGENTS.md      : ${rep.current.agentsBytes} bytes (~${rep.current.agentsTokens} tokens)`)
-  console.log(`  MCPs active    : ${rep.current.mcpCount} ${rep.current.mcpNames.length ? "(" + rep.current.mcpNames.join(", ") + ")" : "(none)"}`)
-  console.log(`  plugins        : ${rep.current.plugins.length}`)
-  console.log(`    vibeguard    : ${rep.current.vibeguardOn ? "ON" : "off"}`)
-  console.log(`    dcp          : ${rep.current.dcpManualMode ? "manual/conservative" : "auto"}`)
-  console.log(`  estimated boot : ~${rep.current.bootTokens} tokens`)
+  console.log("CURRENT")
+  console.log(
+    line("boot", `~${rep.current.bootTokens} tok  (AGENTS.md ${rep.current.agentsTokens} + MCP ${curComp.mcpCount}×400 + plugins ${rep.current.pluginTokens})`)
+  )
+  console.log(
+    line("catalog", `~${rep.current.catalogTokens} tok  (${curComp.catalogCount} desc, ${curComp.catalogDescBytes} bytes)`)
+  )
+  console.log(line("router", `~${rep.current.routerTokens} tok`))
+  console.log(line("TOTAL", `~${rep.current.totalTokens} tok`))
   console.log("")
-  console.log("BASELINE (before optimization)")
-  console.log(`  AGENTS.md      : ${rep.baseline.agentsBytes} bytes (~${rep.baseline.agentsTokens} tokens)`)
-  console.log(`  MCPs active    : ${rep.baseline.mcpCount}`)
-  console.log(`  vibeguard      : ${rep.baseline.vibeguardOn ? "ON" : "off"}`)
-  console.log(`  estimated boot : ~${rep.baseline.bootTokens} tokens`)
+  if (rep.baseline) {
+    console.log(`BASELINE (git ${rep.baselineRef})`)
+    console.log(line("boot", `~${rep.baseline.bootTokens} tok`))
+    console.log(line("catalog", `~${rep.baseline.catalogTokens} tok`))
+    console.log(line("router", `~${rep.baseline.routerTokens} tok`))
+    console.log(line("TOTAL", `~${rep.baseline.totalTokens} tok`))
+    console.log("")
+    console.log(`SAVINGS: ${rep.savingsPct}% (TOTAL vs ${rep.baselineRef})`)
+  } else {
+    console.log("BASELINE: unavailable (git off or no commits; --baseline=none)")
+  }
   console.log("")
-  console.log(`SAVINGS: ${rep.savingsPct}% (goal >= 40%)`)
+  console.log(`BOOT vs cap ${cap}: ${bootStatus} (${rep.current.bootTokens} tok)`)
   console.log("")
 
-  if (scenario === "greeting") {
-    const g = greetingReport(rep, threshold)
-    console.log(`SCENARIO greeting (NFR-008, >=40% reduction vs baseline)`)
-    console.log(`  baseline       : ~${g.baselineGreeting} tokens`)
-    console.log(`  boot           : ~${rep.current.bootTokens} tokens`)
-    console.log(`  user "hola"    : ${g.userTokens} tokens`)
-    console.log(`  min response   : ${g.minResponseTokens} tokens`)
-    console.log(`  TOTAL          : ~${g.greetingTokens} tokens`)
-    console.log(`  savings        : ${g.savingsPct}% (goal >= 40%)`)
-    console.log(`  result         : ${g.pass ? "PASS" : "FAIL"}`)
+  if (greeting) {
+    console.log("SCENARIO greeting (first-turn cost: boot + user + minimal reply)")
+    console.log(`  baseline       : ~${greeting.baselineGreeting} tok`)
+    console.log(`  boot           : ~${rep.current.bootTokens} tok`)
+    console.log(`  user "hola"    : ${greeting.userTokens} tok`)
+    console.log(`  min response   : ${greeting.minResponseTokens} tok`)
+    console.log(`  TOTAL          : ~${greeting.greetingTokens} tok`)
+    console.log(`  reduction      : ${greeting.savingsPct}% (vs baseline, informational)`)
+    console.log(`  gate           : boot <= cap ${cap} -> ${greeting.pass ? "PASS" : "FAIL"}`)
     console.log("")
-    process.exit(g.pass ? 0 : 1)
   }
 
-  process.exit(rep.savingsPct >= 40 ? 0 : 1)
+  process.exit(ok ? 0 : 1)
 }
 
 main()

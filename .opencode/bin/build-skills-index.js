@@ -39,9 +39,11 @@ function parseFrontmatter(content) {
   if (!stripped.startsWith('---')) return null;
   const end = stripped.indexOf('\n---', 3);
   if (end === -1) return null;
-  const fm = stripped.slice(3, end);
+  // Normalize CRLF (see build-agents-index.js): a stray \r on the last field
+  // would silently drop the description when it is the last frontmatter key.
+  const fm = stripped.slice(3, end).replace(/\r\n?/g, '\n');
   const out = {};
-  for (const line of fm.split(/\r?\n/)) {
+  for (const line of fm.split('\n')) {
     const m = line.match(/^([a-z_]+)\s*:\s*(.*)$/i);
     if (m) {
       let v = m[2].trim();
@@ -67,14 +69,14 @@ function listSkills() {
     .map(dirName => {
       const skillFile = path.join(SKILLS_DIR, dirName, 'SKILL.md');
       if (!fs.existsSync(skillFile)) return null;
-      const stat = fs.statSync(skillFile);
       const content = fs.readFileSync(skillFile, 'utf8');
       const fm = parseFrontmatter(content) || {};
       return {
         name: dirName,
         description: (fm.description || '').trim(),
         triggers: Array.isArray(fm.triggers) ? fm.triggers : [],
-        size_bytes: stat.size,
+        // LF-normalized size so the index is identical on CRLF and LF checkouts.
+        size_bytes: Buffer.byteLength(content.replace(/\r\n?/g, '\n'), 'utf8'),
         category: categorize(dirName),
       };
     })

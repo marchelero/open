@@ -1,0 +1,106 @@
+# CI gate — deterministic battery + behavioural invariants
+#
+# Adapted from the MKY/agentes fork (fase 1 de fusión de infraestructura).
+# Deliberate differences:
+#   - NO compat junctions/symlinks step: this pack removed the legacy
+#     `.opencode/agent` and `.opencode/skill` links (opencode >=1.14 reads
+#     `.opencode/agents/` and `.agents/skills/` natively).
+#   - Node 18 (matches package.json `engines`), not Node 24.
+#   - `counts --check` is passed explicit files (with no args it is a no-op).
+#   - `lint-docs` / `wiring-test` / `installer-test` are wired in M3 once green.
+#
+# Tiers:
+#   1. Structural verifiers (counts, frontmatter, lockfile, smoke) — hard gate.
+#   2. eval-static — behavioural invariants (evals/cases/*.json) — hard gate.
+#   3. measure-tokens — informational (continue-on-error).
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-windows:
+    name: "windows: battery + eval-static"
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: "counts --check"
+        run: node .opencode/bin/counts.js --check .opencode/README.md .opencode/manual/README.md
+
+      - name: "validate-frontmatter"
+        run: node .opencode/bin/validate-frontmatter.js
+
+      - name: "verify-lockfile"
+        run: node .opencode/bin/verify-lockfile.js
+
+      - name: "smoke-test"
+        run: node .opencode/bin/smoke-test.js
+
+      - name: "lint-docs"
+        run: node .opencode/bin/lint-docs.js --dir .
+
+      - name: "wiring-test"
+        run: node .opencode/bin/wiring-test.js
+
+      - name: "installer-test"
+        run: node .opencode/bin/installer-test.js
+
+      - name: "eval-static"
+        run: node .opencode/bin/eval-static.js
+
+      - name: "measure-tokens (informational, not a gate)"
+        continue-on-error: true
+        run: node .opencode/bin/measure-tokens.js
+
+  verify-linux:
+    name: "linux: battery + eval-static"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: "counts --check"
+        run: node .opencode/bin/counts.js --check .opencode/README.md .opencode/manual/README.md
+
+      - name: "validate-frontmatter"
+        run: node .opencode/bin/validate-frontmatter.js
+
+      - name: "verify-lockfile"
+        run: node .opencode/bin/verify-lockfile.js
+
+      - name: "smoke-test"
+        run: node .opencode/bin/smoke-test.js
+
+      - name: "lint-docs"
+        run: node .opencode/bin/lint-docs.js --dir .
+
+      - name: "wiring-test"
+        run: node .opencode/bin/wiring-test.js
+
+      - name: "installer-test"
+        run: node .opencode/bin/installer-test.js
+
+      - name: "eval-static"
+        run: node .opencode/bin/eval-static.js
+
+      - name: "measure-tokens (informational, not a gate)"
+        continue-on-error: true
+        run: node .opencode/bin/measure-tokens.js
