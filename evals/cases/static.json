@@ -170,5 +170,12 @@
     "rubricPattern": "^\\|\\s*`([a-z][a-z0-9-]+)`",
     "minRubrics": 4,
     "why": "el juez es no determinista: CI solo guarda la FORMA (esquema + catalogo + superficie), nunca llama al modelo"
+  },
+  {
+    "id": "E19",
+    "kind": "policy",
+    "title": "policy-rules.json es JSON valido con schema correcto (offline, sin ejecutar el plugin)",
+    "file": ".opencode/policy-rules.json",
+    "why": "el motor aplica reglas por datos; CI valida la forma (version/mode + {id,severity,match,tool,message} por regla) de forma determinista y sin red"
   }
 ]

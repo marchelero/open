@@ -25,7 +25,7 @@ Detalles:
 - Slash commands: atajos recurrentes
 - MCPs activos: `context7` (docs) + `anydoc` (document conversion)
 - Plugins npm: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
-- Plugin local: `.opencode/plugins/hookify.js` con 2 hooks (SecretBlocker + DestructiveWarner). Auto-cargado, zero install
+- Plugin local: `.opencode/plugins/hookify.js` con SecretBlocker + policy engine (reglas declarativas en `.opencode/policy-rules.json`). Auto-cargado, zero install
 - **3 ejemplos downstream** en `.opencode/examples/` (node-api, python-data, react-app) — borrar tras grokking el pack
 - CLIs nativos: cero dependencias, solo Node stdlib (ver `node .opencode/bin/counts.js --json`)
 

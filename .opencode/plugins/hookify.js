@@ -1,31 +1,38 @@
 // .opencode/plugins/hookify.js
 //
-// Hookify — 2 production hooks for the opencode starter pack.
+// Hookify — runtime security for the open pack. A single plugin factory with
+// three responsibilities (so `plugins_local` stays at 2 — no new plugin):
 //
 //   1. SecretBlocker       (tool.execute.before, edit/write)
 //      Blocks the agent from writing to secret/credential files (.env,
 //      *.key, *.pem, id_rsa*, .aws/credentials, secrets/, etc.).
 //      Strict: throws on match. Use .env.example / .env.sample instead.
+//      This guard is retained verbatim from the previous version.
 //
-//   2. DestructiveWarner   (tool.execute.before, bash)
-//      Detects destructive bash patterns (rm -rf /, git push --force,
-//      git reset --hard, DROP TABLE, TRUNCATE, etc.) and logs them to
-//      .opencode/logs/destructive.log. Soft: does NOT block execution.
-//      Pairs with the AGENTS.md baseline rule that destructive ops
-//      require explicit user consent — this hook is the audit trail.
+//   2. PolicyEngine        (tool.execute.before, all tools)
+//      Loads .opencode/policy-rules.json and applies declared severities:
+//        deny -> throw (blocks the tool call, logged with rule id)
+//        warn -> console.warn + append to .opencode/logs/policy.log
+//        ask  -> permission.ask status:"ask" when it fires, otherwise it
+//                degrades to a visible warn (never a silent block)
+//      Editing the JSON changes behaviour without touching this file
+//      (mtime cache reloads it live).
 //
-// Both hooks are auto-loaded by opencode from .opencode/plugins/.
-// No install step required. Disable a hook by removing its export.
+//   3. PermissionAsk       (permission.ask)
+//      Surfaces a native confirmation prompt when the engine requested an
+//      `ask` and the native event fires for the tool call.
 //
+// All hooks are auto-loaded by opencode from .opencode/plugins/.
 // Format reference: https://opencode.ai/docs/plugins/
 
 "use strict"
 
 const { appendFileSync, mkdirSync } = require("node:fs")
 const { join } = require("node:path")
+const engine = require("../bin/lib/policy-engine.js")
 
 // ────────────────────────────────────────────────────────────────────────────
-// Hook 1: SecretBlocker
+// Hook 1: SecretBlocker (retained guard, unchanged behaviour)
 // ────────────────────────────────────────────────────────────────────────────
 
 const SECRET_PATH_PATTERNS = [
@@ -90,86 +97,142 @@ async function secretBlocker(input, output) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Hook 2: DestructiveWarner
+// Hook 2: PolicyEngine (declarative rules)
 // ────────────────────────────────────────────────────────────────────────────
 
-const DESTRUCTIVE_PATTERNS = [
-  // Filesystem destruction
-  // rm -rf followed by an absolute path (root or anything under /).
-  // Catches: rm -rf /, rm -rf /etc, rm -rf /var/log. Does NOT match
-  // rm -rf build/ or rm -rf ./build (relative paths are user territory).
-  { pattern: /\brm\s+(-\w*r\w*\s+)*-\w*f\w*\s+\/\S*/, label: "rm -rf /<absolute path>" },
-  { pattern: /\brm\s+-\w*r\w*f\w*\s+~/, label: "rm -rf ~" },
-  { pattern: /\brm\s+-\w*r\w*f\w*\s+\.\.\//, label: "rm -rf ../" },
-  { pattern: /:\s*>\s*\/dev\/sd[a-z]/, label: "wipe /dev/sdX" },
-  { pattern: /\bmkfs\./, label: "mkfs (format disk)" },
-  { pattern: /\bdd\s+if=.*\s+of=\/dev\//, label: "dd to /dev/" },
-  // Git destruction
-  { pattern: /\bgit\s+push\s+(-\w+\s+)*--force(\s|$)/, label: "git push --force" },
-  { pattern: /\bgit\s+push\s+(-\w+\s+)*-f(\s|$)/, label: "git push -f" },
-  { pattern: /\bgit\s+reset\s+--hard/, label: "git reset --hard" },
-  { pattern: /\bgit\s+clean\s+-\w*f\w*d\w*/, label: "git clean -fd" },
-  { pattern: /\bgit\s+branch\s+-\w*D\w*/, label: "git branch -D" },
-  { pattern: /\bgit\s+update-ref\s+-d/, label: "git update-ref -d" },
-  // Database destruction
-  { pattern: /\bDROP\s+(TABLE|DATABASE|SCHEMA)\b/i, label: "DROP TABLE/DATABASE" },
-  { pattern: /\bTRUNCATE(\s+TABLE)?\s+\w+/i, label: "TRUNCATE" },
-  { pattern: /\bDELETE\s+FROM\s+\w+\s*;/i, label: "DELETE FROM (no WHERE)" },
-  // System
-  { pattern: /\bshutdown\b/, label: "shutdown" },
-  { pattern: /\breboot\b/, label: "reboot" },
-  { pattern: /\bhalt\b/, label: "halt" },
-]
+// Outstanding `ask` requests, keyed by session, consumed by permission.ask.
+const pendingAsk = new Map()
+const ASK_TTL_MS = 10000
 
-function findDestructive(command) {
-  if (!command || typeof command !== "string") return null
-  for (const { pattern, label } of DESTRUCTIVE_PATTERNS) {
-    if (pattern.test(command)) return label
+function rememberAsk(sessionID, entry) {
+  if (!sessionID) return
+  pendingAsk.set(sessionID, {
+    rule: entry.rule,
+    tool: entry.tool,
+    target: entry.target,
+    ts: Date.now(),
+  })
+  // Opportunistic GC so a never-consumed entry cannot live forever.
+  for (const [sid, e] of pendingAsk) {
+    if (Date.now() - e.ts > ASK_TTL_MS) pendingAsk.delete(sid)
   }
-  return null
 }
 
-function getLogPath() {
-  return join(process.cwd(), ".opencode", "logs", "destructive.log")
+function takeAsk(sessionID) {
+  if (!sessionID) return null
+  const e = pendingAsk.get(sessionID)
+  if (!e) return null
+  pendingAsk.delete(sessionID)
+  if (Date.now() - e.ts > ASK_TTL_MS) return null
+  return e
 }
 
-function logDestructive(tool, command, label) {
-  try {
-    const logPath = getLogPath()
-    mkdirSync(join(process.cwd(), ".opencode", "logs"), { recursive: true })
-    const ts = new Date().toISOString()
-    const truncated =
-      command.length > 500 ? command.slice(0, 500) + "...[truncated]" : command
-    appendFileSync(
-      logPath,
-      "[" + ts + "] [" + label + "] [" + tool + "] " + truncated + "\n",
-      "utf8"
+async function policyEngine(input, output) {
+  const loaded = engine.cachedRules()
+  if (!loaded || loaded.mode === "off") return
+  const args = output && output.args
+  const target = engine.extractTarget(input.tool, args)
+  const res = engine.evaluate(input.tool, target, loaded.rules, loaded.mode)
+  if (res.severity === "allow" || !res.rule) return
+  const rule = res.rule
+
+  if (res.severity === "deny") {
+    engine.logEvent({ tool: input.tool, severity: "deny", rule, target })
+    throw new Error(
+      "[hookify:policy:" + rule.id + "] denied '" + input.tool + "' call. " +
+        rule.message + " " +
+        "This rule is enforced by .opencode/policy-rules.json. " +
+        "If the operation is intentional and safe, the user must run it " +
+        "outside the agent or relax the rule."
     )
-  } catch {
-    // Never crash the session over a log failure
   }
+
+  if (res.severity === "ask") {
+    rememberAsk(input.sessionID, { rule, tool: input.tool, target })
+    // Degrade-safe: always leave a visible, audited trail. If the native
+    // permission.ask event fires, PermissionAsk also shows the prompt.
+    engine.logEvent({
+      tool: input.tool,
+      severity: "ask",
+      rule,
+      target,
+      note: "confirmation requested; degrades to warn if no native prompt",
+    })
+    console.warn(
+      "[hookify:policy:" + rule.id + "] ask ('" + input.tool + "'): " +
+        rule.message + " Confirmation requested; treated as a warning if no " +
+        "native prompt appears."
+    )
+    return
+  }
+
+  // warn
+  engine.logEvent({ tool: input.tool, severity: "warn", rule, target })
+  console.warn(
+    "[hookify:policy:" + rule.id + "] warn ('" + input.tool + "'): " +
+      rule.message + " Logged to .opencode/logs/policy.log."
+  )
 }
 
-async function destructiveWarner(input, output) {
-  if (input.tool !== "bash") return
-  const command = output && output.args && output.args.command
-  const label = findDestructive(command)
-  if (!label) return
-  logDestructive(input.tool, command, label)
-  // Soft warn via stderr (visible in TUI). Does NOT block — the user
-  // still gets to confirm the command through opencode's normal flow.
-  console.warn(
-    "[hookify:DestructiveWarner] detected '" + label + "' — " +
-      "logged to .opencode/logs/destructive.log. " +
-      "If you didn't explicitly approve this, abort."
-  )
+// ────────────────────────────────────────────────────────────────────────────
+// Hook 3: PermissionAsk (native confirmation channel)
+// ────────────────────────────────────────────────────────────────────────────
+
+function targetFromPermission(input) {
+  if (!input) return undefined
+  const p = input.pattern
+  if (typeof p === "string" && p) return p
+  if (Array.isArray(p) && typeof p[0] === "string") return p[0]
+  const md = input.metadata || {}
+  if (typeof md.command === "string") return md.command
+  if (typeof input.title === "string" && input.title) return input.title
+  return undefined
+}
+
+async function permissionAsk(input, output) {
+  try {
+    if (!output) return
+    const sid = input && input.sessionID
+    const pending = takeAsk(sid)
+    if (pending && pending.rule) {
+      output.status = "ask"
+      engine.logEvent({
+        tool: pending.tool,
+        severity: "ask",
+        rule: pending.rule,
+        target: pending.target,
+        note: "native permission prompt shown",
+      })
+      return
+    }
+    // The event can fire before tool.execute.before recorded the request.
+    // Best effort: evaluate the permission payload itself and ask on match.
+    const loaded = engine.cachedRules()
+    if (!loaded || loaded.mode === "off") return
+    const target = targetFromPermission(input)
+    const tool = input && input.type ? String(input.type) : "bash"
+    const res = engine.evaluate(tool, target, loaded.rules, loaded.mode)
+    if (res.severity === "ask" && res.rule) {
+      output.status = "ask"
+      engine.logEvent({
+        tool,
+        severity: "ask",
+        rule: res.rule,
+        target,
+        note: "native permission prompt shown (payload match)",
+      })
+    }
+  } catch {
+    // Never crash the session over a permission hook.
+  }
 }
 
 module.exports = async () => {
   return {
     "tool.execute.before": async (input, output) => {
       await secretBlocker(input, output)
-      await destructiveWarner(input, output)
+      await policyEngine(input, output)
     },
+    "permission.ask": permissionAsk,
   }
 }

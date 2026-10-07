@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "mode": "enforce",
+  "description": "Declarative tool-call policy for the open pack. Edit this file to change enforcement without touching JS. severity: warn (log + console.warn, never blocks) | ask (native permission.ask prompt, degrades to warn if the event does not fire for bash) | deny (throws in tool.execute.before, blocks the call). Default is conservative: only catastrophic/irreversible operations are deny.",
+  "rules": [
+    {
+      "id": "fs-rm-rf-abs",
+      "severity": "deny",
+      "match": "\\brm\\s+(-\\w*r\\w*\\s+)*-\\w*f\\w*\\s+\\/\\S*",
+      "tool": "bash",
+      "message": "rm -rf on an absolute path can destroy the OS or the whole workspace irreversibly."
+    },
+    {
+      "id": "fs-rm-rf-home",
+      "severity": "deny",
+      "match": "\\brm\\s+-\\w*r\\w*f\\w*\\s+~",
+      "tool": "bash",
+      "message": "rm -rf on the home directory is irreversible."
+    },
+    {
+      "id": "fs-rm-rf-parent",
+      "severity": "warn",
+      "match": "\\brm\\s+-\\w*r\\w*f\\w*\\s+\\.\\.\\/",
+      "tool": "bash",
+      "message": "rm -rf on a parent directory; confirm the target before continuing."
+    },
+    {
+      "id": "fs-wipe-dev",
+      "severity": "deny",
+      "match": ">\\s*\\/dev\\/(sd[a-z]|nvme\\d+n\\d+|disk)",
+      "tool": "bash",
+      "message": "Overwriting a raw block device destroys the disk irreversibly."
+    },
+    {
+      "id": "fs-mkfs",
+      "severity": "deny",
+      "match": "\\bmkfs\\.",
+      "tool": "bash",
+      "message": "mkfs formats a filesystem and destroys its contents irreversibly."
+    },
+    {
+      "id": "fs-dd-dev",
+      "severity": "deny",
+      "match": "\\bdd\\s+if=.*\\s+of=\\/dev\\/",
+      "tool": "bash",
+      "message": "dd writing to a raw device destroys the target irreversibly."
+    },
+    {
+      "id": "fs-fork-bomb",
+      "severity": "deny",
+      "match": ":\\(\\)\\s*\\{\\s*:\\|:\\&\\s*\\}\\s*;\\s*:",
+      "tool": "bash",
+      "message": "Fork bomb; it will exhaust the machine."
+    },
+    {
+      "id": "git-push-force",
+      "severity": "deny",
+      "match": "\\bgit\\s+push\\b[^\\n]*--force(\\s|$)",
+      "tool": "bash",
+      "message": "git push --force can rewrite shared remote history irreversibly."
+    },
+    {
+      "id": "git-push-f",
+      "severity": "deny",
+      "match": "\\bgit\\s+push\\b[^\\n]*\\s-f(\\s|$)",
+      "tool": "bash",
+      "message": "git push -f can rewrite shared remote history irreversibly."
+    },
+    {
+      "id": "git-reset-hard",
+      "severity": "warn",
+      "match": "\\bgit\\s+reset\\s+--hard",
+      "tool": "bash",
+      "message": "git reset --hard discards local changes; recoverable via reflog if caught early."
+    },
+    {
+      "id": "git-clean-fd",
+      "severity": "warn",
+      "match": "\\bgit\\s+clean\\s+-\\w*f\\w*d\\w*",
+      "tool": "bash",
+      "message": "git clean -fd deletes untracked files; confirm the target."
+    },
+    {
+      "id": "git-branch-force-delete",
+      "severity": "warn",
+      "match": "\\bgit\\s+branch\\s+-\\w*D\\w*",
+      "tool": "bash",
+      "message": "git branch -D force-deletes a branch even if unmerged."
+    },
+    {
+      "id": "git-update-ref-d",
+      "severity": "warn",
+      "match": "\\bgit\\s+update-ref\\s+-d",
+      "tool": "bash",
+      "message": "git update-ref -d deletes a ref directly; confirm the target."
+    },
+    {
+      "id": "db-drop-database",
+      "severity": "deny",
+      "match": "\\bDROP\\s+(DATABASE|SCHEMA)\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "DROP DATABASE/SCHEMA destroys the whole schema irreversibly."
+    },
+    {
+      "id": "db-drop-table",
+      "severity": "warn",
+      "match": "\\bDROP\\s+TABLE\\b",
+      "tool": "bash",
+      "flags": "i",
+      "message": "DROP TABLE is legitimate in migrations; warn, do not block."
+    },
+    {
+      "id": "db-truncate",
+      "severity": "warn",
+      "match": "\\bTRUNCATE(\\s+TABLE)?\\s+\\w+",
+      "tool": "bash",
+      "flags": "i",
+      "message": "TRUNCATE removes all rows; legitimate in migrations, warn only."
+    },
+    {
+      "id": "db-delete-no-where",
+      "severity": "warn",
+      "match": "\\bDELETE\\s+FROM\\s+\\w+\\s*;",
+      "tool": "bash",
+      "flags": "i",
+      "message": "DELETE FROM without WHERE deletes every row; confirm before running."
+    },
+    {
+      "id": "sys-shutdown",
+      "severity": "ask",
+      "match": "\\bshutdown\\b",
+      "tool": "bash",
+      "message": "shutdown stops the machine; confirm it is intended."
+    },
+    {
+      "id": "sys-reboot",
+      "severity": "ask",
+      "match": "\\breboot\\b",
+      "tool": "bash",
+      "message": "reboot restarts the machine; confirm it is intended."
+    },
+    {
+      "id": "sys-halt",
+      "severity": "ask",
+      "match": "\\bhalt\\b",
+      "tool": "bash",
+      "message": "halt powers off the machine; confirm it is intended."
+    }
+  ]
+}

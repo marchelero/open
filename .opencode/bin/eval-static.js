@@ -36,6 +36,9 @@
  *   verdict  deterministic shape check of a golden JSON verdict against a
  *            compact schema (offline, no model) + surface files exist +
  *            rubric catalog has >= minRubrics entries
+ *   policy   offline shape check of `.opencode/policy-rules.json`: valid JSON,
+ *            version/mode, and a compilable {id,severity,match,tool,message}
+ *            per rule (no plugin execution, no commands run)
  *
  * Usage:
  *   node .opencode/bin/eval-static.js              # run all cases
@@ -358,6 +361,55 @@ function kVerdict(c) {
   return { ok: true, detail: 'esquema + superficie OK' }
 }
 
+// Validate the declarative policy-rules.json SHAPE offline: JSON parses and
+// every rule carries {id, severity, match, tool, message} with a compilable
+// regex and a valid severity. Does NOT execute the plugin or run any command.
+const POLICY_SEVERITIES = ['warn', 'ask', 'deny']
+const POLICY_MODES = ['enforce', 'warn-only', 'off']
+
+function kPolicy(c) {
+  const file = c.file || '.opencode/policy-rules.json'
+  const raw = read(path.join(ROOT, file))
+  if (raw === null) return { ok: false, detail: 'no existe ' + file }
+  let data
+  try { data = JSON.parse(raw) } catch (e) { return { ok: false, detail: 'JSON invalido: ' + e.message } }
+
+  const errors = []
+  if (typeof data.version !== 'number') errors.push('version debe ser number')
+  if (typeof data.mode !== 'string' || POLICY_MODES.indexOf(data.mode) === -1) {
+    errors.push('mode invalido (esperado: ' + POLICY_MODES.join('|') + ')')
+  }
+  if (!Array.isArray(data.rules)) {
+    errors.push('rules debe ser un array')
+    return { ok: false, detail: errors.join('; ') }
+  }
+  const ids = new Set()
+  data.rules.forEach((r, i) => {
+    const tag = 'rules[' + i + ']'
+    if (!r || typeof r !== 'object' || Array.isArray(r)) { errors.push(tag + ' no es objeto'); return }
+    if (typeof r.id !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(r.id)) errors.push(tag + '.id invalido')
+    else if (ids.has(r.id)) errors.push('id duplicado: ' + r.id)
+    else ids.add(r.id)
+    if (POLICY_SEVERITIES.indexOf(r.severity) === -1) errors.push(tag + '.severity invalido')
+    if (typeof r.match !== 'string') {
+      errors.push(tag + '.match debe ser string')
+    } else {
+      try { new RegExp(r.match, r.flags || '') } catch (e) { errors.push(tag + '.match regex invalida') }
+    }
+    const toolOk = typeof r.tool === 'string' ||
+      (Array.isArray(r.tool) && r.tool.length > 0 && r.tool.every(t => typeof t === 'string'))
+    if (!toolOk) errors.push(tag + '.tool invalido')
+    if (typeof r.message !== 'string' || r.message.length < 8) errors.push(tag + '.message invalido')
+  })
+  if (data.rules.length < 18) errors.push('rules.length ' + data.rules.length + ' < 18')
+  if (!data.rules.some(r => r && r.severity === 'deny')) errors.push('sin regla deny')
+  if (!data.rules.some(r => r && r.severity === 'warn')) errors.push('sin regla warn')
+  if (!data.rules.some(r => r && r.severity === 'ask')) errors.push('sin regla ask')
+
+  if (errors.length) return { ok: false, detail: errors.slice(0, 6).join('; ') }
+  return { ok: true, detail: data.rules.length + ' reglas, mode=' + data.mode }
+}
+
 const KINDS = {
   files: kFiles,
   present: kPresent,
@@ -368,6 +420,7 @@ const KINDS = {
   orphan: kOrphan,
   metric: kMetric,
   verdict: kVerdict,
+  policy: kPolicy,
 }
 
 // ---------------------------------------------------------------------------
