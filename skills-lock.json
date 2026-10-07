@@ -1,7 +1,11 @@
 {
   "version": 2,
-  "generated": "2026-10-07T07:21:39.319Z",
+  "generated": "2026-10-07T20:47:05.255Z",
   "skills": {
+    "accessibility": {
+      "path": ".agents/skills/accessibility/SKILL.md",
+      "sha256": "2e62cfc918692b969138d8928dd19fd33f263fda2a02bafb7f9e8677874d5f50"
+    },
     "agent-evals": {
       "path": ".agents/skills/agent-evals/SKILL.md",
       "sha256": "90406c366dcadfc6fb0283bc9593561af7b93007037aaa24ffbfea5c3f5d35a6"
@@ -26,9 +30,13 @@
       "path": ".agents/skills/archify/SKILL.md",
       "sha256": "ad15d5acb596dbce2da3d2f2035191ed9009a1d1ef0bb336a09c1f0d205bca37"
     },
+    "architecture-decision-records": {
+      "path": ".agents/skills/architecture-decision-records/SKILL.md",
+      "sha256": "a0a55f8f1ee258ee890df0095551f59870c89b6ba92a0fae13b9024f2b93cfbe"
+    },
     "backend-patterns": {
       "path": ".agents/skills/backend-patterns/SKILL.md",
-      "sha256": "472e7353685d195f4243f9754cb448ce24c280f6d16777e0cfa6c02958f2f65f"
+      "sha256": "0a5297f9231c074934d0188ca367ff05274b710885c913aaefdb21d5b5be3bad"
     },
     "caching-patterns": {
       "path": ".agents/skills/caching-patterns/SKILL.md",
@@ -49,6 +57,10 @@
       "path": ".agents/skills/clerk-auth/SKILL.md",
       "sha256": "fd26ff8964cf45043902d0a87bb41323144b81f60cc3b3646035e41a95bebbd8"
     },
+    "clickhouse-io": {
+      "path": ".agents/skills/clickhouse-io/SKILL.md",
+      "sha256": "3eb6e687f84942cd700857d14139a329d2084da5c9bf245ae2418178bae91d40"
+    },
     "codebase-graph": {
       "path": ".agents/skills/codebase-graph/SKILL.md",
       "sha256": "918b64a0cb687a7b27937eb49def4ca5af66f00e4ec46ba1f830220c8da3cb41"
@@ -65,6 +77,10 @@
       "path": ".agents/skills/contextual-commits/SKILL.md",
       "sha256": "14cf563aa88d53b838c4df2e1cd34e578f321065a94feb7a05e5ae5c55e72f7f"
     },
+    "contract-first": {
+      "path": ".agents/skills/contract-first/SKILL.md",
+      "sha256": "9be54616e6a7f4ca6f0c0c447977395747505ce76e2bedc967c24222988e3ab0"
+    },
     "convert-documents-to-markdown": {
       "path": ".agents/skills/convert-documents-to-markdown/SKILL.md",
       "sha256": "72249af70aefa6fa5f78a91b78c7f1a9755d68fc456e37176911db4748f8f7ce",
@@ -72,9 +88,13 @@
       "sourceType": "github",
       "skillPath": "skills/convert-documents-to-markdown/SKILL.md"
     },
+    "cpp-coding-standards": {
+      "path": ".agents/skills/cpp-coding-standards/SKILL.md",
+      "sha256": "4424b2245cb43410670d1582f0b826036038be323bd57c40a7048e87eb7078ba"
+    },
     "database-migrations": {
       "path": ".agents/skills/database-migrations/SKILL.md",
-      "sha256": "fc60a8c4f0c584a7ce8534ecbf94968a7e3c3a4d9bc740ccc409d7c003742a8d"
+      "sha256": "bbe349a7f0eab64a1d9ce4dddc42302ceaa2b89ee7df08c4273497d81dc3ee5f"
     },
     "db-schema-visualizer": {
       "path": ".agents/skills/db-schema-visualizer/SKILL.md",
@@ -92,9 +112,21 @@
       "path": ".agents/skills/dependency-audit/SKILL.md",
       "sha256": "611e51928095c059d03a7dfe454ef9ea1740a8828ad3db19784a128c41b174a4"
     },
+    "deployment-patterns": {
+      "path": ".agents/skills/deployment-patterns/SKILL.md",
+      "sha256": "c4da78407febba710ba92b21f7c098e550091710115b24a2de6a14486f6cbffd"
+    },
+    "design-system": {
+      "path": ".agents/skills/design-system/SKILL.md",
+      "sha256": "cfe245ea59d01ead6f38fd8e75c7467d91af1bd58deaa1b3194966333b9138b3"
+    },
+    "django-patterns": {
+      "path": ".agents/skills/django-patterns/SKILL.md",
+      "sha256": "4712e84f5d04d9f2f0c040e4885df9ef4aaf7d8446f16abffd6bf798efd1f5c2"
+    },
     "docker-patterns": {
       "path": ".agents/skills/docker-patterns/SKILL.md",
-      "sha256": "957fbab3ce0d4d8de95e81bf06147b3f6ce3a18d22d5973bb9839cbb47a9bd95"
+      "sha256": "ad5f32ba2e28361f5f6d658b04e1df6695b9eb6d0d9c5a6ce597f3aa644a24f8"
     },
     "docs-writing": {
       "path": ".agents/skills/docs-writing/SKILL.md",
@@ -114,9 +146,17 @@
       "sourceType": "github",
       "skillPath": "skills/docx/SKILL.md"
     },
+    "dotnet-patterns": {
+      "path": ".agents/skills/dotnet-patterns/SKILL.md",
+      "sha256": "6e0c249416a7e0e3158ce70ae400614aade244ed2877900397377d96c61a2c24"
+    },
     "drizzle-patterns": {
       "path": ".agents/skills/drizzle-patterns/SKILL.md",
       "sha256": "f28ede999442ac7d58f8286d6e3b645508e35fe4a299491fa099f84ce31cef0a"
+    },
+    "e2e-testing": {
+      "path": ".agents/skills/e2e-testing/SKILL.md",
+      "sha256": "917bbe8d75aa0522a2b791eb1c86729e1e372c0bffb9c2b05a55f28449f0a2d9"
     },
     "edge-computing": {
       "path": ".agents/skills/edge-computing/SKILL.md",
@@ -130,6 +170,10 @@
       "path": ".agents/skills/error-handling/SKILL.md",
       "sha256": "25d27cca6d933519cf97017276a7e0027d2a25b67f9bff9dd3526a78d094c0da"
     },
+    "fastapi-patterns": {
+      "path": ".agents/skills/fastapi-patterns/SKILL.md",
+      "sha256": "b3b0ee2133756c9c709db6c0c93020efed6240983a28b20cd5dd5a2e62db416c"
+    },
     "feature-flags": {
       "path": ".agents/skills/feature-flags/SKILL.md",
       "sha256": "27aa3186a5ceef3956dd32b6773a742fd8fd74521472a00c418924ccdb9574df"
@@ -142,9 +186,13 @@
       "path": ".agents/skills/firebase-patterns/SKILL.md",
       "sha256": "33fb799848f123c0b50d19e5848afa007f935fdd167e27ebe218a879851efc02"
     },
+    "frontend-a11y": {
+      "path": ".agents/skills/frontend-a11y/SKILL.md",
+      "sha256": "26fac38702ceddc55f538d55a7ed0296931da7e49debdd83ea3495d5b6a75aa9"
+    },
     "frontend-patterns": {
       "path": ".agents/skills/frontend-patterns/SKILL.md",
-      "sha256": "79783e004933b8ba1d11c0672b96666716c139e4d62bd126812487ac219d7007"
+      "sha256": "a1488fd95924f1679692d9ac2d7db15dab0bab05d393aff41a706bd258838762"
     },
     "git-hooks": {
       "path": ".agents/skills/git-hooks/SKILL.md",
@@ -161,13 +209,33 @@
       "sourceType": "github",
       "skillPath": "skills/github-actions-efficiency/SKILL.md"
     },
+    "golang-patterns": {
+      "path": ".agents/skills/golang-patterns/SKILL.md",
+      "sha256": "d749b79d4d1df624486d1d5dc8f0797b8ca141df0c15a1df7c2d874e16c2d226"
+    },
+    "golang-testing": {
+      "path": ".agents/skills/golang-testing/SKILL.md",
+      "sha256": "89cdb5c2aefaafa83f904dc2331e379151d8476e82502b9275adb538178067b1"
+    },
     "grill-me": {
       "path": ".agents/skills/grill-me/SKILL.md",
       "sha256": "f5cb1d00cadf464d3eda86dc1c03790ad302507aa367eeb6936f2b80f20c2d9a"
     },
+    "hexagonal-architecture": {
+      "path": ".agents/skills/hexagonal-architecture/SKILL.md",
+      "sha256": "c977d0c53b7a4e2528a1b2d1a0b5dd63cacbb6c1973fd76415d9b7f92f75927b"
+    },
     "intent-driven-development": {
       "path": ".agents/skills/intent-driven-development/SKILL.md",
       "sha256": "a30fa8ad573344c74f3f1fff880087052e6eb4f9738e521220cd84049f02e13e"
+    },
+    "java-coding-standards": {
+      "path": ".agents/skills/java-coding-standards/SKILL.md",
+      "sha256": "851d86dc71fd8be1a16ea1496780c69f8ce7d6211934f33b533109cb6c5a5692"
+    },
+    "kotlin-patterns": {
+      "path": ".agents/skills/kotlin-patterns/SKILL.md",
+      "sha256": "73502f5af2b395aee53d01fb54797d7539d1ff44e4b8a4d2a6fa768edb5a6555"
     },
     "kubernetes-specialist": {
       "path": ".agents/skills/kubernetes-specialist/SKILL.md",
@@ -179,6 +247,10 @@
     "llm-as-judge": {
       "path": ".agents/skills/llm-as-judge/SKILL.md",
       "sha256": "05fa4276126608d1fe62d9556ea61ea5c5cb56877bdde3a3445426644a47d09f"
+    },
+    "make-interfaces-feel-better": {
+      "path": ".agents/skills/make-interfaces-feel-better/SKILL.md",
+      "sha256": "3b28f4b2947ea6b9a5c137d8ab280b83c9ee0671cd55acb9b1740f73b68df2c2"
     },
     "mcp-server-patterns": {
       "path": ".agents/skills/mcp-server-patterns/SKILL.md",
@@ -200,6 +272,22 @@
       "path": ".agents/skills/monorepo-patterns/SKILL.md",
       "sha256": "cd7021dc17b0eb11dbd5fe3ebd608b456a7068e1d972db1fcfc6c9d9ce2c255d"
     },
+    "motion-foundations": {
+      "path": ".agents/skills/motion-foundations/SKILL.md",
+      "sha256": "da7d890d6959b114b825e42a19b52192af39918868dde925364b550d688775ec"
+    },
+    "motion-patterns": {
+      "path": ".agents/skills/motion-patterns/SKILL.md",
+      "sha256": "d9f213803b0f96a8c46d1b90e6ec1362445400588b1359118661dbaad7bd6665"
+    },
+    "mysql-patterns": {
+      "path": ".agents/skills/mysql-patterns/SKILL.md",
+      "sha256": "55a08b2e953ddee477fa9acdee8ee68425d5d01d2f06c374bf83afa558033c74"
+    },
+    "nestjs-patterns": {
+      "path": ".agents/skills/nestjs-patterns/SKILL.md",
+      "sha256": "204e49535a889b7e7b92d44b07ea04d65ce30d192001e97e96450624e1711ca9"
+    },
     "observability": {
       "path": ".agents/skills/observability/SKILL.md",
       "sha256": "3c6e3d811b85e32be742ba71afa84d197d026de7a3cb8df39c533dbe61c8ed5a"
@@ -214,7 +302,7 @@
     },
     "pack-reference": {
       "path": ".agents/skills/pack-reference/SKILL.md",
-      "sha256": "8348efde2efbd0559d305a520f1b3999069b7a95d1dd8f18d7dd79b9adfee36a"
+      "sha256": "fb4eba66dc8d3e1be5ce4dee7791d499d5a09f62b83d4eff9a7e933e6f807f1c"
     },
     "pdf": {
       "path": ".agents/skills/pdf/SKILL.md",
@@ -253,6 +341,14 @@
       "path": ".agents/skills/python-async-patterns/SKILL.md",
       "sha256": "ac9fb75713b8e580c96806b0582bb30e3483c8896d6d960aa7445ccc6a172209"
     },
+    "python-patterns": {
+      "path": ".agents/skills/python-patterns/SKILL.md",
+      "sha256": "3a80370d120f0600e24221fb19ce717f2d37320f4b0dc5bff7dd8bf8d310c065"
+    },
+    "python-testing": {
+      "path": ".agents/skills/python-testing/SKILL.md",
+      "sha256": "e4356a5faa0c91c39ca585239866b10c2778756768333f51a1e86353a7a284c1"
+    },
     "railway-deploy": {
       "path": ".agents/skills/railway-deploy/SKILL.md",
       "sha256": "d4ac5e74cd9b0d4dabac83a07433352e3322f1984849ee23ebab0bc0bda787cc"
@@ -261,13 +357,25 @@
       "path": ".agents/skills/realtime-patterns/SKILL.md",
       "sha256": "4c8e5e10ba2df5f3aa0c8328fedda6c0518f622175a15cb5880df142d90d7d25"
     },
+    "redis-patterns": {
+      "path": ".agents/skills/redis-patterns/SKILL.md",
+      "sha256": "b328db81671f170fcfb6cbc8654fb6b13632df4aa4fb4ab060ed4661cb85f3f3"
+    },
     "refactoring-patterns": {
       "path": ".agents/skills/refactoring-patterns/SKILL.md",
       "sha256": "6a27f7927049433f6d29e765eeafbc346b90c01c89c17f1a80e549b7a8855296"
     },
     "router": {
       "path": ".agents/skills/router/SKILL.md",
-      "sha256": "bc1da8c7ceb6722f3bd853114ed5042285d4ee49a9f74e08e9bf97978f81e99d"
+      "sha256": "e4d8c2d3f97f8faf38a9b8c0e93d7c8efdf852822f018ea123160fa8e773c366"
+    },
+    "rust-patterns": {
+      "path": ".agents/skills/rust-patterns/SKILL.md",
+      "sha256": "207f72d7bcd9b1ad32adfe42e883cfc35f9f9d06a007ad9a26c9f13542f5534c"
+    },
+    "rust-testing": {
+      "path": ".agents/skills/rust-testing/SKILL.md",
+      "sha256": "6917f1ad422b3fb7f66d56ded8d59d3bd5527ef68aa6ba41ed5941d9dcb8f7e3"
     },
     "security-review": {
       "path": ".agents/skills/security-review/SKILL.md",
@@ -285,6 +393,10 @@
       "path": ".agents/skills/skill-optimizer/SKILL.md",
       "sha256": "98cac71755e51d728743125e3ca1f4cf996df9eefe94d5eb12db8155af0906bb"
     },
+    "springboot-patterns": {
+      "path": ".agents/skills/springboot-patterns/SKILL.md",
+      "sha256": "fd597c30a973c67a7ce54a7eba91bebb3382205e51d6eff5c384916a3a10f43f"
+    },
     "stripe-integration": {
       "path": ".agents/skills/stripe-integration/SKILL.md",
       "sha256": "b05e105ad61e157e0f9f630b8876d93aa48c25bdbbd22d1a0098de18cb9bfcc8"
@@ -296,6 +408,10 @@
     "task-decomposition": {
       "path": ".agents/skills/task-decomposition/SKILL.md",
       "sha256": "4e34e26b78b93293100c033256f0bf5532b8fde38057407f6cd39d79b90d36b8"
+    },
+    "tdd-workflow": {
+      "path": ".agents/skills/tdd-workflow/SKILL.md",
+      "sha256": "3669be59f81df1349f2f3ed09ea83a4c561e4d79e34e27a6a2b5f959db129927"
     },
     "testing": {
       "path": ".agents/skills/testing/SKILL.md",
@@ -315,7 +431,7 @@
     },
     "ui-ux-pro-max": {
       "path": ".agents/skills/ui-ux-pro-max/SKILL.md",
-      "sha256": "d3f88122afe410b5bd24dbe9c6b782c0d7a7994c393ea1ec2599c767834d3c5f"
+      "sha256": "cfa72e317b4bfcd5c5800e8386d8be85089f78c0cc89dfe2d01ede9683e3d2d0"
     },
     "user-manual-generator": {
       "path": ".agents/skills/user-manual-generator/SKILL.md",
@@ -331,7 +447,7 @@
     },
     "vercel-react-best-practices": {
       "path": ".agents/skills/vercel-react-best-practices/SKILL.md",
-      "sha256": "acc64b51be50a5f10691cde37958641f1967c87540fa93bc7972111c27ef1838",
+      "sha256": "651e15727cc7aa43d60f4bec91c3621c23192f53dea0ed58aa7dae1969896346",
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/react-best-practices/SKILL.md"

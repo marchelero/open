@@ -119,7 +119,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
 ├── CHANGELOG.md                     historial de versiones
 ├── .gitignore                       ignora node_modules, .opencode/state, .opencode/node_modules, OS junk
 ├── .agents/                         skills del proyecto (pack + user-installed)
-│   └── skills/                      79 skills portables (<nombre>/SKILL.md)
+│   └── skills/                      108 skills portables (<nombre>/SKILL.md)
 │       ├── router/                  matriz intent → agent + skill (merged, auto-loaded por primary)
 │       ├── api-design/
 │       ├── backend-patterns/

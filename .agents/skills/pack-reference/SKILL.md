@@ -11,7 +11,7 @@ Quick reference for opencode pack structure, conventions, and standards. Loaded 
 
 ## Que es esto
 
-Starter pack portable de opencode. El "producto" son los 72 agentes, 64 slash commands y 20 skills. No es codigo de aplicacion — es config + prompts + CLIs en `.opencode/bin/`.
+Starter pack portable de opencode. El "producto" son los 68 agentes, 64 slash commands y 108 skills. No es codigo de aplicacion — es config + prompts + CLIs en `.opencode/bin/`.
 
 ## Estructura
 
@@ -19,17 +19,15 @@ Starter pack portable de opencode. El "producto" son los 72 agentes, 64 slash co
 .
 ├── opencode.json          Config principal
 ├── .opencode/             PACK template (portable)
-│   ├── agents/            72 subagentes (description + mode + permission)
+│   ├── agents/            68 subagentes (description + mode + permission)
 │   ├── commands/          64 slash commands
-│   ├── plugins/           Local plugins (hookify.js = 2 hooks)
-│   ├── bin/               10 CLIs nativos
+│   ├── plugins/           Local plugins (hookify.js, gateguard.js, cost-ledger.js)
+│   ├── bin/               22 CLIs nativos
 │   ├── examples/          3 downstream demos (node-api, python-data, react-app)
 │   ├── manual/            PACK docs (info del pack, NO del proyecto)
 │   ├── package.json       Plugin deps (npm install on first clone)
 │   ├── AGENTS.md          (cargado al boot, contiene core rules)
 │   ├── CONVENTIONS.md     Naming + path conventions
-│   ├── agent -> agents    JUNCTION oculta (backwards compat opencode 1.17.x)
-│   └── skill -> ../.agents/skills  JUNCTION
 ├── .agents/skills/        ALL skills (pack + user-installed)
 └── docs/                  PROJECT docs (single location, easy to take anywhere)
     ├── PROJECT.md         (auto-gen por refresh-project.js)
@@ -40,7 +38,7 @@ Starter pack portable de opencode. El "producto" son los 72 agentes, 64 slash co
 ## Convenciones obligatorias
 
 1. **Nombres de carpetas en PLURAL** (`.opencode/agents/`, `.opencode/commands/`, `.agents/skills/`). Standard oficial.
-2. **NO borrar las junctions ocultas** (`.opencode/agent`, `.opencode/skill`). opencode 1.17.x las escanea por backwards compat.
+2. **Rutas plurales nativas** (`.opencode/agents/`, `.agents/skills/`). Los symlinks legacy singulares (`.opencode/agent`, `.opencode/skill`) fueron removidos — opencode >=1.14 usa las rutas plurales; no recrearlos.
 3. **Frontmatter agentes**: `description` (required), `mode: subagent` (required), `permission:` (recomendado). `name` se infiere del filename.
 4. **Frontmatter skills**: `name` + `description`. Description third person, 1-1024 chars, "Use when...".
 5. **Slash commands en `.md` con frontmatter** (no JSON): `description` + `agent`. `agent` enruta a un especialista.
@@ -48,15 +46,18 @@ Starter pack portable de opencode. El "producto" son los 72 agentes, 64 slash co
 ## Que NO hacer
 
 - No crear `tsconfig.json` ni archivos de build en el pack.
-- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 72 agentes — avisar antes.
+- No incluir `model` ni `small_model` en opencode.json (cada usuario configura el suyo). Si lo agregas, sera el default para los 68 agentes — avisar antes.
 
 ## Plugins
 
 **npm** (en `.opencode/package.json`): `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` + `@opencode-ai/plugin` peer.
 
-**Local** (auto-cargado desde `.opencode/plugins/`): `hookify.js` con 2 hooks:
-- **SecretBlocker** (strict) — bloquea writes a `.env`/`*.key`/`*.pem`/`id_rsa*`/etc (allowlist para `.env.example`)
-- **DestructiveWarner** (soft) — loguea `rm -rf /`, `git push --force`, `DROP TABLE`, etc a `.opencode/logs/destructive.log` (gitignored). NO bloquea — user confirma via flujo normal.
+**Local** (auto-cargado desde `.opencode/plugins/`), 3 plugins:
+- **hookify.js** — `SecretBlocker` (bloquea writes a `.env`/`*.key`/`*.pem`/`id_rsa*`/etc, allowlist `.env.example`) + `PolicyEngine` (reglas declarativas de `.opencode/policy-rules.json`, severidades warn/ask/deny) + `PermissionAsk`.
+- **gateguard.js** — clasificador destructivo cross-platform (POSIX + Windows) *shell-aware*; perfiles `GATEGUARD_MODE` (warn por defecto / block / off).
+- **cost-ledger.js** — escribe `docs/state/cost-*.json` en session idle + snapshot factual en `docs/sessions/` + instruccion de continuidad en compaction.
+
+Los logs de auditoría van a `.opencode/logs/policy.log` y `.opencode/logs/gateguard.log` (gitignored).
 
 **Auto-install**: `cd .opencode && npm install` (postinstall corre `bin/install-plugins.js` idempotentemente). `package.json` y `package-lock.json` tracked; `node_modules/` gitignored.
 
@@ -86,24 +87,3 @@ Naming: PRDs → `docs/prds/{YYYY-MM-DD_HHMM}-{name}.prd.md` · plans → `docs/
 **Immediate agent usage** (no user prompt needed): complex features → `planner` · code just written → `code-reviewer` · bug fix or new feature → `tdd-guide` · architectural decision → `architect`.
 
 **Parallel task execution**: SIEMPRE usar parallel Task para ops independientes. Multi-perspective analysis para problemas complejos (factual/senior/security/consistency sub-agents). Cada sub-agent corre en su propio context, primary sintetiza outputs.
-
-## Communication Triage Pattern
-
-When managing multi-channel communication (email, Slack, messaging), use this 4-tier classification:
-
-| Tier | Trigger | Action |
-|------|---------|--------|
-| **skip** | noreply, bots, @github.com, @jira, automated alerts | Auto-archive, show count only |
-| **info_only** | CC'd, receipts, @channel announcements, file shares | One-line summary |
-| **meeting_info** | Zoom/Teams URLs, date+meeting context, .ics attachments | Cross-reference calendar, fill missing links |
-| **action_required** | Direct questions, @user mentions, scheduling requests | Generate draft reply, present [Send/Edit/Skip] |
-
-**Priority order**: skip → info_only → meeting_info → action_required.
-
-**Post-send checklist** (enforce after every send):
-1. Calendar — Create [Tentative] events for proposed dates
-2. Relationships — Append interaction to sender context
-3. Todo — Update upcoming events, mark completed
-4. Pending responses — Set follow-up deadlines
-5. Archive — Remove processed message
-6. Knowledge files — Git commit all changes

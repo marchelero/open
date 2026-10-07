@@ -13,6 +13,7 @@ Run `node .opencode/bin/context.js` to generate a context hygiene report.
 - `/context-budget --skills` — only skills inventory (local + global)
 - `/context-budget --recommend` — only the recommendations block
 - `/context-budget --files` — only file sizes
+- `/context-budget --cost` — cost/token report aggregated from the session ledger (`docs/state/cost-*.json`)
 
 ## What it reports
 
@@ -20,6 +21,7 @@ Run `node .opencode/bin/context.js` to generate a context hygiene report.
 - **Agents** — count + total bytes + token estimate (with explicit warning: "do not load all")
 - **Commands** — count + total bytes
 - **Sessions** — count + latest date (helps decide if `/session-start` will resume)
+- **Cost** — tokens + USD aggregated from the per-session ledger written by `cost-ledger.js` (shown inline; `--cost` for the by-day/by-model breakdown)
 - **Project size** — excluding `.git/` and `.opencode/node_modules/`
 - **Recommendations** — heuristic tips based on the above (e.g. "many skills, trust catalog", "use Task tool to delegate")
 
@@ -59,6 +61,7 @@ node .opencode/bin/context.js                    # full
 node .opencode/bin/context.js --skills           # skills only
 node .opencode/bin/context.js --recommend        # recs only
 node .opencode/bin/context.js --files            # project size
+node .opencode/bin/context.js --cost             # cost/token report
 ```
 
 ## Integration

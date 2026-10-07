@@ -316,6 +316,22 @@ async function run() {
     /SecretBlocker/.test(e.message) ? ok("blocks write to id_rsa") : bad("blocks write to id_rsa", e.message.slice(0, 60))
   }
 
+  // ---- config-protection & git-integrity guards -------------------------
+  console.log("")
+  console.log("[config & git-integrity guards]")
+  const evalRule = (tool, target) => engine.evaluate(tool, target, loaded.rules, loaded.mode)
+  const guardChecks = [
+    ["edit eslint config warns", evalRule("edit", "eslint.config.js").severity === "warn"],
+    ["write .prettierrc warns", evalRule("write", ".prettierrc").severity === "warn"],
+    ["write ruff.toml warns", evalRule("write", "ruff.toml").severity === "warn"],
+    ["edit normal source allowed", evalRule("edit", "src/app.tsx").severity === "allow"],
+    ["bash git commit --no-verify asks", evalRule("bash", "git commit --no-verify -m x").severity === "ask"],
+    ["bash git push --no-verify asks", evalRule("bash", "git push origin main --no-verify").severity === "ask"],
+    ["bash core.hooksPath override asks", evalRule("bash", "git -c core.hooksPath=/dev/null commit -m x").severity === "ask"],
+    ["bash normal git commit allowed", evalRule("bash", "git commit -m 'feat: policy'").severity === "allow"],
+  ]
+  for (const [name, cond] of guardChecks) cond ? ok(name) : bad(name)
+
   // ---- permission.ask fallback ------------------------------------------
   console.log("")
   console.log("[permission.ask channel]")

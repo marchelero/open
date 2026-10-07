@@ -1,6 +1,6 @@
 ---
 name: ui-ux-pro-max
-description: "UI/UX design intelligence for web, mobile, and desktop."
+description: "Use when designing, building, reviewing, or fixing web, mobile, or desktop interfaces — pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation."
 ---
 
 # UI/UX Pro Max - Design Intelligence

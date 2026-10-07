@@ -1,15 +1,15 @@
 ---
 prd: docs/prds/2026-10-07_0303-ecc-aprovechamiento.prd.md
 plan: docs/plans/2026-10-07_0303-ecc-aprovechamiento.plan.md
-status: IN_PROGRESS
+status: COMPLETE
 created: 2026-10-07_0303
 ---
 
 # Tasks: Aprovechamiento de ECC en el pack `open`
 
 ## Resumen
-- Total: 24 · done: 16 · pending: 8 · blocked: 0
-- AC cubiertos: 7/7 (AC-05 y AC-06 parciales)
+- Total: 24 · done: 24 · pending: 0 · blocked: 0
+- AC cubiertos: 7/7 (AC-05 y AC-06 completos desde 2026-10-07_1231)
 - AC SIN cobertura: ninguno
 
 ## Fase 1: Tools nativas (AC-01) [QUICK WIN] ✅ COMPLETA
@@ -36,18 +36,18 @@ created: 2026-10-07_0303
 ## Fase 4: Skills homónimas (AC-05) [QUICK WIN] 🟡 PARCIAL
 
 - [x] T-013 `code` `security-review`: fix placeholder SQL + guard + `error.issues` + descripción · ✓ 2026-10-07
-- [ ] T-014 `code` `frontend-patterns`: merge ErrorBoundary, virtualización, focus, animación — **pendiente**
-- [ ] T-015 `code` `backend-patterns`: merge caching, background jobs, JWT/RBAC/retry — **pendiente**
-- [ ] T-016 `code` `database-migrations`: merge PostgreSQL patterns, Kysely, Django, timeline — **pendiente**
+- [x] T-014 `code` `frontend-patterns`: merge ErrorBoundary, virtualización, focus, animación · ✓ 2026-10-07_1231 — +Error Boundary, código de virtualización, Focus Management, Keyboard Nav, Animation Patterns
+- [x] T-015 `code` `backend-patterns`: merge caching, background jobs, JWT/RBAC/retry · ✓ 2026-10-07_1231 — +Caching, Background Jobs & Queues, Retry w/ backoff+jitter, JWT verify pinning, RBAC role→permission map
+- [x] T-016 `code` `database-migrations`: merge PostgreSQL patterns, Kysely, Django, timeline · ✓ 2026-10-07_1231 — +PG11 defaults, CONCURRENTLY/INVALID, SKIP LOCKED, Kysely, Django RunPython+SeparateDatabaseAndState, timeline, +5 anti-pattern rows
 - [x] T-017 `code` `deep-research`: merge `MCP Requirements` + `Untrusted Sources` · ✓ 2026-10-07
-- [ ] T-018 `code` `docker-patterns`: merge Networking/Volumes/.dockerignore/Debugging — **pendiente**
+- [x] T-018 `code` `docker-patterns`: merge Networking/Volumes/.dockerignore/Debugging · ✓ 2026-10-07_1231 — +Compose Networking, Volume Strategies, .dockerignore, Debugging (skip harness ECC)
 - [x] T-019 `code` Fixes menores: `coding-standards` (Zod), `verification-loop` (pipefail/--no-install), descripciones truncadas · ✓ 2026-10-07
 - [x] T-020 `config` Regenerar `skills-lock.json` + `build-skills-index` · ✓ 2026-10-07 — lockfile CLEAN
 
 ## Fase 5: Tier 1 skills (AC-06) [FASE POSTERIOR]
 
-- [ ] T-021 `docs` Importar arquitectura + accesibilidad + testing (8) — **pendiente (fase posterior)**
-- [ ] T-022 `docs` Importar lenguajes + DB + design (≈18) — **pendiente (fase posterior)**
+- [x] T-021 `docs` Importar arquitectura + accesibilidad + testing (8) · ✓ 2026-10-07_1231 — hexagonal-architecture, contract-first, architecture-decision-records, deployment-patterns, accessibility, frontend-a11y, e2e-testing, tdd-workflow
+- [x] T-022 `docs` Importar lenguajes + DB + design (21) · ✓ 2026-10-07_1231 — golang/rust/python/django/fastapi/springboot/java/kotlin/cpp/dotnet (+tests), mysql, redis, clickhouse-io, nestjs, design-system, make-interfaces-feel-better, motion-foundations, motion-patterns
 
 ## Fase 6: Verificación (AC-07) ✅
 
@@ -62,8 +62,8 @@ created: 2026-10-07_0303
 | AC-02 | Detección destructiva cross-platform | T-005..T-008 | ✅ done |
 | AC-03 | Arranque sin cuelgue | T-009, T-010 | ✅ done |
 | AC-04 | Drift interno cero | T-011, T-012 | ✅ done |
-| AC-05 | 14 skills homónimas actualizadas | T-013..T-020 | 🟡 9/13 hechas; 4 merges grandes pendientes |
-| AC-06 | Tier 1 importado | T-021, T-022 | ⏸ pendiente (fase posterior) |
+| AC-05 | 14 skills homónimas actualizadas | T-013..T-020 | ✅ done (13/13; api-design dedupe no aplicó) |
+| AC-06 | Tier 1 importado | T-021, T-022 | ✅ done — 29 skills, frontmatter `triggers:`+`origin` |
 | AC-07 | No regresión | T-004, T-020, T-023, T-024 | ✅ done |
 
 ## Pendientes (fase posterior)

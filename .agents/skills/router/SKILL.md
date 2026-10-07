@@ -6,7 +6,7 @@ triggers: [build, create, add, implement, fix, repair, patch, refactor, rewrite,
 
 # Router
 
-Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 68 agents and 79 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 147 descriptions.
+Decide which **subagent** to invoke and/or which **knowledge skill** to load for a user request. The pack ships 68 agents and 108 skills organized by purpose. This single skill provides the decision matrix so the primary agent doesn't have to scan all 176 descriptions.
 
 > **This is the merged `agent-router` + `skill-router`.** When you needed both before, you load just this one now. Save ~10K tokens of skill content per turn.
 
@@ -292,6 +292,35 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 | dependency audit, CVE, license compliance, supply chain, outdated package, vulnerable dependency | `dependency-audit` |
 | performance budget, Core Web Vitals, LCP, CLS, bundle size, load time, Lighthouse, TTI, TBT | `performance-budget` |
 | user manual, end-user documentation, user guide, handoff docs, guía de usuario, entrega | `user-manual-generator` |
+| ports and adapters, hexagonal, dependency inversion, use case layer, domain boundary, adapter | `hexagonal-architecture` |
+| contract first, OpenAPI first, api contract test, consumer driven contract, schema before code | `contract-first` |
+| ADR, architecture decision record, decision log, lightweight architecture doc | `architecture-decision-records` |
+| deploy strategy, blue green, canary, rolling update, release rollout, strangler fig, deploy rollback | `deployment-patterns` |
+| WCAG, screen reader, contrast ratio, aria-live, target size, semantic role, audit accessibility | `accessibility` |
+| focus trap, skip link, landmark, aria-describedby, accessible form, keyboard-only UI | `frontend-a11y` |
+| Playwright, page object, test id, flaky e2e, browser test, e2e suite, E2E CI | `e2e-testing` |
+| write a failing test first, red green refactor, test driven, TDD plan | `tdd-workflow` |
+| goroutine, go channel, go context, go error wrapping, go interface, golang idiom | `golang-patterns` |
+| go test, testify, table driven test, go benchmark, go mock, golang coverage | `golang-testing` |
+| rust ownership, borrow checker, trait impl, lifetime, Result/Option rust, rust error | `rust-patterns` |
+| cargo test, rust test, proptest, criterion benchmark, rust mock | `rust-testing` |
+| python idioms, typing, dataclass, context manager, generator python, pep 8 | `python-patterns` |
+| pytest fixture, monkeypatch, parametrize, pytest mark, python test suite | `python-testing` |
+| django model, queryset, django view, django orm, migration django, django signal | `django-patterns` |
+| fastapi router, pydantic model, response_model, fastapi dependency, api route fastapi | `fastapi-patterns` |
+| spring boot, spring data jpa, spring bean, spring controller, spring security config | `springboot-patterns` |
+| java idioms, effective java, optional, java stream, record, java style guide | `java-coding-standards` |
+| kotlin coroutine, sealed class, extension function, null safety, kotlin idiom | `kotlin-patterns` |
+| C++, RAII, smart pointer, move semantics, constexpr, modern C++ | `cpp-coding-standards` |
+| .NET, C#, Entity Framework, dependency injection .NET, ASP.NET, C# idiom | `dotnet-patterns` |
+| mysql, innodb, mysql index, explain plan, replica mysql, slow query mysql | `mysql-patterns` |
+| redis data type, distributed lock, redis ttl, pubsub, redis pipeline | `redis-patterns` |
+| clickhouse, columnar, olap, MergeTree, distributed aggregate, analytic query | `clickhouse-io` |
+| nest module, nest guard, nest interceptor, nest provider, nest decorator | `nestjs-patterns` |
+| generate a design system, design tokens json, AI slop patterns, visual consistency audit | `design-system` |
+| polish UI, micro-interaction, visual hierarchy, spacing rhythm, interface feel | `make-interfaces-feel-better` |
+| easing, motion duration, animation principle, reduced motion, motion choreography | `motion-foundations` |
+| framer motion, entrance exit, spring animation, layout animation, scroll animation | `motion-patterns` |
 
 ---
 
@@ -323,7 +352,7 @@ Use these INSTEAD of `code-reviewer` when the stack is known:
 - **Don't invoke `build-error-resolver` for specific languages.** The lang-specific resolver is faster and more accurate.
 - **Don't load this router for pure Q&A.** The primary agent answers directly.
 - **Don't use `prd-agent` for small fixes.** Use `/quick-prd` flow or skip PRD entirely.
-- **Don't load all 20 skills.** Pick the top 1-3 by trigger match.
+- **Don't load all skills.** Pick the top 1-3 by trigger match — the catalog above covers 108, and the full list lives in `.agents/skills/INDEX.md`.
 - **Don't load a skill that doesn't match** (e.g. `frontend-patterns` for a deploy request just because "config" is a shared trigger).
 
 ---

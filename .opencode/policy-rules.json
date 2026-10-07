@@ -241,6 +241,35 @@
       "match": "\\bhalt\\b",
       "tool": "bash",
       "message": "halt powers off the machine; confirm it is intended."
+    },
+    {
+      "id": "protect-linter-config",
+      "severity": "warn",
+      "tool": ["edit", "write"],
+      "flags": "i",
+      "match": "(^|[/\\\\])(\\.eslintrc.*|eslint\\.config\\..*|\\.eslintignore|\\.prettierrc.*|prettier\\.config\\..*|\\.prettierignore|\\.stylelintrc.*|stylelint\\.config\\..*|\\.stylelintignore|commitlint\\.config\\..*|\\.commitlintrc.*|biome\\.jsonc?|\\.biome\\.jsonc?|\\.?ruff\\.toml|\\.markdownlint.*)$",
+      "message": "Editing a linter/formatter/commit-lint config can silently weaken the whole repo's checks. Fix the code, not the gate; if the change is intentional, confirm it."
+    },
+    {
+      "id": "git-commit-no-verify",
+      "severity": "ask",
+      "tool": "bash",
+      "match": "\\bgit\\s+commit\\b[^\\n]*--no-verify",
+      "message": "git commit --no-verify skips pre-commit hooks; bypassing the checks is rarely intended. Confirm before running."
+    },
+    {
+      "id": "git-push-no-verify",
+      "severity": "ask",
+      "tool": "bash",
+      "match": "\\bgit\\s+push\\b[^\\n]*--no-verify",
+      "message": "git push --no-verify skips pre-push hooks; bypassing the checks is rarely intended. Confirm before running."
+    },
+    {
+      "id": "git-hooks-path-override",
+      "severity": "ask",
+      "tool": "bash",
+      "match": "\\bgit\\b[^\\n]*core\\.hooksPath",
+      "message": "Overriding core.hooksPath disables the repository's git hooks for this command. Confirm before running."
     }
   ]
 }

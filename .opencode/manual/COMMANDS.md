@@ -43,7 +43,7 @@
 | `/react-perf` | Revisión de rendimiento React / Next.js. | code-reviewer |
 | `/ui-review` | Revisión de UI/UX y accesibilidad. | code-reviewer |
 | `/api-docs` | Genera/actualiza la documentación de la API. | code-explorer |
-| `/build-fix` | Arregla errores de build y TypeScript con cambios mínimos. | build-error-resolver |
+| `/build-fix` | Detecta el build system y arregla errores de build/type con cambios mínimos; enruta al `*-build-resolver` del stack. | build-error-resolver |
 | `/go-test` | Workflow TDD de Go con tests table-driven. | tdd-guide |
 
 ## "Quiero testear"
@@ -99,7 +99,7 @@
 | `/help` | Overview del pack: comandos principales, agentes, skills, convenciones. | build |
 | `/start-here` | Onboarding: primeros pasos tras instalar el pack. | build |
 | `/list-agents` | Lista los 68 agents con descripción y triggers. Filtros: keyword, categoría. | build |
-| `/list-skills` | Lista las 79 skills con descripción y triggers. Filtros: keyword. | build |
+| `/list-skills` | Lista las 108 skills con descripción y triggers. Filtros: keyword. | build |
 | `/list-mcps` | Lista MCPs activos y opcionales. | build |
 | `/pack-doctor` | Diagnostica la salud del pack (frontmatter, duplicados, permalinks, etc). | build |
 

@@ -32,3 +32,14 @@ One file per work session. Used by `/session-start` (read) and `/session-end` (w
 ## Cleanup
 
 Old snapshots are kept for archaeology. Optional: archive snapshots older than 90 days to `docs/sessions/archive/`.
+
+## Auto-snapshot (cost-ledger.js)
+
+Independently of `/session-end`, the `cost-ledger.js` plugin writes a **factual**
+snapshot on `session.idle` — branch, `git status --porcelain`, tokens and cost —
+to `<YYYY-MM-DD>-session-<id>.md` (one file per session, refreshed on each idle).
+
+`LATEST.md` is only overwritten while it still looks auto-generated, so a
+narrated `/session-end` handoff is never clobbered by an idle snapshot. Run
+`/session-end` for the real, human-readable handoff; the auto-snapshot is a
+safety net if a session ends without one.

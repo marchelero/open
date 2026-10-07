@@ -10,7 +10,7 @@ Pack portable de opencode. Cópialo a cualquier proyecto, reinicia opencode y em
 
 - **68** agents (.opencode/agents)
 - **64** commands (.opencode/commands)
-- **79** skills (.agents/skills)
+- **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
 - **3** npm plugins + **3** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
@@ -40,7 +40,7 @@ Después de copiar el pack, **corré esto una vez** en el proyecto destino:
 cd .opencode && npm install
 ```
 
-Baja los plugins (vibeguard, pty, dcp) + `@opencode-ai/plugin` peer. Sin esto opencode puede colgarse al boot porque los plugins no cargan. El script `install-plugins.js` es idempotente — si `node_modules/` ya existe, skip.
+Baja los plugins (vibeguard, pty, dcp) + `@opencode-ai/plugin` peer. Sin esto opencode puede colgarse al boot porque los plugins no cargan. El script `install-plugins.js` es idempotente **y auto-reparable**: verifica cada dependencia declarada y reinstala si falta (no salta solo porque `node_modules/` exista).
 
 ### Si opencode se cuelga al boot
 

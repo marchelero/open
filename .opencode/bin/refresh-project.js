@@ -22,8 +22,9 @@
  *   - .env.example / .env.sample (env vars)
  *
  * Generates a fresh docs/PROJECT.md and (in --dry-run) shows the diff
- * without writing. Manual sections (Non-Negotiables, Architecture Notes,
- * Open Questions) are preserved across refreshes.
+ * without writing. Every section carrying a `<!-- manual -->` marker
+ * (Non-Negotiables, Architecture Notes, Open Questions, Glossary,
+ * Token / MCP Opt-in, …) is preserved across refreshes.
  *
  * Usage:
  *   node .opencode/bin/refresh-project.js              # scan + write
@@ -63,7 +64,7 @@ Scans: package.json, pubspec.yaml, pyproject.toml, requirements.txt, setup.py,
 Writes: docs/PROJECT.md (backup at docs/PROJECT.md.bak.<ts>)
 
 Sections regenerated: Identity, Stack, Tooling, Directory Layout, License, Entry Points
-Sections preserved: Non-Negotiables, Architecture Notes, Open Questions (manual edits kept)
+Sections preserved: every <!-- manual --> section (Non-Negotiables, Architecture Notes, Open Questions, Glossary, Token / MCP Opt-in, …)
 `);
   process.exit(0);
 }
@@ -456,15 +457,37 @@ function simpleDiff(oldText, newText) {
   return diff.length ? diff.join('\n') : '(no changes)';
 }
 
+function escapeRegExp(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function preserveManualSections(oldContent, newContent) {
   if (!oldContent) return newContent;
-  const sections = ['Non-Negotiables', 'Architecture Notes', 'Open Questions'];
+  // Sections the template always regenerates (body swapped in place) plus any
+  // other user section carrying a `<!-- manual` marker, which is appended when
+  // the template does not produce it (e.g. Glossary, Token / MCP Opt-in).
+  const regenerated = ['Non-Negotiables', 'Architecture Notes', 'Open Questions'];
   let result = newContent;
-  for (const section of sections) {
-    const re = new RegExp(`(## ${section}\\s*\\n)([\\s\\S]*?)(?=\\n## |$)`, 'm');
-    const oldMatch = oldContent.match(re);
-    if (oldMatch) {
-      result = result.replace(re, `$1${oldMatch[2].trim()}\n\n`);
+  const reFor = (name) =>
+    new RegExp(`(## ${escapeRegExp(name)}\\s*\\n)([\\s\\S]*?)(?=\\n## |$)`, '');
+
+  for (const name of regenerated) {
+    const oldMatch = oldContent.match(reFor(name));
+    if (oldMatch) result = result.replace(reFor(name), `$1${oldMatch[2].trim()}\n\n`);
+  }
+
+  // Any other `## Heading` whose body carries a `<!-- manual` marker.
+  const sectionRe = /(## [^\n]+\n)([\s\S]*?)(?=\n## |$)/g;
+  let m;
+  while ((m = sectionRe.exec(oldContent)) !== null) {
+    const name = m[1].replace(/^##\s+/, '').trim();
+    const body = m[2];
+    if (regenerated.includes(name)) continue;
+    if (!/<!--\s*manual/.test(body)) continue;
+    if (reFor(name).test(result)) {
+      result = result.replace(reFor(name), `$1${body.trim()}\n\n`);
+    } else {
+      result = result.trimEnd() + `\n\n## ${name}\n${body.trim()}\n`;
     }
   }
   return result;
@@ -556,5 +579,5 @@ if (AUTO) {
   console.log(`Lines removed: ${removed}`);
   console.log('');
   console.log('Sections regenerated: Identity, Stack, Tooling, Conventions, Entry Points, Directory Layout, License');
-  console.log('Sections preserved: Non-Negotiables, Architecture Notes, Open Questions (manual edits kept)');
+  console.log('Sections preserved: every <!-- manual --> section (Non-Negotiables, Architecture Notes, Open Questions, Glossary, Token / MCP Opt-in, …)');
 }

@@ -96,11 +96,11 @@
   {
     "id": "E11",
     "kind": "metric",
-    "title": "counts: 79 skills presentes (no se filtran)",
+    "title": "counts: 108 skills presentes (no se filtran)",
     "tool": "counts",
     "field": "skills",
-    "equals": 79,
-    "why": "invariante propia de open: la poda del instalador NO toca skills (64 + 14 skills SaaS/stack de Fase 4 + llm-as-judge)"
+    "equals": 108,
+    "why": "invariante propia de open: la poda del instalador NO toca skills (64 + 14 skills SaaS/stack de Fase 4 + llm-as-judge + 29 skills Tier 1 de ECC)"
   },
   {
     "id": "E12",
@@ -132,11 +132,11 @@
   {
     "id": "E15",
     "kind": "count",
-    "title": "skills-lock.json cubre 79 skills + 68 agents (sha256 >= 147)",
+    "title": "skills-lock.json cubre 108 skills + 68 agents (sha256 >= 176)",
     "files": ["skills-lock.json"],
     "pattern": "\"sha256\"",
-    "gte": 147,
-    "why": "un lockfile casi vacio deja pasar drift de contenido (64+14+1 skills + 68 agents)"
+    "gte": 176,
+    "why": "un lockfile casi vacio deja pasar drift de contenido (64+14+1+29 skills + 68 agents)"
   },
   {
     "id": "E16",
@@ -209,5 +209,32 @@
       ".opencode/plugins/gateguard.js"
     ],
     "why": "AC-02: un mismo detector cubre POSIX y Windows, con perfiles y modos warn/block"
+  },
+  {
+    "id": "E23",
+    "kind": "present",
+    "title": "Continuidad: hook de compaction + auto-snapshot de sesion presentes",
+    "files": [".opencode/plugins/cost-ledger.js"],
+    "pattern": "experimental\\.session\\.compacting|writeSessionSnapshot",
+    "min": 2,
+    "why": "Lote 2 (C5/C6): la continuidad deja de ser solo prompt — un hook de compaction y un snapshot factual en session.idle"
+  },
+  {
+    "id": "E24",
+    "kind": "present",
+    "title": "Scanner de unicode peligroso (ASCII/Tag smuggling) presente",
+    "files": [".opencode/bin/lint-docs.js"],
+    "pattern": "Unicode Tag block",
+    "min": 1,
+    "why": "Lote 2 (C2): el Prompt Defense Baseline nombra unicode/homoglyph/zero-width; lint-docs R8 lo verifica"
+  },
+  {
+    "id": "E25",
+    "kind": "present",
+    "title": "Cost report surfacea el ledger existente",
+    "files": [".opencode/bin/context.js"],
+    "pattern": "--cost",
+    "min": 1,
+    "why": "Lote 2 (C9): cost-ledger.js escribia docs/state/cost-*.json sin ningun lector; context.js --cost lo surfacea"
   }
 ]

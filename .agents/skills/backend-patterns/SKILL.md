@@ -166,6 +166,37 @@ try { await riskyOp() } catch (e) {
 
 If you do not know what to do with the error, rethrow it. The framework's error handler will deal with it.
 
+### Retry with Exponential Backoff
+
+Retry only operations that are safe to repeat (reads, idempotent writes with an idempotency key). Never retry non-idempotent side effects blindly.
+
+```typescript
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  { maxAttempts = 3, baseMs = 250, isRetryable = () => true } = {},
+): Promise<T> {
+  let lastError: unknown
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      return await fn()
+    } catch (err) {
+      lastError = err
+      if (!isRetryable(err) || attempt === maxAttempts - 1) throw err
+      const backoff = baseMs * 2 ** attempt
+      const jitter = Math.random() * backoff * 0.3      // avoid thundering herd
+      await new Promise(r => setTimeout(r, backoff + jitter))
+    }
+  }
+  throw lastError
+}
+```
+
+Rules:
+- Bounded attempts with exponential backoff **plus jitter**.
+- Retry only transient classes: timeouts, 429, 5xx, connection reset. Not 4xx from the caller's own mistake.
+- Cap total wait time (deadline) — a retry loop must not outlive the request timeout.
+- One retry budget per dependency; a failing upstream must not multiply your load.
+
 ## Transactions
 
 A unit of work must be atomic. Use a transaction whenever multiple writes need to succeed or fail together.
@@ -201,6 +232,57 @@ await db.transaction(async (tx) => {
 - Never edit a deployed migration. Create a new one.
 - Test migrations on a copy of production data before deploying.
 
+## Caching
+
+Cache reads, not writes. The default is **cache-aside**: the caller checks the cache, falls back to the source, and repopulates.
+
+```typescript
+async function getWithCache<T>(key: string, ttlSec: number, load: () => Promise<T>): Promise<T> {
+  const hit = await redis.get(key)
+  if (hit !== null) return JSON.parse(hit) as T
+
+  const value = await load()                       // cache miss → source of truth
+  await redis.setex(key, ttlSec, JSON.stringify(value))
+  return value
+}
+
+// Invalidation is a write-side responsibility:
+// on mutation, delete every key the mutation affects (`user:${id}`, `user:${id}:posts`).
+```
+
+Rules:
+- Choose TTLs per data class: seconds for hot reads, minutes for aggregates, never forever without an invalidation path.
+- **Write-through invalidation**: delete (or update) cache keys in the same code path as the write — preferably in the same transaction boundary or immediately after commit.
+- Cache stampede: on miss under load, only one request should recompute (Redis `SET NX`, in-process mutex, or stale-while-revalidate).
+- Never cache the result of an authorization check across users — key must include the acting user or the permission scope.
+- Cache serialization must be stable (JSON) and versioned if the shape changes; a shape change is a key change.
+- Negative caching (404s) is useful for hot miss paths but keep the TTL short.
+
+Where it belongs: HTTP/CDN caching is `api-design`'s contract; in-process memoization is `caching-patterns`; this section is the application-level read-through layer.
+
+## Background Jobs & Queues
+
+Anything that must survive a restart, takes > ~200ms, or fans out to many workers belongs in a queue — not in the request path.
+
+```typescript
+// Request path: enqueue and return 202 immediately
+app.post('/reports', async (req, res) => {
+  const job = await queue.enqueue('report.generate', { userId: req.user.id, reportId }, {
+    jobId: `${req.user.id}:${req.body.idempotencyKey}`,   // idempotent enqueue
+  })
+  res.status(202).json({ jobId: job.id })
+})
+```
+
+Rules:
+- Use a durable broker (BullMQ, Celery, SQS, RabbitMQ, Sidekiq) — an in-process array queue dies with the process.
+- **Idempotent consumers**: at-least-once delivery means every handler runs twice sometimes. Dedupe by message id or a processed-jobs table.
+- Retries with backoff move to the queue's retry policy; after max attempts → dead-letter queue (DLQ) with alerting.
+- Job payload carries identifiers, not full data blobs; the worker re-reads the source of truth.
+- Preserve ordering only where it is required (per-entity ordering via a partition key) — global ordering costs throughput.
+- Bound concurrency per queue so a slow job type cannot starve the rest.
+- Record duration, attempts, and failure reason for every job.
+
 ## Authentication & Sessions
 
 - Use established libraries (Passport, NextAuth, Lucia, Clerk, Auth0). Do not roll your own JWT.
@@ -209,6 +291,37 @@ await db.transaction(async (tx) => {
 - MFA for admin / high-privilege operations.
 - Token rotation for refresh tokens. Detect token reuse.
 - Rate limit auth endpoints aggressively (5 attempts / 15 min / IP).
+
+### Verifying a JWT at the Edge of the Request
+
+Libraries, never hand-rolled crypto. Verify signature, `exp`, `iss`, and `aud` — then treat every claim as untrusted input.
+
+```typescript
+import jwt from 'jsonwebtoken'
+
+interface Claims { sub: string; role: 'admin' | 'user'; exp: number }
+
+export function requireAuth(req: Request): Claims {
+  const token = req.headers.authorization?.replace(/^Bearer /i, '')
+  if (!token) throw new UnauthorizedError('missing bearer token')
+
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET!, {
+      algorithms: ['HS256'],          // pin the algorithm — never trust the header
+      issuer: 'https://auth.example.com',
+      audience: 'api.example.com',
+    }) as Claims
+  } catch {
+    throw new UnauthorizedError('invalid or expired token')
+  }
+}
+```
+
+Notes:
+- Pin `algorithms`. Accepting the header's `alg` is the classic `alg: none` / RS→HS confusion bug.
+- Verify on every request at the middleware boundary; a decoded-but-unverified token is not authentication.
+- Short-lived access tokens (minutes) + rotating refresh tokens; detect refresh reuse.
+- `iat`/`nbf`/`exp` are numbers, not booleans — check them explicitly if your library does not.
 
 ## Authorization
 
@@ -226,6 +339,37 @@ async function deletePost(userId: string, postId: string) {
 ```
 
 Centralize authorization logic. Do not scatter `if (user.id === post.authorId)` checks across the codebase.
+
+### Role → Permission Map (RBAC)
+
+Object-level checks (above) and role-based checks compose; neither replaces the other.
+
+```typescript
+type Permission = 'read' | 'write' | 'delete' | 'admin'
+
+const rolePermissions: Record<'admin' | 'moderator' | 'user', Permission[]> = {
+  admin:    ['read', 'write', 'delete', 'admin'],
+  moderator:['read', 'write', 'delete'],
+  user:     ['read', 'write'],
+}
+
+export function requirePermission(permission: Permission) {
+  return (handler: (req: Request, user: Claims) => Promise<Response>) =>
+    async (req: Request) => {
+      const user = requireAuth(req)
+      if (!rolePermissions[user.role]?.includes(permission)) throw new ForbiddenError('insufficient permissions')
+      return handler(req, user)
+    }
+}
+
+export const DELETE = requirePermission('delete')(async (req, user) => { /* ... */ })
+```
+
+Rules:
+- Keep the map in one module — the audit surface for "who can do what" is a single file.
+- Deny by default: unknown role → no permissions.
+- Roles answer *what*; ownership answers *whose*. A `delete` permission still passes the `post.authorId` check.
+- Changing a permission set is a security change: test it, and never derive roles from client-supplied claims alone.
 
 ## Logging
 
@@ -249,4 +393,9 @@ Never log:
 - **Catching errors and ignoring them** — rethrow or handle explicitly.
 - **Logging PII or secrets** — mask, hash, or omit.
 - **Auth in the frontend only** — backend must enforce authorization on every request.
+- **Caching without an invalidation path** — stale data nobody can expire.
+- **Caching cross-user responses without a user-scoped key** — one user's data served to another.
+- **Blocking the request path with slow/fan-out work** — enqueue and return 202.
+- **Non-idempotent queue consumers** — at-least-once delivery will double-charge.
+- **Unbounded or blind retries** — amplifies the outage you are trying to survive.
 - **One file per "thing" with 1000+ lines** — split by layer or aggregate.

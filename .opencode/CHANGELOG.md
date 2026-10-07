@@ -124,7 +124,19 @@ Pack 1.1 polish: bug fixes, drift cleanup, scaffolding. **+1 primary, -11 trivia
 - **Added `validateBodySkillRefs()` to `validate-frontmatter.js`** (C3b). New check finds `skill(s):` keyword, extracts backticked names from rest-of-line, warns on missing skills against `.agents/skills/` catalog. Caught 5 more broken refs the original audit missed (laravel/postgres/db) and is now durable. Currently 25 body-refs, all valid.
 
 ### Added
-- **`counts.js` — single source of truth for pack surface-area numbers** (H1). Scans filesystem for agents/commands/skills/CLIs/plugins/MCPs and emits JSON. `--update <files...>` injects/replaces a `## Counts` block (between `<!-- COUNTS-START -->` / `<!-- COUNTS-END -->` markers) in any markdown file. `--check` mode exits non-zero if any tracked file is stale. Both `build-agents-index.js` and `build-skills-index.js` now use `counts.compute()` for their footers — no more hardcoded numbers that drift.
+- **`counts.js` — single source of truth for pack surface-area numbers** (H1). Scans filesystem for agents/commands/skills/CLIs/plugins/MCPs and emits JSON. `--update <files...>` injects/replaces a `## Counts` block (between `<!-- COUNTS-START -->
+## Counts
+
+> Auto-managed by `.opencode/bin/counts.js`. Do not edit by hand.
+> Regenerate: `node .opencode/bin/counts.js --update <files...>`
+
+- **68** agents (.opencode/agents)
+- **64** commands (.opencode/commands)
+- **108** skills (.agents/skills)
+- **22** native CLIs (.opencode/bin)
+- **3** npm plugins + **3** local plugin(s)
+- **1** active MCPs + **13** optional MCP(s)
+<!-- COUNTS-END -->` markers) in any markdown file. `--check` mode exits non-zero if any tracked file is stale. Both `build-agents-index.js` and `build-skills-index.js` now use `counts.compute()` for their footers — no more hardcoded numbers that drift.
 - **`.opencode/AGENTS.md` is now ~1.2KB lighter at boot** — see M2 above.
 - **3 scaffolders** (M3) for downstream extension without hand-writing frontmatter:
   - `node .opencode/bin/scaffold-new-project.js <name>` + `/new-project` — creates `docs/{prds,plans,reports,audits,sessions,state,instincts}/` + `PROJECT.md` template + `docs/README.md` index

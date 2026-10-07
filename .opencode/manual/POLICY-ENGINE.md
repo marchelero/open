@@ -28,6 +28,29 @@ The default is conservative: only `rm -rf /`, `rm -rf ~`, raw-device wipes,
 `git push --force` are `deny`. Migrations, commits, tests, and `DROP TABLE`
 inside a migration stay non-blocking.
 
+## Guard groups
+
+- **Filesystem / DB / power** — the original catastrophic set (`deny`) plus
+  migration-safe `warn`s.
+- **Config protection** (`protect-linter-config`, `warn`, `tool: ["edit","write"]`)
+  — editing an ESLint/Prettier/Stylelint/commitlint/Biome/Ruff/markdownlint
+  config (or its ignore file) warns: the fix belongs in the code, not in the
+  gate. Creating a config also warns; it never blocks.
+- **Git-integrity** (`git-commit-no-verify`, `git-push-no-verify`,
+  `git-hooks-path-override`, `ask`) — committing/pushing with hooks disabled or
+  overriding `core.hooksPath` asks for confirmation instead of running silently.
+
+## Companion detector (GateGuard)
+
+`.opencode/plugins/gateguard.js` is a second, independent detector that runs
+alongside this engine on `tool.execute.before` (default profile `warn`, switch
+with `GATEGUARD_MODE`). It adds cross-platform coverage (Windows `del`,
+`Remove-Item`, `diskpart`, …) and **shell-composition awareness**: the bodies of
+`$(...)`, backticks, bare `(...)` subshells and `{ ...; }` brace groups are
+extracted and scanned too, so a destructive verb hidden inside one of them is
+still caught. Heredoc bodies are treated as data (removed from the scan) unless
+they feed a shell interpreter. See `node .opencode/plugins/gateguard.js --selftest`.
+
 ## Editing a rule
 
 Open `.opencode/policy-rules.json`, change a `severity`, edit a `match`

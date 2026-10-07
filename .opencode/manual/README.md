@@ -12,7 +12,7 @@
 
 - **68** agents (.opencode/agents)
 - **64** commands (.opencode/commands)
-- **79** skills (.agents/skills)
+- **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
 - **3** npm plugins + **3** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
@@ -25,7 +25,7 @@ Detalles:
 - Slash commands: atajos recurrentes
 - MCPs activos: `context7` (docs) + `anydoc` (document conversion)
 - Plugins npm: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
-- Plugin local: `.opencode/plugins/hookify.js` con SecretBlocker + policy engine (reglas declarativas en `.opencode/policy-rules.json`). Auto-cargado, zero install
+- Plugins locales: `.opencode/plugins/hookify.js` (SecretBlocker + policy engine con reglas declarativas en `.opencode/policy-rules.json`), `gateguard.js` (detector destructivo cross-platform) y `cost-ledger.js` (ledger de costo + snapshot de sesión). Auto-cargados, zero install
 - **3 ejemplos downstream** en `.opencode/examples/` (node-api, python-data, react-app) — borrar tras grokking el pack
 - CLIs nativos: cero dependencias, solo Node stdlib (ver `node .opencode/bin/counts.js --json`)
 

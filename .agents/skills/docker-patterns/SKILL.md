@@ -156,6 +156,66 @@ secrets:
     file: ./secrets/db_password.txt
 ```
 
+### Compose Networking
+
+Services on the same Compose network resolve each other by **service name** — that is the only address any container needs:
+
+```
+postgresql://postgres:secret@db:5432/mydb     # "db" is the service name
+redis://redis:6379/0
+```
+
+`ports:` publishes to the **host**; it is not required for container-to-container traffic. Omit it in production for anything that is not meant to be reached from outside.
+
+```yaml
+services:
+  frontend:
+    networks: [frontend-net]
+
+  api:
+    networks: [frontend-net, backend-net]
+
+  db:
+    networks: [backend-net]      # reachable from api only, never from frontend
+    ports:
+      - "127.0.0.1:5432:5432"    # if the host must connect: bind to loopback
+                                 # (omit ports entirely if only containers need it)
+
+networks:
+  frontend-net:
+  backend-net:
+```
+
+Rules:
+- Bind published ports to `127.0.0.1:` for databases and admin UIs. `5432:5432` publishes to every interface, including the public one.
+- Separate frontend and backend planes; only services that must talk cross-plane join both networks.
+- `depends_on` orders startup, it does not wait for *readiness* — use `condition: service_healthy` with a healthcheck.
+- Docker's embedded DNS is the service discovery mechanism; hard-coded IPs break on every `up`.
+
+### Volume Strategies
+
+```yaml
+volumes:
+  postgres_data:        # named volume: persists across restarts, Docker-managed
+
+services:
+  app:
+    volumes:
+      - .:/app                        # bind mount: live reload in development
+      - /app/node_modules             # anonymous volume: protect container deps from the host bind
+      - /app/.next                    # protect the build cache from being overwritten
+  db:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql   # read-only init
+```
+
+- Named volumes for anything durable; bind mounts for source during development only.
+- Anonymous volume entries (`/app/node_modules`) are what keep a host bind mount from shadowing container-installed dependencies.
+- Container filesystems are ephemeral: no volume = data gone on `docker compose down` or restart.
+- Never bind-mount production data directories from the host — permissions and ownership drift.
+- Mark config/secret mounts `:ro`.
+
 ## Layer Caching Optimization
 
 ```dockerfile
@@ -210,6 +270,66 @@ RUN --mount=type=secret,id=db_password cat /run/secrets/db_password
 | `gcr.io/distroless/static` | ~2MB | Go runtime |
 | `nginx:alpine` | ~40MB | Static files |
 
+## .dockerignore
+
+Without it, `COPY . .` sends `node_modules`, `.git`, and every secret in the working directory to the daemon — bigger context, worse cache hits, and a real leak risk.
+
+```
+node_modules
+.git
+.env
+.env.*
+dist
+coverage
+*.log
+.next
+.cache
+docker-compose*.yml
+Dockerfile*
+README.md
+tests/
+```
+
+- Keep it next to the Dockerfile and review it whenever a new artifact directory appears.
+- `.env*` is not optional — build context is the most common place secrets end up in an image.
+- Exclude anything the build does not read; if it is not in a `COPY`, it does not belong in the context.
+
+## Debugging
+
+```bash
+# Logs
+docker compose logs -f app
+docker compose logs --tail=50 db
+
+# Inside a running container
+docker compose exec app sh
+docker compose exec db psql -U postgres
+
+# State
+docker compose ps                 # services and health
+docker compose top                # processes per container
+docker stats                      # live CPU/memory
+
+# Rebuild
+docker compose up --build
+docker compose build --no-cache app     # ignore cached layers
+
+# Cleanup (last one is destructive)
+docker compose down
+docker compose down -v            # also removes volumes — data loss
+docker system prune
+```
+
+Network problems from inside a container:
+
+```bash
+docker compose exec app nslookup db                     # DNS resolves?
+docker compose exec app wget -qO- http://api:3000/health  # connectivity?
+docker network inspect <project>_default                # who is attached?
+```
+
+Typical order of diagnosis: `logs` → `ps` (is it healthy?) → DNS from inside the client container → port/`expose` mismatch → firewall. `localhost` inside a container is that container, not the host and not a sibling service — use the service name.
+
 ## Health Checks
 
 ```dockerfile
@@ -236,6 +356,11 @@ healthcheck:
 | Secrets in Dockerfile | Use build secrets or runtime secrets |
 | No health check | Add HEALTHCHECK instruction |
 | Single-stage build | Use multi-stage builds |
+| Missing `.dockerignore` | Exclude `.env*`, `.git`, `node_modules`, tests |
+| Public `ports:` on databases | Bind `127.0.0.1:` or omit entirely |
+| Durable data in the container layer | Named volume for all persistent state |
+| `localhost` used for a sibling service | Use the Compose service name |
+| Production compose without an orchestrator | Kubernetes / ECS / Swarm for multi-host |
 
 ## References
 

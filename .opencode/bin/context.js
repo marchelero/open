@@ -15,6 +15,7 @@
  *   node .opencode/bin/context.js --skills     # only skills inventory
  *   node .opencode/bin/context.js --files      # only recent file sizes
  *   node .opencode/bin/context.js --recommend  # only recommendations
+ *   node .opencode/bin/context.js --cost       # cost/token report from docs/state/cost-*.json
  */
 
 const fs = require('fs');
@@ -127,6 +128,11 @@ function full() {
   console.log(`Agents: ${agents.count} (${fmtBytes(agents.totalBytes)}, ~${estimateTokens(agents.totalBytes)} tokens if all loaded -- DO NOT load all; trust the description-trigger)`);
   console.log(`Commands: ${cmds.count} (${fmtBytes(cmds.totalBytes)})`);
   console.log('Sessions:', sessions.count, sessions.latest ? '(latest: ' + sessions.latest.date + ')' : '(no prior sessions)');
+  const cost = costReport();
+  if (cost.files > 0) {
+    const t = cost.totals;
+    console.log(`Cost (last ${t.sessions} session(s)): $${t.costUsd.toFixed(6)} — full breakdown: context.js --cost`);
+  }
   console.log('');
   console.log('Project (excluding .git and .opencode/node_modules):', fmtBytes(projectSize));
   console.log('');
@@ -148,7 +154,60 @@ function onlyRecommend() {
   for (const r of recommend(skills, agents, cmds, sessions)) console.log('-', r);
 }
 
+// C9 — surface the per-session ledger that cost-ledger.js writes on session idle.
+function costReport() {
+  const dir = path.join(CWD, 'docs', 'state');
+  const files = exists(dir) ? readDir(dir).filter(f => f.isFile() && /^cost-.*\.json$/.test(f.name)) : [];
+  const byDay = new Map();
+  const byModel = new Map();
+  const totals = { sessions: 0, tokensIn: 0, tokensOut: 0, costUsd: 0, estimated: 0, withCost: 0 };
+  for (const f of files) {
+    let d;
+    try { d = JSON.parse(fs.readFileSync(path.join(dir, f.name), 'utf8')); } catch { continue; }
+    totals.sessions++;
+    totals.tokensIn += d.tokensIn || 0;
+    totals.tokensOut += d.tokensOut || 0;
+    if (typeof d.costUsd === 'number') { totals.costUsd += d.costUsd; totals.withCost++; }
+    if (d.estimated) totals.estimated++;
+    const day = String(d.timestamp || '').slice(0, 10) || 'unknown';
+    const model = d.model || 'unknown';
+    const dayAgg = byDay.get(day) || { sessions: 0, cost: 0, hasCost: false };
+    dayAgg.sessions++; if (typeof d.costUsd === 'number') { dayAgg.cost += d.costUsd; dayAgg.hasCost = true; }
+    byDay.set(day, dayAgg);
+    const mAgg = byModel.get(model) || { sessions: 0, cost: 0, hasCost: false, tokensIn: 0, tokensOut: 0 };
+    mAgg.sessions++; mAgg.tokensIn += d.tokensIn || 0; mAgg.tokensOut += d.tokensOut || 0;
+    if (typeof d.costUsd === 'number') { mAgg.cost += d.costUsd; mAgg.hasCost = true; }
+    byModel.set(model, mAgg);
+  }
+  return { files: files.length, totals, byDay, byModel };
+}
+
+function onlyCost() {
+  const r = costReport();
+  console.log('Cost Report (docs/state/cost-*.json)');
+  console.log('===================================');
+  if (r.files === 0) {
+    console.log('No ledger files yet. cost-ledger.js writes one on each session idle.');
+    return;
+  }
+  const t = r.totals;
+  console.log(`Sessions: ${t.sessions}  (estimated: ${t.estimated}, with cost: ${t.withCost})`);
+  console.log(`Tokens: in ${t.tokensIn} / out ${t.tokensOut}`);
+  console.log(`Cost: $${t.costUsd.toFixed(6)}${t.withCost < t.sessions ? ' (partial — some sessions expose no cost)' : ''}`);
+  console.log('');
+  console.log('By day:');
+  for (const [day, a] of [...r.byDay.entries()].sort()) {
+    console.log(`  ${day}  sessions=${a.sessions}  cost=${a.hasCost ? '$' + a.cost.toFixed(6) : 'n/a'}`);
+  }
+  console.log('');
+  console.log('By model:');
+  for (const [model, a] of [...r.byModel.entries()].sort((x, y) => y[1].cost - x[1].cost)) {
+    console.log(`  ${model}  sessions=${a.sessions}  tokens=${a.tokensIn + a.tokensOut}  cost=${a.hasCost ? '$' + a.cost.toFixed(6) : 'n/a'}`);
+  }
+}
+
 const arg = process.argv[2];
 if (arg === '--skills') onlySkills();
 else if (arg === '--recommend') onlyRecommend();
+else if (arg === '--cost') onlyCost();
 else full();

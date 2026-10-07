@@ -7,12 +7,13 @@
 #     `.opencode/agents/` and `.agents/skills/` natively).
 #   - Node 18 (matches package.json `engines`), not Node 24.
 #   - `counts --check` is passed explicit files (with no args it is a no-op).
-#   - `lint-docs` / `wiring-test` / `installer-test` are wired in M3 once green.
 #
 # Tiers:
-#   1. Structural verifiers (counts, frontmatter, lockfile, smoke) — hard gate.
-#   2. eval-static — behavioural invariants (evals/cases/*.json) — hard gate.
-#   3. measure-tokens — informational (continue-on-error).
+#   1. Structural verifiers (counts, frontmatter, lockfile, smoke, lint-docs,
+#      wiring, installer) — hard gate.
+#   2. Plugin self-tests (gateguard, policy-engine) — hard gate.
+#   3. eval-static — behavioural invariants (evals/cases/*.json) — hard gate.
+#   4. measure-tokens — informational (continue-on-error).
 
 name: ci
 
@@ -38,7 +39,7 @@ jobs:
           node-version: "18"
 
       - name: "counts --check"
-        run: node .opencode/bin/counts.js --check README.md .opencode/README.md .opencode/manual/README.md
+        run: node .opencode/bin/counts.js --check README.md .opencode/README.md .opencode/manual/README.md .opencode/CHANGELOG.md .opencode/AGENTS_INDEX.md
 
       - name: "validate-frontmatter"
         run: node .opencode/bin/validate-frontmatter.js
@@ -60,6 +61,12 @@ jobs:
 
       - name: "installer-test"
         run: node .opencode/bin/installer-test.js
+
+      - name: "gateguard self-test"
+        run: node .opencode/plugins/gateguard.js --selftest
+
+      - name: "policy self-test"
+        run: node .opencode/bin/lib/policy-selftest.js
 
       - name: "eval-static"
         run: node .opencode/bin/eval-static.js
@@ -81,7 +88,7 @@ jobs:
           node-version: "18"
 
       - name: "counts --check"
-        run: node .opencode/bin/counts.js --check README.md .opencode/README.md .opencode/manual/README.md
+        run: node .opencode/bin/counts.js --check README.md .opencode/README.md .opencode/manual/README.md .opencode/CHANGELOG.md .opencode/AGENTS_INDEX.md
 
       - name: "validate-frontmatter"
         run: node .opencode/bin/validate-frontmatter.js
@@ -103,6 +110,12 @@ jobs:
 
       - name: "installer-test"
         run: node .opencode/bin/installer-test.js
+
+      - name: "gateguard self-test"
+        run: node .opencode/plugins/gateguard.js --selftest
+
+      - name: "policy self-test"
+        run: node .opencode/bin/lib/policy-selftest.js
 
       - name: "eval-static"
         run: node .opencode/bin/eval-static.js

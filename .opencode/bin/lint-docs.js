@@ -14,6 +14,9 @@
  *   R5  non-numeric phase      `state.js update "$STATE" executing ...`
  *   R6  broken relative link   [text](path) whose target does not exist
  *   R7  mojibake               double-encoded UTF-8 or U+FFFD replacement char
+ *   R8  dangerous invisible    zero-width / bidi-control / Unicode-tag codepoints
+ *                              (prompt-injection smuggling vector named in the
+ *                              AGENTS.md Prompt Defense Baseline)
  *
  * BASELINE (adapted for `open`)
  *   The pack carries two known-debt classes: R3 (V1 syntax in SDD flow
@@ -90,6 +93,25 @@ const MOJIBAKE_PATTERNS = [
   { re: /[\u00C2\u00C3][\u0080-\u00BF]/, what: 'UTF-8 doblemente codificada' },
   { re: /\u00E2\u20AC/, what: 'UTF-8 doblemente codificada (â..)' },
   { re: /\uFFFD/, what: 'caracter de reemplazo U+FFFD' },
+];
+
+// R8 — dangerous invisible codepoints. These have no legitimate use in prose or
+// source and are the canonical vector for prompt-injection smuggling (hidden
+// instructions, homoglyph confusables, "ASCII/Tag smuggling"). Emoji variation
+// selectors U+FE00–U+FE0F are deliberately EXCLUDED: they are a normal part of
+// emoji rendering and would false-positive on every ✅/🟡 in the reports.
+const INVISIBLE_PATTERNS = [
+  { re: /[\u200B-\u200D]/, what: 'zero-width space/joiner' },
+  { re: /\u2060/, what: 'word joiner' },
+  { re: /\uFEFF/, what: 'BOM / zero-width no-break space' },
+  { re: /[\u202A-\u202E]/, what: 'bidi control' },
+  { re: /[\u2066-\u2069]/, what: 'bidi isolate control' },
+  { re: /[\u{E0000}-\u{E007F}]/u, what: 'Unicode Tag block (ASCII/Tag smuggling)' },
+  { re: /\u180E/, what: 'Mongolian vowel separator' },
+  { re: /[\u115F\u1160]/, what: 'Hangul filler (zero-width)' },
+  { re: /[\u2061-\u2064]/, what: 'invisible math operator' },
+  { re: /\u3164/, what: 'Hangul filler U+3164' },
+  { re: /[\u{E0100}-\u{E01EF}]/u, what: 'variation selector (supplementary)' },
 ];
 
 const STATE_SUB = '(?:init|update|complete|fail|list|archive)';
@@ -211,6 +233,12 @@ function lintFile(file) {
       }
     }
 
+    // R8 — dangerous invisible codepoints. Checked on every line, fences and
+    // history included: smuggling can hide inside a code block too.
+    for (const p of INVISIBLE_PATTERNS) {
+      if (p.re.test(line)) { push('R8', p.what, line); break; }
+    }
+
     if (local) for (const h of local) hits.push(h);
   }
   return hits;
@@ -245,7 +273,7 @@ function main() {
   const newHits = all.filter((h) => !baseline.has(h.fp));
   const stale = [...baseline].filter((fp) => !currentFps.has(fp));
 
-  const byRule = { R1: 0, R2: 0, R3: 0, R4: 0, R5: 0, R6: 0, R7: 0 };
+  const byRule = { R1: 0, R2: 0, R3: 0, R4: 0, R5: 0, R6: 0, R7: 0, R8: 0 };
   for (const h of all) byRule[h.rule]++;
 
   const fail = newHits.length > 0 || (STRICT && stale.length > 0);
@@ -272,7 +300,7 @@ function main() {
   console.log(
     `lint-docs: ${files.length} .md scanned | ` +
     `R1=${byRule.R1} R2=${byRule.R2} R3=${byRule.R3} R4=${byRule.R4} R5=${byRule.R5} ` +
-    `R6=${byRule.R6} R7=${byRule.R7} | total=${all.length} | new=${newHits.length} baselined=${all.length - newHits.length}` +
+    `R6=${byRule.R6} R7=${byRule.R7} R8=${byRule.R8} | total=${all.length} | new=${newHits.length} baselined=${all.length - newHits.length}` +
     (STRICT ? ` stale=${stale.length}` : '')
   );
   process.exit(fail ? 1 : 0);
