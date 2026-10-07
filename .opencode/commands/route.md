@@ -24,7 +24,16 @@ Identify from the request:
 
 ### Step 2 — Match against the 3 catalogs
 
-Read these 3 indexes in order (auto-generated):
+**First, score automatically with the lexical router (read-only, deterministic, zero-dep):**
+
+```bash
+node .opencode/bin/route-match.js "<verbatim request>"          # 1 recommendation + 2 alternatives + command
+node .opencode/bin/route-match.js "<verbatim request>" --json    # machine-readable
+```
+
+Use its `recommended` + `alternatives` as the primary candidates (BM25 over `name`+`triggers`+`description`). It scores skills+agents; map the winning skill/agent to the right **command** using the tables below.
+
+**Fallback (when the CLI is unavailable):** read the auto-generated indexes and score by hand.
 
 ```bash
 node .opencode/bin/build-agents-index.js    # .opencode/AGENTS_INDEX.md

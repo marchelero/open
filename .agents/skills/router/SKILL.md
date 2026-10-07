@@ -94,6 +94,15 @@ Extract from the user request:
 
 Pick the highest-priority match. Ties: prefer specialist over generalist.
 
+**Automatic scoring (zero-dep, deterministic):** run the lexical router to rank the whole catalog before reading the tables below. It uses BM25 over `name` + `triggers` + `description` and returns 1 recommendation + 2 alternatives + the exact command.
+
+```bash
+node .opencode/bin/route-match.js "<verbatim request>"
+node .opencode/bin/route-match.js "<verbatim request>" --json   # { request, mode, degraded, recommended, alternatives }
+```
+
+Use its output as the primary candidates; the tables below remain the human-readable matrix and the fallback when the CLI is unavailable.
+
 ### Step 3 — Invoke
 
 For implementation work, ALWAYS layer with `planner` → `tdd-guide` → reviewer (stack-specific) before invoking. Never dispatch implementation directly to a generic agent.
@@ -338,6 +347,7 @@ Most agent invocations benefit from a paired skill:
 
 # Integration
 
+- `node .opencode/bin/route-match.js "<request>"` — automatic lexical scoring over the skills+agents catalog (BM25, zero-dep, deterministic). `--eval` runs `evals/routing/cases.json`.
 - `/route <request>` — command-level superset (routes across commands, agents, AND skills)
 - `/list-agents <keyword>` — browse the full agent catalog
 - `/list-skills` — browse the full skill catalog

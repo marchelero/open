@@ -38,7 +38,7 @@ jobs:
           node-version: "18"
 
       - name: "counts --check"
-        run: node .opencode/bin/counts.js --check .opencode/README.md .opencode/manual/README.md
+        run: node .opencode/bin/counts.js --check README.md .opencode/README.md .opencode/manual/README.md
 
       - name: "validate-frontmatter"
         run: node .opencode/bin/validate-frontmatter.js
@@ -78,7 +78,7 @@ jobs:
           node-version: "18"
 
       - name: "counts --check"
-        run: node .opencode/bin/counts.js --check .opencode/README.md .opencode/manual/README.md
+        run: node .opencode/bin/counts.js --check README.md .opencode/README.md .opencode/manual/README.md
 
       - name: "validate-frontmatter"
         run: node .opencode/bin/validate-frontmatter.js

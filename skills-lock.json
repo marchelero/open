@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-10-07T04:26:36.723Z",
+  "generated": "2026-10-07T04:45:18.951Z",
   "skills": {
     "agent-evals": {
       "path": ".agents/skills/agent-evals/SKILL.md",
@@ -263,7 +263,7 @@
     },
     "router": {
       "path": ".agents/skills/router/SKILL.md",
-      "sha256": "4d929442cd84c5afab0906e0e7675b6b642eab066296966b9b76fda335065ad6"
+      "sha256": "66dce95fc6596edd3c2e63702ad1c5c0f16e3ed1ce2bd217dedfb8aca48828b9"
     },
     "security-review": {
       "path": ".agents/skills/security-review/SKILL.md",

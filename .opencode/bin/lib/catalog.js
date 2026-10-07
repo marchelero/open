@@ -13,11 +13,17 @@
  *
  * Exports:
  *   listCatalog()        -> { skills:[Entry], agents:[Entry] }
+ *   listCommands()       -> [Entry]   (optional; commands have no triggers)
  *   parseFrontmatter(s)  -> object|null
  *   estimateTokens(b, n) -> round(b / n)   (n default 4)
  *   ROOT, relPosix
  *
- * Entry = { name, path (posix, relative to ROOT), description, bytes }
+ * Entry = { name, path (posix, relative to ROOT), description, triggers, bytes }
+ *
+ * NOTE (additive): `triggers` was added for the semantic router
+ * (.opencode/bin/lib/route-engine.js). Consumers that read only `description`
+ * (measure-tokens) or `path` (verify-lockfile) are unaffected; the {skills,
+ * agents} shape is unchanged.
  */
 
 const fs = require('fs');
@@ -26,6 +32,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const SKILLS_DIR = path.join(ROOT, '.agents', 'skills');
 const AGENTS_DIR = path.join(ROOT, '.opencode', 'agents');
+const COMMANDS_DIR = path.join(ROOT, '.opencode', 'commands');
 
 const BYTES_PER_TOKEN = 4;
 
@@ -85,6 +92,23 @@ function isDir(p) {
   }
 }
 
+// `triggers:` is stored as an inline array (`[a, b, "c d"]`). parseFrontmatter
+// already JSON.parses it when possible; otherwise it falls back to a comma
+// split. Normalize either shape (and a bare string) to a clean string array.
+function normalizeTriggers(v) {
+  if (v === undefined || v === null) return [];
+  let arr = v;
+  if (typeof v === 'string') {
+    const s = v.trim();
+    if (s.startsWith('[') && s.endsWith(']')) arr = s.slice(1, -1).split(',');
+    else arr = s.split(',');
+  }
+  if (!Array.isArray(arr)) return [];
+  return arr
+    .map((x) => String(x).replace(/^["']+|["']+$/g, '').trim())
+    .filter(Boolean);
+}
+
 function listSkills() {
   if (!fs.existsSync(SKILLS_DIR)) return [];
   return fs
@@ -100,6 +124,7 @@ function listSkills() {
         name: dirName,
         path: relPosix(skillFile),
         description: (fm.description || '').trim(),
+        triggers: normalizeTriggers(fm.triggers),
         bytes: stat.size,
       };
     })
@@ -121,6 +146,30 @@ function listAgents() {
         name: f.replace(/\.md$/, ''),
         path: relPosix(full),
         description: (fm.description || '').trim(),
+        triggers: normalizeTriggers(fm.triggers),
+        bytes: stat.size,
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Optional: commands are NOT scored by the router (mapped by /route tables),
+// but exposing them keeps catalog.js a complete enumerator for other consumers.
+function listCommands() {
+  if (!fs.existsSync(COMMANDS_DIR)) return [];
+  return fs
+    .readdirSync(COMMANDS_DIR)
+    .filter((f) => f.endsWith('.md') && f !== 'INDEX.md')
+    .map((f) => {
+      const full = path.join(COMMANDS_DIR, f);
+      const stat = fs.statSync(full);
+      const content = fs.readFileSync(full, 'utf8');
+      const fm = parseFrontmatter(content) || {};
+      return {
+        name: f.replace(/\.md$/, ''),
+        path: relPosix(full),
+        description: (fm.description || '').trim(),
+        triggers: normalizeTriggers(fm.triggers),
         bytes: stat.size,
       };
     })
@@ -135,6 +184,8 @@ module.exports = {
   listCatalog,
   listSkills,
   listAgents,
+  listCommands,
+  normalizeTriggers,
   parseFrontmatter,
   estimateTokens,
   bytesPerToken: BYTES_PER_TOKEN,

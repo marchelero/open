@@ -36,7 +36,7 @@ const MCP_OPTIONAL = path.join(__dirname, '..', 'mcp.optional.json');
 // Canonical files carrying an auto-managed `## Counts` block. Used as the
 // default target for `--check`/`--update` so a bare `counts.js --check` is not
 // a silent no-op (which it was until this default was added).
-const DEFAULT_COUNTS_FILES = ['.opencode/README.md', '.opencode/manual/README.md'];
+const DEFAULT_COUNTS_FILES = ['README.md', '.opencode/README.md', '.opencode/manual/README.md'];
 
 function countMdFiles(dir) {
   if (!fs.existsSync(dir)) return 0;

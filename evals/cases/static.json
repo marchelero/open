@@ -137,5 +137,14 @@
     "pattern": "\"sha256\"",
     "gte": 145,
     "why": "un lockfile casi vacio deja pasar drift de contenido (64+14 skills + 67 agents)"
+  },
+  {
+    "id": "E16",
+    "kind": "metric",
+    "title": "Router lexico: top1 >= baseline+15 y top3 >= 80% (fixture routing)",
+    "tool": "route-match",
+    "field": "gate",
+    "equals": true,
+    "why": "el router debe superar el baseline keyword; `route-match.js --json` sin request corre el eval y emite gate"
   }
 ]
