@@ -138,7 +138,3 @@ Funciona sin red ni secretos; con `/route` como punto de entrada.
     ├── plugins/               Hooks (hookify, cost-ledger)
     └── templates/             Plantillas
 ```
-
-## Créditos
-
-Pack base. El proyecto [`MKY/agentes`](https://github.com/miguelalbisortiz/agentes) es un fork derivado de este.
