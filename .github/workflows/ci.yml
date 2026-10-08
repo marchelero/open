@@ -11,7 +11,7 @@
 # Tiers:
 #   1. Structural verifiers (counts, frontmatter, lockfile, smoke, lint-docs,
 #      wiring, installer) — hard gate.
-#   2. Plugin self-tests (gateguard, policy-engine) — hard gate.
+#   2. Plugin self-tests (gateguard, policy-engine, stack-env) — hard gate.
 #   3. eval-static — behavioural invariants (evals/cases/*.json) — hard gate.
 #   4. measure-tokens — informational (continue-on-error).
 
@@ -65,6 +65,9 @@ jobs:
       - name: "gateguard self-test"
         run: node .opencode/plugins/gateguard.js --selftest
 
+      - name: "stack-env self-test"
+        run: node .opencode/plugins/stack-env.js --selftest
+
       - name: "policy self-test"
         run: node .opencode/bin/lib/policy-selftest.js
 
@@ -113,6 +116,9 @@ jobs:
 
       - name: "gateguard self-test"
         run: node .opencode/plugins/gateguard.js --selftest
+
+      - name: "stack-env self-test"
+        run: node .opencode/plugins/stack-env.js --selftest
 
       - name: "policy self-test"
         run: node .opencode/bin/lib/policy-selftest.js

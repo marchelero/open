@@ -164,6 +164,7 @@ El `permission.skill: "allow"` global en `opencode.json` permite a cada agente c
     │   ├── build-skills-index.js
     │   ├── state.js
     │   └── install-plugins.js
+    ├── plugins/                    hooks locales auto-cargados (hookify, gateguard, cost-ledger, stack-env)
     ├── manual/                      documentación del pack (lo que estás leyendo)
     │   ├── README.md                punto de entrada (español)
     │   ├── START-HERE.md            5-minute orientation (inglés)

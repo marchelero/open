@@ -1,8 +1,26 @@
 {
   "version": 1,
-  "count": 147,
-  "descriptionBytes": 18344,
+  "count": 176,
+  "descriptionBytes": 27078,
   "entries": [
+    {
+      "name": "accessibility",
+      "type": "skill",
+      "path": ".agents/skills/accessibility/SKILL.md",
+      "summary": "Use when building or auditing UI for accessibility compliance, keyboard navigation, or screen-reader support. Design, implement, and audit accessible UI to WCAG 2.2 Level AA across Web, iOS, and",
+      "triggers": [
+        "accessibility",
+        "a11y",
+        "wcag",
+        "aria",
+        "screen reader",
+        "contrast",
+        "target size",
+        "keyboard navigation"
+      ],
+      "bytes": 338,
+      "hash": "6e39982bd17ac0dbb8a3acddabcaf90d4843ccac780ac7bbb53433435a33eaa2"
+    },
     {
       "name": "agent-evals",
       "type": "skill",
@@ -106,6 +124,21 @@
       "hash": "afe618118eb648b7b652595485790a386d88fd316341ae592929811e14419946"
     },
     {
+      "name": "architecture-decision-records",
+      "type": "skill",
+      "path": ".agents/skills/architecture-decision-records/SKILL.md",
+      "summary": "Use when the user says 'record this decision' or 'ADR this', chooses between frameworks or databases, discusses trade-offs, or asks why the codebase is shaped this way. Capture architectural decisions",
+      "triggers": [
+        "adr",
+        "architecture decision",
+        "decision record",
+        "technical decision",
+        "lightweight architecture"
+      ],
+      "bytes": 318,
+      "hash": "f18c9d517d2119e095266aca62fa79ae574fb66d6b9181c3f87de0824a6d67f5"
+    },
+    {
       "name": "backend-patterns",
       "type": "skill",
       "path": ".agents/skills/backend-patterns/SKILL.md",
@@ -192,6 +225,22 @@
       "hash": "83cf9f18a2f8a3e7f56fc9e22f0698f82886ba0ae8503caf2ef47f3b98083e3d"
     },
     {
+      "name": "clickhouse-io",
+      "type": "skill",
+      "path": ".agents/skills/clickhouse-io/SKILL.md",
+      "summary": "Use when writing ClickHouse schemas or queries, or when an analytical query is too slow. ClickHouse database patterns, query optimization, analytics, and data engineering best practices for",
+      "triggers": [
+        "clickhouse",
+        "columnar",
+        "olap",
+        "aggregation query",
+        "distributed query",
+        "time series analytics"
+      ],
+      "bytes": 228,
+      "hash": "a57da456595bd88d32f63cf5bffbbc50f41f95fa4345d87667247cd407ce74d7"
+    },
+    {
       "name": "codebase-graph",
       "type": "skill",
       "path": ".agents/skills/codebase-graph/SKILL.md",
@@ -258,6 +307,23 @@
       "hash": "822688f825493b70195b887023cad31f1c27f1f89bf61d00a26bf5a5783f42e2"
     },
     {
+      "name": "contract-first",
+      "type": "skill",
+      "path": ".agents/skills/contract-first/SKILL.md",
+      "summary": "Use when parallel consumer and provider work must evolve an API or event schema without field drift, mock/production shape mismatch, or one side silently redefining the interface. Coordinate",
+      "triggers": [
+        "contract first",
+        "openapi",
+        "api contract",
+        "schema first",
+        "consumer driven contract",
+        "idl",
+        "api definition"
+      ],
+      "bytes": 407,
+      "hash": "90fcd298343142ec937ff53548173e016ada666d549d72527d6eb9948b4e1dfc"
+    },
+    {
       "name": "convert-documents-to-markdown",
       "type": "skill",
       "path": ".agents/skills/convert-documents-to-markdown/SKILL.md",
@@ -265,6 +331,23 @@
       "triggers": [],
       "bytes": 124,
       "hash": "9dfe906567d51ebdc4964dbcf7e080c8a263259e982250bbdae72f8666ada9a5"
+    },
+    {
+      "name": "cpp-coding-standards",
+      "type": "skill",
+      "path": ".agents/skills/cpp-coding-standards/SKILL.md",
+      "summary": "Use when writing, reviewing, or refactoring C++ code to enforce modern, safe, and idiomatic practices. C++ coding standards based on the C++ Core Guidelines (isocpp.github.io).",
+      "triggers": [
+        "c++",
+        "cpp",
+        "raii",
+        "smart pointer",
+        "modern c++",
+        "constexpr",
+        "move semantics"
+      ],
+      "bytes": 176,
+      "hash": "98c0f812f92ec2647e433e46dfcce85a58f5f82e4f47155662a0a62bcd3c6b92"
     },
     {
       "name": "database-migrations",
@@ -393,6 +476,57 @@
       "hash": "c7f77c4b17e4236370c0a7e27c673d93d6687c0036db22b9ad138634dbb96f11"
     },
     {
+      "name": "deployment-patterns",
+      "type": "skill",
+      "path": ".agents/skills/deployment-patterns/SKILL.md",
+      "summary": "Use when setting up CI/CD, containerizing an app, or checking production readiness before a release. Deployment workflows, CI/CD pipeline patterns, Docker containerization, health checks, rollback",
+      "triggers": [
+        "deployment",
+        "blue green",
+        "canary",
+        "rolling update",
+        "release strategy",
+        "rollback",
+        "strangler fig",
+        "feature flag rollout"
+      ],
+      "bytes": 266,
+      "hash": "a52e32493dbef47bb6c3084e46e2e9a0e902933d768b53035a38f49b01b9b450"
+    },
+    {
+      "name": "design-system",
+      "type": "skill",
+      "path": ".agents/skills/design-system/SKILL.md",
+      "summary": "Use when starting a design system, auditing visual consistency before a redesign, or reviewing a PR that touches styling. Generate a design system from an existing codebase or audit one for visual",
+      "triggers": [
+        "design system",
+        "design tokens",
+        "typography",
+        "color palette",
+        "component library",
+        "visual consistency"
+      ],
+      "bytes": 433,
+      "hash": "c8ff0c3929a800284b5361db49d645874d8df703cb8ea9b82a1872841b331926"
+    },
+    {
+      "name": "django-patterns",
+      "type": "skill",
+      "path": ".agents/skills/django-patterns/SKILL.md",
+      "summary": "Use when building or reviewing Django apps, DRF APIs, ORM queries, or caching. Django architecture patterns, REST API design with DRF, ORM best practices, caching, signals, middleware, and",
+      "triggers": [
+        "django",
+        "django orm",
+        "queryset",
+        "django view",
+        "django model",
+        "django signal",
+        "django middleware"
+      ],
+      "bytes": 218,
+      "hash": "895d86569a6b4bbb478450dad50a1c33dd00eab42503b24c17ac1fe3ff689d57"
+    },
+    {
       "name": "docker-patterns",
       "type": "skill",
       "path": ".agents/skills/docker-patterns/SKILL.md",
@@ -426,7 +560,7 @@
       "name": "documentation-lookup",
       "type": "skill",
       "path": ".agents/skills/documentation-lookup/SKILL.md",
-      "summary": "Use this skill when the user asks setup questions, API references, or code examples, or names a framework (e.g. React, Next.js, Prisma). Replaces",
+      "summary": "Use when you need up-to-date library and framework docs via Context7 MCP instead of training data — setup questions, API references, code examples, or when the user names a framework (e.g. React",
       "triggers": [
         "library",
         "framework",
@@ -436,8 +570,8 @@
         "Context7",
         "latest"
       ],
-      "bytes": 145,
-      "hash": "0b90870d607500609e02da706de4cf103937b372031926a034cc442283b2d089"
+      "bytes": 215,
+      "hash": "3dace1badcbdb56347390a40973071723bb4c833f532dd92f39479f866094a46"
     },
     {
       "name": "docx",
@@ -459,6 +593,22 @@
       "hash": "57daa68f1456f44f87be1383c07d77c9623f5675765889cfefd7e2433bfd148a"
     },
     {
+      "name": "dotnet-patterns",
+      "type": "skill",
+      "path": ".agents/skills/dotnet-patterns/SKILL.md",
+      "summary": "Use when writing or reviewing C# / .NET code — DI, async, or general conventions. Idiomatic C# and .NET patterns, conventions, dependency injection, async/await, and best practices for building",
+      "triggers": [
+        ".net",
+        "dotnet",
+        "c#",
+        "entity framework",
+        "dependency injection dotnet",
+        "asp.net"
+      ],
+      "bytes": 235,
+      "hash": "64a82c7be791d00757aeeb21d91d08c277049ac950457bd73046ff590cb493f2"
+    },
+    {
       "name": "drizzle-patterns",
       "type": "skill",
       "path": ".agents/skills/drizzle-patterns/SKILL.md",
@@ -474,6 +624,24 @@
       ],
       "bytes": 119,
       "hash": "bda41b6d90c3114a85c354acff614804e335ace2c643933d24cad77f92d45363"
+    },
+    {
+      "name": "e2e-testing",
+      "type": "skill",
+      "path": ".agents/skills/e2e-testing/SKILL.md",
+      "summary": "Use when writing Playwright tests, structuring page objects, or fixing flaky E2E runs in CI. Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management",
+      "triggers": [
+        "e2e",
+        "playwright",
+        "cypress",
+        "page object",
+        "test id",
+        "flaky test",
+        "browser test",
+        "ci artifacts"
+      ],
+      "bytes": 226,
+      "hash": "fe311a32c1118508d199742badf40d76315564f5f9b0df37a31d1f42659c2d7c"
     },
     {
       "name": "edge-computing",
@@ -518,6 +686,22 @@
       ],
       "bytes": 58,
       "hash": "9dc9b29b4710d8e68d793e7cfe69160ff9e7f6d508d47815dfd6a0e99fe04b53"
+    },
+    {
+      "name": "fastapi-patterns",
+      "type": "skill",
+      "path": ".agents/skills/fastapi-patterns/SKILL.md",
+      "summary": "Use when building or reviewing FastAPI apps — Pydantic schemas, dependencies, async handlers, auth, or tests. FastAPI best practices covering project structure, Pydantic v2 schemas, dependency",
+      "triggers": [
+        "fastapi",
+        "pydantic",
+        "fastapi dependency",
+        "async endpoint",
+        "response model",
+        "fastapi router"
+      ],
+      "bytes": 317,
+      "hash": "fcc2de604e2e6d3d132a8b18acd4704d50586a3ddceae9d0c0c2772d911549be"
     },
     {
       "name": "feature-flags",
@@ -580,6 +764,24 @@
       ],
       "bytes": 153,
       "hash": "4f0493c2ffefea54092194e3da0968d53bd355b00592a590b2579baedfb0fae6"
+    },
+    {
+      "name": "frontend-a11y",
+      "type": "skill",
+      "path": ".agents/skills/frontend-a11y/SKILL.md",
+      "summary": "Use when building or reviewing forms, modals, dropdowns, tooltips, or tabs, fixing a11y lint or code-review findings, or wiring up keyboard navigation and focus management. Accessibility patterns for",
+      "triggers": [
+        "frontend a11y",
+        "aria",
+        "focus trap",
+        "skip link",
+        "landmark",
+        "accessible form",
+        "reduced motion",
+        "semantic html"
+      ],
+      "bytes": 334,
+      "hash": "18dc575c2667fb1a1694efb32b4015ec4698ab1d77d7c1fa523290f727f726a7"
     },
     {
       "name": "frontend-patterns",
@@ -661,6 +863,40 @@
       "hash": "15a086b7a5ffa628f1a333f689c4281b5365bb8cae3d8d1a511e5aa741cff96d"
     },
     {
+      "name": "golang-patterns",
+      "type": "skill",
+      "path": ".agents/skills/golang-patterns/SKILL.md",
+      "summary": "Use when writing or reviewing Go code and idiomatic structure or conventions are in question. Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintainable Go",
+      "triggers": [
+        "golang",
+        "goroutine",
+        "channel",
+        "go context",
+        "go interface",
+        "go error handling",
+        "go patterns"
+      ],
+      "bytes": 214,
+      "hash": "34785c02a64d52b56bb82b15e7381d154590cc99e053a391acf9909456c8ea90"
+    },
+    {
+      "name": "golang-testing",
+      "type": "skill",
+      "path": ".agents/skills/golang-testing/SKILL.md",
+      "summary": "Use when writing Go tests — table-driven cases, subtests, benchmarks, fuzzing, or coverage. Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing, and test coverage",
+      "triggers": [
+        "go test",
+        "golang testing",
+        "testify",
+        "table test",
+        "go benchmark",
+        "go mock",
+        "go coverage"
+      ],
+      "bytes": 246,
+      "hash": "24b85f73f95f296ba07d94e1b57a28be68e16890439fb70da222a363fe454a24"
+    },
+    {
       "name": "grill-me",
       "type": "skill",
       "path": ".agents/skills/grill-me/SKILL.md",
@@ -670,10 +906,27 @@
       "hash": "e693dd1faec6e8cb56f9308251ec713924f3a49d225e19c9b1c70c4403cebbab"
     },
     {
+      "name": "hexagonal-architecture",
+      "type": "skill",
+      "path": ".agents/skills/hexagonal-architecture/SKILL.md",
+      "summary": "Use when introducing or refactoring toward Ports and Adapters, or when domain logic has become entangled with I/O. Design, implement, and refactor Ports & Adapters systems with clear domain",
+      "triggers": [
+        "hexagonal",
+        "ports and adapters",
+        "domain boundary",
+        "dependency inversion",
+        "use case",
+        "adapter",
+        "application layer"
+      ],
+      "bytes": 309,
+      "hash": "71a6a419cf52bd9ca8a89dd5bfab78e8f3cafc3887b94a4901df64125ef53189"
+    },
+    {
       "name": "intent-driven-development",
       "type": "skill",
       "path": ".agents/skills/intent-driven-development/SKILL.md",
-      "summary": "Use this skill when the user asks to clarify a feature, define acceptance criteria, de-risk a security/data/migration/integration change, prepare",
+      "summary": "Use when a request needs scoping into verifiable acceptance criteria before or alongside implementation — clarifying a feature, defining acceptance criteria, de-risking a",
       "triggers": [
         "PRD",
         "requirement",
@@ -683,8 +936,40 @@
         "success criteria",
         "intention"
       ],
-      "bytes": 145,
-      "hash": "a22bb940887585a05a60be8987c9667a494ba28b3ca4095b702e7376116e17b2"
+      "bytes": 504,
+      "hash": "144f5303e7466cc991fa05c17c3752807da503873a6837bb44339e7b0eba3294"
+    },
+    {
+      "name": "java-coding-standards",
+      "type": "skill",
+      "path": ".agents/skills/java-coding-standards/SKILL.md",
+      "summary": "Use when writing or reviewing Java in a Spring Boot or Quarkus service. Java coding standards for Spring Boot and Quarkus services: naming, immutability, Optional usage, streams, exceptions, generics",
+      "triggers": [
+        "java",
+        "effective java",
+        "optional java",
+        "java streams",
+        "record java",
+        "java style"
+      ],
+      "bytes": 298,
+      "hash": "6e4b4c0d525d2e3f9eda6f1d6ee4feb5fb69ae9aafce934474994ab1103a92c9"
+    },
+    {
+      "name": "kotlin-patterns",
+      "type": "skill",
+      "path": ".agents/skills/kotlin-patterns/SKILL.md",
+      "summary": "Use when writing or reviewing Kotlin code and idiomatic structure or null safety is in question. Idiomatic Kotlin patterns, best practices, and conventions for building robust, efficient, and",
+      "triggers": [
+        "kotlin",
+        "coroutines",
+        "sealed class",
+        "extension function",
+        "null safety kotlin",
+        "kotlin idioms"
+      ],
+      "bytes": 272,
+      "hash": "79dbb17584915c69eddabf2e9f2e9db754194e536ae02a44a9f8d33c8e28309f"
     },
     {
       "name": "kubernetes-specialist",
@@ -731,6 +1016,22 @@
       ],
       "bytes": 242,
       "hash": "3cf058d23d370fe59da12ecff3e97c696a048b3c8ad33404f32891aa90d6082c"
+    },
+    {
+      "name": "make-interfaces-feel-better",
+      "type": "skill",
+      "path": ".agents/skills/make-interfaces-feel-better/SKILL.md",
+      "summary": "Use when reviewing or improving UI spacing, typography, borders, shadows, motion, hit areas, icons, text wrapping, and interaction states. Apply concrete design-engineering details that make",
+      "triggers": [
+        "polish ui",
+        "micro interaction",
+        "spacing",
+        "visual hierarchy",
+        "interface feel",
+        "ui refinement"
+      ],
+      "bytes": 216,
+      "hash": "1c02b57775102a809141691ce05d5300a1c5ba41e722f36e296e05d3a9f6d1d1"
     },
     {
       "name": "mcp-server-patterns",
@@ -825,6 +1126,70 @@
       ],
       "bytes": 199,
       "hash": "5e1337061846a44d7945b1abad889417d3e5795b67aff9c12f7fcd59cb6faf59"
+    },
+    {
+      "name": "motion-foundations",
+      "type": "skill",
+      "path": ".agents/skills/motion-foundations/SKILL.md",
+      "summary": "Use when setting up motion tokens, spring presets, reduced-motion handling, or SSR-safe animation in React or Next.js. Motion tokens, spring presets, performance rules, device adaptation",
+      "triggers": [
+        "motion",
+        "easing",
+        "animation duration",
+        "animation principles",
+        "reduced motion",
+        "choreography"
+      ],
+      "bytes": 330,
+      "hash": "0fc32f15f583451ad045757c99d28bef9ab42d32aebd1c4a6de4208b9ed8eac2"
+    },
+    {
+      "name": "motion-patterns",
+      "type": "skill",
+      "path": ".agents/skills/motion-patterns/SKILL.md",
+      "summary": "Use when animating a specific UI element in React or Next.js — button, modal, toast, stagger, page transition, or scroll. Production-ready animation patterns for React / Next.js — button, modal",
+      "triggers": [
+        "framer motion",
+        "animation",
+        "entrance exit",
+        "spring animation",
+        "layout animation",
+        "scroll animation"
+      ],
+      "bytes": 320,
+      "hash": "39f3d84d02b05e038e53863eec90655a56732342eec382bc4274186394f3d34d"
+    },
+    {
+      "name": "mysql-patterns",
+      "type": "skill",
+      "path": ".agents/skills/mysql-patterns/SKILL.md",
+      "summary": "Use when designing MySQL or MariaDB schemas and indexes, or when a query, transaction, or replica lags. MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool",
+      "triggers": [
+        "mysql",
+        "innodb",
+        "mysql index",
+        "explain plan mysql",
+        "replication mysql",
+        "query mysql"
+      ],
+      "bytes": 226,
+      "hash": "99aefd0e0939f497d1dbb33012d74c6d69a42a477b54682e0b8aa9ee90e161b8"
+    },
+    {
+      "name": "nestjs-patterns",
+      "type": "skill",
+      "path": ".agents/skills/nestjs-patterns/SKILL.md",
+      "summary": "Use when building or reviewing a NestJS backend — modules, providers, DTO validation, guards, or interceptors. NestJS architecture patterns for modules, controllers, providers, DTO validation",
+      "triggers": [
+        "nestjs",
+        "nest module",
+        "nest guard",
+        "nest interceptor",
+        "nest decorator",
+        "nestjs provider"
+      ],
+      "bytes": 266,
+      "hash": "b9326ce04135e41552acaa9890b6c1d67bec77e819f02396f4aa8876f9b41a07"
     },
     {
       "name": "observability",
@@ -1039,6 +1404,40 @@
       "hash": "d194f90652f8917bf62d2e1f73acd43c8cc79d35de4fb3fd9a407f388c2bf999"
     },
     {
+      "name": "python-patterns",
+      "type": "skill",
+      "path": ".agents/skills/python-patterns/SKILL.md",
+      "summary": "Use when writing or reviewing Python code and idiomatic structure, typing, or PEP 8 is in question. Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and",
+      "triggers": [
+        "python",
+        "pep 8",
+        "typing python",
+        "dataclass",
+        "async python",
+        "context manager",
+        "python idioms"
+      ],
+      "bytes": 234,
+      "hash": "6d9c702aa2053a9ea578e3cade3d89164d8f52419771c704cdb331ca35da7a72"
+    },
+    {
+      "name": "python-testing",
+      "type": "skill",
+      "path": ".agents/skills/python-testing/SKILL.md",
+      "summary": "Use when writing pytest tests — fixtures, mocks, parametrization, or coverage. Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.",
+      "triggers": [
+        "pytest",
+        "python testing",
+        "fixture",
+        "monkeypatch",
+        "parametrize",
+        "unittest",
+        "python coverage"
+      ],
+      "bytes": 200,
+      "hash": "c49116b39feb6c82a740ca58e570f4e8ea3a5bbd63dd6b9e9959705ae781a447"
+    },
+    {
       "name": "railway-deploy",
       "type": "skill",
       "path": ".agents/skills/railway-deploy/SKILL.md",
@@ -1072,6 +1471,22 @@
       ],
       "bytes": 52,
       "hash": "26dcda888795ae6d9f311b3fea2882792881dc5ce1bebba956626f9c352b701e"
+    },
+    {
+      "name": "redis-patterns",
+      "type": "skill",
+      "path": ".agents/skills/redis-patterns/SKILL.md",
+      "summary": "Use when adding caching, a distributed lock, rate limiting, or pub/sub with Redis, or when key design needs review. Redis data structure patterns, caching strategies, distributed locks, rate limiting",
+      "triggers": [
+        "redis",
+        "cache redis",
+        "ttl",
+        "redis data structure",
+        "pubsub",
+        "redis pipeline"
+      ],
+      "bytes": 264,
+      "hash": "f34a96976c35505e88afecc4aaeff5f53414099593543464e1e0c78f63d958c7"
     },
     {
       "name": "refactoring-patterns",
@@ -1236,10 +1651,43 @@
       "hash": "10d6d579cf10b5ef346ea1a56787806107e45f6f16eb21680e634eaa31458e14"
     },
     {
+      "name": "rust-patterns",
+      "type": "skill",
+      "path": ".agents/skills/rust-patterns/SKILL.md",
+      "summary": "Use when writing or reviewing Rust code and ownership, error handling, traits, or concurrency is in question. Idiomatic Rust patterns, ownership, error handling, traits, concurrency, and best",
+      "triggers": [
+        "rust",
+        "ownership",
+        "borrow checker",
+        "trait",
+        "lifetimes",
+        "async rust",
+        "rust error handling"
+      ],
+      "bytes": 245,
+      "hash": "d2f22bf40923ba8911dff3a638142a1c2d53f367f9db59adf909c466f097f93d"
+    },
+    {
+      "name": "rust-testing",
+      "type": "skill",
+      "path": ".agents/skills/rust-testing/SKILL.md",
+      "summary": "Use when writing Rust tests — unit, integration, async, property-based, or coverage. Rust testing patterns including unit tests, integration tests, async testing, property-based testing, mocking",
+      "triggers": [
+        "rust test",
+        "cargo test",
+        "proptest",
+        "rust mock",
+        "integration test rust",
+        "criterion"
+      ],
+      "bytes": 236,
+      "hash": "db793d3803f7690a1ff1c196b980d900644335874ff8261aee8333c0e2e480ec"
+    },
+    {
       "name": "security-review",
       "type": "skill",
       "path": ".agents/skills/security-review/SKILL.md",
-      "summary": "Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive",
+      "summary": "Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and",
       "triggers": [
         "auth",
         "password",
@@ -1252,8 +1700,8 @@
         "OWASP",
         "vulnerability"
       ],
-      "bytes": 143,
-      "hash": "4e4fcff803015e3fb4b30663734df83b79c17788135869e26ff42209cfdb7823"
+      "bytes": 209,
+      "hash": "e805a5cf2a5fdd09e9b9c6eec9b65443c39605aac8123752f9c729eaa6c8c458"
     },
     {
       "name": "self-improving",
@@ -1272,6 +1720,22 @@
       "triggers": [],
       "bytes": 69,
       "hash": "387d03bdf6c20e9ac95a74a9b0e7c9e19ed71fd234c57448a705c8c14e19807d"
+    },
+    {
+      "name": "springboot-patterns",
+      "type": "skill",
+      "path": ".agents/skills/springboot-patterns/SKILL.md",
+      "summary": "Use when building or reviewing a Spring Boot backend — REST layer, services, data access, caching, or async work. Spring Boot architecture patterns, REST API design, layered services, data access",
+      "triggers": [
+        "spring boot",
+        "spring",
+        "spring data jpa",
+        "spring bean",
+        "spring controller",
+        "spring security"
+      ],
+      "bytes": 277,
+      "hash": "02cf3c041a455f0cc291f0a1a0c1bb4c8200acb60ebcfcf076389f1f64ebe01a"
     },
     {
       "name": "stripe-integration",
@@ -1327,6 +1791,22 @@
       ],
       "bytes": 132,
       "hash": "d99f9ecec84a7a1a232307d6ea1b8fdee375b2547eedd1a64a19916f6899327e"
+    },
+    {
+      "name": "tdd-workflow",
+      "type": "skill",
+      "path": ".agents/skills/tdd-workflow/SKILL.md",
+      "summary": "Use when writing a new feature, fixing a bug, refactoring, or when told to write failing tests first. Test-driven development workflow: write a failing test first, watch it fail, implement the",
+      "triggers": [
+        "tdd",
+        "red green refactor",
+        "test first",
+        "test driven",
+        "test plan",
+        "unit test workflow"
+      ],
+      "bytes": 292,
+      "hash": "7f7d8a050606b69457906f3320fce23e115199e4bdb6e02f3ec252c50086bb1d"
     },
     {
       "name": "testing",
@@ -1437,10 +1917,10 @@
       "name": "ui-ux-pro-max",
       "type": "skill",
       "path": ".agents/skills/ui-ux-pro-max/SKILL.md",
-      "summary": "UI/UX design intelligence for web, mobile, and desktop.",
+      "summary": "Use when designing, building, reviewing, or fixing web, mobile, or desktop interfaces — pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts",
       "triggers": [],
-      "bytes": 55,
-      "hash": "01c8ee5ed7a532e1b219b986a0653e0c722b1d19d59635423848baf74863821b"
+      "bytes": 236,
+      "hash": "06ceb65f4bbfff1a26af93a2fa68851bba911c0debd05ddb63e07a6b959c810a"
     },
     {
       "name": "user-manual-generator",
@@ -1495,10 +1975,10 @@
       "name": "vercel-react-best-practices",
       "type": "skill",
       "path": ".agents/skills/vercel-react-best-practices/SKILL.md",
-      "summary": "React and Next.js performance optimization guidelines from Vercel Engineering.",
+      "summary": "Use when writing, reviewing, or refactoring React/Next.js code for performance — rerender prevention, bundle optimization, data fetching, and hydration, following Vercel Engineering guidelines.",
       "triggers": [],
-      "bytes": 78,
-      "hash": "f15d9e0ab0e16b7566f0891c63cf3f9e2ec8b8839625e17996a6e3c7813ba3c4"
+      "bytes": 195,
+      "hash": "11336263dd0faa2b6a277908f9136ab461ac204e2ee52227a4927b634b1b1d46"
     },
     {
       "name": "vercel-web-design",

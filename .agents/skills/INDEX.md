@@ -232,5 +232,5 @@ When a user request comes in, the primary agent loads the right skill based on t
 - **64** commands
 - **108** skills (this file)
 - **22** native CLIs
-- **3** npm plugins + **3** local plugin(s)
+- **3** npm plugins + **4** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)

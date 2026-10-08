@@ -132,5 +132,5 @@
 - **64** commands
 - **108** skills
 - **22** native CLIs
-- **3** npm plugins + **3** local plugin(s)
+- **3** npm plugins + **4** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)

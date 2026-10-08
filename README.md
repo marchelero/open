@@ -23,7 +23,7 @@ Aplicado a tu día a día, el pack cubre **cuatro prácticas** a la vez:
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **3** npm plugins + **3** local plugin(s)
+- **3** npm plugins + **4** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->
 

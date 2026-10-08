@@ -4,6 +4,12 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+### Added (2026-10-08) — StackEnv (C8): `shell.env` exporta el stack a cada bash
+- **`.opencode/plugins/stack-env.js`** (nuevo, 4º plugin local) — registra el hook `shell.env` de opencode y escribe `OPENCODE_STACK_*` (`TYPE`, `LANGUAGE`, `FRAMEWORK`, `RUNTIME`, `PACKAGE_MANAGER`, `MONOREPO`, `TEST_RUNNER`, `LINTER`, `FORMATTER`) en el env de cada `bash`, para que el agente use el runner correcto sin adivinar. Solo hechos detectados (nunca `"?"`), no-clobber, sin secretos, cache por `cwd` (TTL 5s) y try/catch global (nunca rompe una sesión). Opt-out `OPENCODE_STACK_ENV=0|false|off`. Self-test: `node .opencode/plugins/stack-env.js --selftest` (22/22).
+- **`.opencode/bin/lib/stack-detect.js`** (nuevo) — detectores de stack compartidos (factory por `baseDir`) reusados por `refresh-project.js` y por el plugin; añade cobertura **.NET** (`*.csproj`/`*.sln`). `bin/lib/` no cuenta como CLI.
+- **`evals/cases/static.json`** — invariantes `E26` (ficheros presente) y `E27` (hook `shell.env` + prefijo `OPENCODE_STACK_`).
+- **CI** — step `stack-env self-test` en ambos jobs (Windows + Linux).
+
 ### Removed (2026-09-13) — pack-doctor --fix
 - **`.opencode/agent` y `.opencode/skill` symlinks eliminados del repo.** Opencode >=1.14 descubre nativamente `.opencode/agents/` y `.agents/skills/`; las junctions en singular eran compat legacy 1.17.x y provocaban doble registro de skills. En Windows, `git` sin `core.symlinks` los checkeaba como stubs de texto rotos. Añadidos a `.gitignore`; `smoke-test.js` y `/pack-doctor` check 10 ahora verifican su AUSENCIA.
 - **`docs/prds/2026-08-12-optimize-pack-token-consumption.prd.md`** archivado a `docs/prds/archive/` (DRAFT >30d).
@@ -134,7 +140,7 @@ Pack 1.1 polish: bug fixes, drift cleanup, scaffolding. **+1 primary, -11 trivia
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **3** npm plugins + **3** local plugin(s)
+- **3** npm plugins + **4** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->` markers) in any markdown file. `--check` mode exits non-zero if any tracked file is stale. Both `build-agents-index.js` and `build-skills-index.js` now use `counts.compute()` for their footers — no more hardcoded numbers that drift.
 - **`.opencode/AGENTS.md` is now ~1.2KB lighter at boot** — see M2 above.

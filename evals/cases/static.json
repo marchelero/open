@@ -236,5 +236,24 @@
     "pattern": "--cost",
     "min": 1,
     "why": "Lote 2 (C9): cost-ledger.js escribia docs/state/cost-*.json sin ningun lector; context.js --cost lo surfacea"
+  },
+  {
+    "id": "E26",
+    "kind": "files",
+    "title": "StackEnv: detector compartido + plugin shell.env presentes",
+    "files": [
+      ".opencode/bin/lib/stack-detect.js",
+      ".opencode/plugins/stack-env.js"
+    ],
+    "why": "C8 (AC-01/AC-02): el hook shell.env exporta hechos del stack desde una lib compartida con refresh-project.js"
+  },
+  {
+    "id": "E27",
+    "kind": "present",
+    "title": "StackEnv registra el hook shell.env y emite el prefijo OPENCODE_STACK_",
+    "files": [".opencode/plugins/stack-env.js"],
+    "pattern": "shell\\.env|OPENCODE_STACK_",
+    "min": 2,
+    "why": "C8 (AC-01/AC-03): el plugin debe registrar el hook y exponer variables prefijadas y estables"
   }
 ]
