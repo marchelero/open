@@ -55,6 +55,17 @@ node init-opencode.js
 
 El instalador **detecta el stack** del proyecto (`package.json` → node, `pyproject.toml` → python, `pubspec.yaml` → flutter...) y **descarta los agents de lenguajes que no aplican** (las skills se conservan todas). Es **idempotente**: repetirlo actualiza sin duplicar ni pisar tu config.
 
+#### Actualizar un proyecto que ya tiene el pack
+
+Volver a correr el instalador **reemplaza** los archivos del pack por la versión nueva y **conserva tus skills** (las propias del proyecto se detectan y se reportan). Además limpia los obsoletos de una versión vieja:
+
+- **Con manifest** (`.opencode/.pack-manifest.json`, lo escribe cada instalación): el borrado de archivos obsoletos es automático.
+- **Sin manifest** (una versión anterior a esta feature): una pasada con `--prune` limpia los obsoletos de `.opencode/` (agents/commands incluidos). Nunca toca `.agents/skills/`, `docs/`, ni tu `opencode.json`/`.gitignore`.
+
+```bash
+node init-opencode.js --project-path "C:\mi-proyecto" --prune
+```
+
 ### 2. Arranca opencode
 
 ```bash

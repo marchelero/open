@@ -3,11 +3,22 @@
  * init-opencode.js - cross-platform installer for the `open` pack
  *
  * WHY THIS EXISTS
- *   A pack of 64 skills / 59 agents / 58 commands only pays off if it can be
+ *   A pack of 108 skills / 68 agents / 64 commands only pays off if it can be
  *   dropped into any project reproducibly. This is a zero-dependency,
  *   Node >=18, CommonJS installer (Windows + Linux) that copies the pack in
  *   7 phases, filters the language agents to the target stack, and merges the
  *   root config conservatively (the project ALWAYS wins).
+ *
+ * UPGRADE (re-installing over an older version)
+ *   Running it again on a path that already has the pack replaces every
+ *   pack-managed file with the new version. `.agents/skills/` is NEVER pruned:
+ *   pack skills are refreshed, and skills the project added are kept and
+ *   reported. Each install writes `.opencode/.pack-manifest.json`; on the next
+ *   install, files listed there that the new pack no longer ships are removed
+ *   (obsolete leftovers), without ever touching user files. For a manifest-less
+ *   old install, `--prune` performs that cleanup once, removing any `.opencode/`
+ *   file the new pack no longer ships (agents/commands included) — never
+ *   `.agents/skills/` or `docs/`. It prints every path it removes.
  *
  * WHAT IT DOES NOT DO
  *   - No junctions / symlinks: opencode >=1.14 reads .opencode/agents/ and
@@ -31,7 +42,7 @@
  * Usage:
  *   node init-opencode.js [--project-path <dir>] [--pack-path <dir>]
  *                         [--stack <name>] [--all-agents]
- *                         [--skip-install] [--skip-docs] [--force]
+ *                         [--skip-install] [--skip-docs] [--force] [--prune]
  *
  *   --project-path  target project            (default: process.cwd())
  *   --pack-path     pack origin               (default: directory of this script)
@@ -41,6 +52,10 @@
  *   --skip-install  skip the `npm install` of plugins
  *   --skip-docs     skip the docs/ skeleton
  *   --force         accepted for compatibility: the installer never prompts
+ *   --prune         force cleanup of a manifest-less old install: removes every
+ *                   .opencode/ file the new pack no longer ships (agents and
+ *                   commands included). Also runs alongside a manifest. Never
+ *                   touches .agents/skills/ or docs/. Prints every deletion.
  *
  * Exit codes:
  *   0 = installed (possibly with warnings)
@@ -176,7 +191,11 @@ function countFilesDeep(dir) {
 function usage() {
   console.log('Uso: node init-opencode.js [--project-path <dir>] [--pack-path <dir>]');
   console.log('                           [--stack <name>] [--all-agents]');
-  console.log('                           [--skip-install] [--skip-docs] [--force]');
+  console.log('                           [--skip-install] [--skip-docs] [--force] [--prune]');
+  console.log('');
+  console.log('  --prune   limpieza forzada de una instalacion vieja: borra TODO archivo');
+  console.log('            de .opencode/ que el pack nuevo ya no trae (incluye agents/commands).');
+  console.log('            Nunca toca .agents/skills/ ni docs/. Imprime cada borrado.');
 }
 
 // ---------------------------------------------------------------------------
@@ -184,9 +203,9 @@ function usage() {
 // ---------------------------------------------------------------------------
 
 function parseArgs(argv) {
-  const opts = { projectPath: '', packPath: '', stack: '', allAgents: false, skipInstall: false, skipDocs: false };
+  const opts = { projectPath: '', packPath: '', stack: '', allAgents: false, skipInstall: false, skipDocs: false, prune: false };
   const valueFlags = { '--project-path': 'projectPath', '--pack-path': 'packPath', '--stack': 'stack' };
-  const boolFlags = { '--all-agents': 'allAgents', '--skip-install': 'skipInstall', '--skip-docs': 'skipDocs', '--force': true };
+  const boolFlags = { '--all-agents': 'allAgents', '--skip-install': 'skipInstall', '--skip-docs': 'skipDocs', '--prune': 'prune', '--force': true };
 
   for (let i = 0; i < argv.length; i++) {
     let arg = argv[i];
@@ -315,6 +334,100 @@ function copyItemSafe(src, dest, description, isFile) {
 }
 
 // ---------------------------------------------------------------------------
+// Upgrade / manifest - safe in-place upgrades.
+//
+// Every install records the pack-managed files under `.opencode/` in
+// `.opencode/.pack-manifest.json`. On the NEXT install, any manifest entry that
+// no longer exists in the new pack is obsolete and gets removed. This prunes
+// leftovers from an older version WITHOUT ever touching user files (they are
+// not in the manifest) and WITHOUT touching `.agents/skills/` (never pruned).
+// `--prune` does the same cleanup for a manifest-less old install, but only
+// inside pack-owned dirs (never agents/commands/plugins/skills).
+// ---------------------------------------------------------------------------
+
+const PACK_MANIFEST = '.opencode/.pack-manifest.json';
+
+// With --prune (manifest-less old install), files under .opencode/ that the new
+// pack no longer ships are removed. These paths are never pruned (runtime /
+// upgrade state / deps). NOTE: --prune also removes project-local agents/commands
+// that are not in the pack, so it is opt-in and prints every deletion.
+const PRUNE_KEEP = new Set(['.opencode/.stack', '.opencode/.pack-manifest.json']);
+const PRUNE_KEEP_PREFIXES = ['.opencode/node_modules/', '.opencode/logs/', '.opencode/state/'];
+
+/** Sorted posix-relative paths of every file under root (skips node_modules/.git,
+ *  symlinks, and SKIP_FILE_NAMES), relative to `base`. */
+function walkFilesRel(root, base) {
+  const out = [];
+  const walk = (dir) => {
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (SKIP_DIR_NAMES.has(e.name) || SKIP_FILE_NAMES.has(e.name)) continue;
+      const full = path.join(dir, e.name);
+      let st;
+      try { st = fs.lstatSync(full); } catch { continue; }
+      if (st.isSymbolicLink()) continue;
+      if (st.isDirectory()) walk(full);
+      else if (st.isFile()) out.push(path.relative(base, full).replace(/\\/g, '/'));
+    }
+  };
+  walk(root);
+  return out.sort();
+}
+
+function packFilesUnder(packPath, sub) {
+  return walkFilesRel(path.join(packPath, sub), packPath);
+}
+
+function readManifest(projectPath) {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(projectPath, PACK_MANIFEST), 'utf8'));
+    if (data && Array.isArray(data.files)) return data.files;
+  } catch { /* no manifest: fresh install or version older than the manifest */ }
+  return null;
+}
+
+function writeManifest(projectPath, files) {
+  try {
+    const p = path.join(projectPath, PACK_MANIFEST);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
+    fs.writeFileSync(p, JSON.stringify({ version: 1, files }, null, 2) + '\n', 'utf8');
+  } catch { /* best effort */ }
+}
+
+/** Remove obsolete pack files, then prune now-empty dirs (never `.opencode` itself). */
+function pruneFiles(projectPath, rels) {
+  let removed = 0;
+  const dirs = new Set();
+  for (const rel of rels) {
+    if (!rel.startsWith('.opencode/')) continue; // never touch .agents/, docs/, root files
+    const abs = path.join(projectPath, rel);
+    try {
+      if (fs.existsSync(abs)) { fs.rmSync(abs, { force: true }); removed++; dirs.add(path.dirname(abs)); }
+    } catch { /* keep going */ }
+  }
+  const stop = path.join(projectPath, '.opencode');
+  for (const d of [...dirs].sort((a, b) => b.length - a.length)) {
+    let cur = d;
+    while (cur.length > stop.length && cur.startsWith(stop)) {
+      try {
+        if (fs.readdirSync(cur).length === 0) fs.rmdirSync(cur);
+        else break;
+      } catch { break; }
+      cur = path.dirname(cur);
+    }
+  }
+  return removed;
+}
+
+/** Files in the installed project under .opencode/ that came from the pack
+ *  (the manifest), i.e. pack files minus stack-filtered agents. */
+function installedPackFiles(projectPath, packFileSet) {
+  return walkFilesRel(path.join(projectPath, '.opencode'), projectPath)
+    .filter((rel) => packFileSet.has(rel));
+}
+
+// ---------------------------------------------------------------------------
 // Conservative root-file merges - the project MANDA. Only entries missing from
 // the project are added; nothing already present is overwritten.
 // ---------------------------------------------------------------------------
@@ -408,6 +521,16 @@ function spawnNodeQuiet(args, cwd) {
   }
 }
 
+/** Run a node script and return its exit code (0 ok, -1 spawn failure). */
+function runNodeStatus(args, cwd) {
+  try {
+    execFileSync(process.execPath, args, { cwd, stdio: 'ignore' });
+    return 0;
+  } catch (e) {
+    return e.status === null || e.status === undefined ? -1 : e.status;
+  }
+}
+
 function mcpNamesOf(file) {
   try {
     const cfg = JSON.parse(readText(file) || '');
@@ -441,6 +564,12 @@ function main() {
     console.log('[INFO] Creando directorio del proyecto: ' + projectPath);
     fs.mkdirSync(projectPath, { recursive: true });
   }
+
+  // Upgrade state: the new pack's file set + the previous install's manifest.
+  const packFileSet = new Set(packFilesUnder(packPath, '.opencode'));
+  const oldManifest = readManifest(projectPath);
+  const wasInstalled = oldManifest !== null ||
+    fs.existsSync(path.join(projectPath, '.opencode', 'bin', 'counts.js'));
 
   // ============================================================
   // STACK DETECTION + AGENT FILTER
@@ -512,8 +641,10 @@ function main() {
 
   mergeJsonConservative(path.join(packPath, 'opencode.json'), path.join(projectPath, 'opencode.json'),
     'opencode.json (MCP activo: context7; el resto, opt-in)');
-  mergeJsonConservative(path.join(packPath, 'skills-lock.json'), path.join(projectPath, 'skills-lock.json'),
-    'skills-lock.json');
+  // skills-lock.json is NOT merged: it is regenerated authoritatively in FASE 5
+  // (verify-lockfile --fix) so it matches the project's real skills + agents
+  // (custom skills, stack-filtered agents). Merging it would re-add filtered
+  // agents and break idempotency.
   mergeGitignore(path.join(packPath, '.gitignore'), path.join(projectPath, '.gitignore'));
 
   // ============================================================
@@ -588,6 +719,65 @@ function main() {
     }
   }
 
+  // --- Junctions legacy (.opencode/agent, .opencode/skill): siempre obsoletas ---
+  // opencode >=1.14 lee las rutas plurales nativas; estos symlinks/duplicados
+  // viejos rompen smoke-test. Se eliminan en cada install (symlink, no datos).
+  for (const legacy of ['.opencode/agent', '.opencode/skill']) {
+    const lp = path.join(projectPath, legacy);
+    try {
+      if (!fs.existsSync(lp)) continue;
+      const st = fs.lstatSync(lp);
+      if (st.isSymbolicLink()) fs.unlinkSync(lp);
+      else fs.rmSync(lp, { recursive: true, force: true });
+      console.log('  [OK] Junction/duplicado legacy eliminado: ' + legacy);
+    } catch { /* best effort */ }
+  }
+
+  // ============================================================
+  // UPGRADE: limpiar archivos obsoletos de una version anterior
+  // ============================================================
+  // Manifest presente -> borra lo que el pack ya no trae (seguro: solo borra
+  // lo que el propio instalador registro antes). Sin manifest -> --prune opt-in,
+  // limitado a directorios pack-owned (nunca agents/commands/plugins/skills).
+  {
+    const obsoleteSet = new Set();
+    // Manifest present: prune everything the previous install recorded that the
+    // new pack no longer ships (safe — the installer wrote that list).
+    if (oldManifest) {
+      for (const rel of oldManifest) {
+        if (rel.startsWith('.opencode/') && !packFileSet.has(rel)) obsoleteSet.add(rel);
+      }
+    }
+    // --prune: force full-surface cleanup of a manifest-less old install.
+    // Removes any .opencode/ file not in the new pack (except runtime/deps).
+    if (opts.prune) {
+      const projectFiles = walkFilesRel(path.join(projectPath, '.opencode'), projectPath);
+      for (const rel of projectFiles) {
+        if (packFileSet.has(rel)) continue;
+        if (PRUNE_KEEP.has(rel)) continue;
+        if (PRUNE_KEEP_PREFIXES.some((p) => rel.startsWith(p))) continue;
+        obsoleteSet.add(rel);
+      }
+    }
+    const obsolete = [...obsoleteSet].sort();
+    if (obsolete.length > 0) {
+      const n = pruneFiles(projectPath, obsolete);
+      console.log('');
+      console.log(DASH);
+      console.log('[UPGRADE] Instalacion existente: ' + n + ' archivo(s) del pack obsoletos eliminados');
+      console.log(DASH);
+      for (const rel of obsolete.slice(0, 20)) console.log('  - ' + rel);
+      if (obsolete.length > 20) console.log('  ... y ' + (obsolete.length - 20) + ' mas');
+    } else if (wasInstalled) {
+      console.log('');
+      console.log('[UPGRADE] Instalacion existente detectada: sin archivos del pack obsoletos.');
+      if (!oldManifest) {
+        console.log('          (sin manifest previo: limpia los obsoletos de una version vieja');
+        console.log('           con --prune; de aqui en mas es automatico)');
+      }
+    }
+  }
+
   // ============================================================
   // FASE 3: .agents/ (SKILLS) - NUNCA SE FILTRAN
   // ============================================================
@@ -612,6 +802,22 @@ function main() {
         console.log('  [OK] Limpieza: ' + nested + ' eliminado (' + n + ' archivos residuales del bug de copia)');
       }
     }
+  }
+
+  // --- Skills propias del proyecto (no vienen del pack): NUNCA se borran ---
+  let customSkills = [];
+  try {
+    const packSkillsDir = path.join(packPath, '.agents', 'skills');
+    const projSkillsDir = path.join(projectPath, '.agents', 'skills');
+    const packNames = new Set(fs.readdirSync(packSkillsDir, { withFileTypes: true })
+      .filter(e => e.isDirectory()).map(e => e.name));
+    customSkills = fs.readdirSync(projSkillsDir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && !packNames.has(e.name))
+      .map(e => e.name).sort();
+  } catch { /* best effort */ }
+  if (customSkills.length > 0) {
+    console.log('  [INFO] Skills propias del proyecto conservadas (' + customSkills.length + '): ' +
+      customSkills.slice(0, 8).join(', ') + (customSkills.length > 8 ? ', ...' : ''));
   }
 
   // ============================================================
@@ -763,6 +969,29 @@ function main() {
     skipped++;
   }
 
+  // Re-pin skills-lock.json for THIS project: custom skills and stack-filtered
+  // agents make the pack's lockfile drift, so verify-lockfile would fail
+  // downstream. Mirrors the counts/index regeneration above.
+  const lockScript = path.join(projectPath, '.opencode', 'bin', 'verify-lockfile.js');
+  if (fs.existsSync(lockScript)) {
+    // Check first: only rewrite when there is real drift, so a 2nd run is a
+    // no-op (the lockfile carries a timestamp that would churn otherwise).
+    if (runNodeStatus([lockScript], projectPath) === 0) {
+      console.log('  [OK] skills-lock.json ya consistente');
+    } else {
+      const fixStatus = runNodeStatus([lockScript, '--fix'], projectPath);
+      if (fixStatus === 0) {
+        console.log('  [OK] skills-lock.json re-pinneado para este proyecto');
+        copied++;
+      } else {
+        console.log('  [WARN] No pude re-pinnear skills-lock.json (exit ' + fixStatus + ')');
+      }
+    }
+  } else {
+    console.log('  [SKIP] verify-lockfile.js no encontrado');
+    skipped++;
+  }
+
   // ============================================================
   // FASE 6: INSTALAR DEPENDENCIAS NPM
   // ============================================================
@@ -858,6 +1087,9 @@ function main() {
     console.log('  [OK] MCPs configurados: ' + mcpNames.length + ' (' + mcpNames.join(', ') + ')');
   }
 
+  // Record the pack-managed files actually installed, for the next upgrade.
+  writeManifest(projectPath, installedPackFiles(projectPath, packFileSet));
+
   console.log('');
   console.log(SEP);
   console.log('   RESUMEN');
@@ -889,6 +1121,11 @@ function main() {
     console.log('    - Plugins (vibeguard, pty, dcp)');
     console.log('    - Manual completo');
     console.log('    - Templates y estructura docs');
+    if (customSkills.length > 0) {
+      console.log('    - ' + customSkills.length + ' skill(s) propias del proyecto conservadas');
+    }
+    console.log('    - Manifest de upgrade: .opencode/.pack-manifest.json');
+    if (wasInstalled) console.log('      (re-instalacion: pack reemplazado, skills intactas, obsoletos limpiados)');
     console.log('');
     console.log('  Ciclo Spec-Driven disponible desde el minuto 1:');
     console.log('    /prd -> /plan -> /tasks -> /verify -> /audit-report');

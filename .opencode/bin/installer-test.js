@@ -18,6 +18,8 @@
  *   T5  bad --pack-path -> fails cleanly, installs nothing half-way
  *   T6  stack not detected -> keeps all 68 agents and all 108 skills
  *   T7  scaffolders produce valid frontmatter and refresh ## Counts
+ *   T8  upgrade in-place -> replaces pack files, keeps project skills, prunes
+ *       obsolete pack files via the manifest (never touches user files)
  *
  * Scratch projects live under os.tmpdir() (never inside the repo) and are
  * removed when the run ends. The installer is invoked as
@@ -425,7 +427,82 @@ function t7() {
   else bad('smoke-test FAILED');
 }
 
-const SCENARIOS = [t1, t2, t3, t4, t5, t6, t7];
+function t8() {
+  head('T8 - upgrade in-place: reemplaza el pack, conserva skills, limpia obsoletos');
+  const t8 = newProject(path.join(WORK, 't8-upgrade'));
+  runInit(t8);
+
+  const manifestPath = path.join(t8, '.opencode', '.pack-manifest.json');
+  if (fs.existsSync(manifestPath)) ok('manifest de upgrade escrito (.pack-manifest.json)');
+  else { bad('sin manifest de upgrade'); return; }
+
+  // Skill propia del proyecto (no viene del pack): debe sobrevivir al upgrade.
+  const customSkill = path.join(t8, '.agents', 'skills', 'zz-proj-skill');
+  fs.mkdirSync(customSkill, { recursive: true });
+  fs.writeFileSync(path.join(customSkill, 'SKILL.md'),
+    '---\nname: zz-proj-skill\ndescription: "Use when project-only."\n---\n\n# zz\nproject only\n');
+
+  // Archivo pack-owned que el "pack viejo" traia y el nuevo ya no: registrado en
+  // el manifest -> la proxima corrida debe eliminarlo (sin tocar nada del usuario).
+  const obsoleteRel = '.opencode/bin/zz-obsolete.js';
+  fs.writeFileSync(path.join(t8, '.opencode', 'bin', 'zz-obsolete.js'), '// legacy\n');
+  const man = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  man.files.push(obsoleteRel);
+  man.files.sort();
+  fs.writeFileSync(manifestPath, JSON.stringify(man, null, 2) + '\n');
+
+  // Editar un archivo del pack: la re-instalacion debe restaurarlo.
+  const cmdFile = path.join(t8, '.opencode', 'commands', 'build-fix.md');
+  fs.writeFileSync(cmdFile, fs.readFileSync(cmdFile, 'utf8') + '\n<!-- USER EDIT -->\n');
+
+  runInit(t8);
+
+  if (fs.existsSync(path.join(customSkill, 'SKILL.md'))) ok('skill propia conservada');
+  else bad('skill propia PERDIDA');
+
+  if (!fs.existsSync(path.join(t8, '.opencode', 'bin', 'zz-obsolete.js'))) ok('obsoleto pack-owned eliminado');
+  else bad('obsoleto NO eliminado (conflicto)');
+
+  if (fs.readFileSync(cmdFile, 'utf8').indexOf('USER EDIT') === -1) ok('archivo del pack reemplazado por la version nueva');
+  else bad('archivo del pack NO reemplazado');
+
+  const man2 = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (man2.files.indexOf(obsoleteRel) === -1) ok('manifest actualizado sin el obsoleto');
+  else bad('manifest todavia lista el obsoleto');
+
+  if (testCounts(t8)) ok('counts --check PASS tras upgrade');
+  else bad('counts --check FAIL tras upgrade');
+}
+
+function t9() {
+  head('T9 - upgrade: elimina junctions legacy y re-pinnea el lockfile');
+  const t9 = newProject(path.join(WORK, 't9-legacy'));
+  runInit(t9);
+
+  // Junction legacy simulada (directorio duplicado .opencode/agent).
+  const legacy = path.join(t9, '.opencode', 'agent');
+  fs.mkdirSync(legacy, { recursive: true });
+  fs.writeFileSync(path.join(legacy, 'dup.md'), '# duplicate\n');
+
+  // Skill propia: el lockfile del pack no la tiene -> drift que el install re-pinnea.
+  const projSkill = path.join(t9, '.agents', 'skills', 'zz-proj-skill2');
+  fs.mkdirSync(projSkill, { recursive: true });
+  fs.writeFileSync(path.join(projSkill, 'SKILL.md'),
+    '---\nname: zz-proj-skill2\ndescription: "Use when project-only."\n---\n\n# zz2\n');
+
+  runInit(t9);
+
+  if (!fs.existsSync(legacy)) ok('junction legacy (.opencode/agent) eliminada');
+  else bad('junction legacy .opencode/agent todavia presente');
+
+  if (runNodeIn(t9, 'verify-lockfile.js') === 0) ok('verify-lockfile CLEAN tras re-pin (skill propia pinneada)');
+  else bad('verify-lockfile con drift tras upgrade');
+
+  if (fs.existsSync(path.join(projSkill, 'SKILL.md'))) ok('skill propia conservada');
+  else bad('skill propia PERDIDA');
+}
+
+const SCENARIOS = [t1, t2, t3, t4, t5, t6, t7, t8, t9];
 
 // ---------------------------------------------------------------------------
 // Run
