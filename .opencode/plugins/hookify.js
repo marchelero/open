@@ -286,12 +286,15 @@ async function permissionAsk(input, output) {
   }
 }
 
-module.exports = async () => {
-  return {
-    "tool.execute.before": async (input, output) => {
-      await secretBlocker(input, output)
-      await policyEngine(input, output)
-    },
-    "permission.ask": permissionAsk,
-  }
+module.exports = {
+  id: "hookify",
+  setup: async () => {
+    return {
+      "tool.execute.before": async (input, output) => {
+        await secretBlocker(input, output)
+        await policyEngine(input, output)
+      },
+      "permission.ask": permissionAsk,
+    }
+  },
 }

@@ -105,10 +105,13 @@ async function shellEnv(input, output) {
   }
 }
 
-module.exports = async () => {
-  return {
-    "shell.env": shellEnv,
-  }
+module.exports = {
+  id: "stack-env",
+  setup: async () => {
+    return {
+      "shell.env": shellEnv,
+    }
+  },
 }
 
 // ────────────────────────────────────────────────────────────────────────────

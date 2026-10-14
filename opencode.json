@@ -18,9 +18,7 @@
         "auto": true,
         "tail_turns": 2
     },
-    "plugin": [
-        "opencode-vibeguard",
-        "opencode-pty",
+    "plugins": [
         "@tarquinen/opencode-dcp"
     ],
     "mcp": {

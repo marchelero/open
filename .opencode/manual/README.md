@@ -14,7 +14,7 @@
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **3** npm plugins + **4** local plugin(s)
+- **1** npm plugins + **4** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->
 
@@ -24,7 +24,7 @@ Detalles:
 - Skills portables: patrones de API, TDD, seguridad, error handling, testing, refactoring, debugging, `router`, etc.
 - Slash commands: atajos recurrentes
 - MCPs activos: `context7` (docs) + `anydoc` (document conversion)
-- Plugins npm: `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
+- Plugins npm: `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
 - Plugins locales: `.opencode/plugins/hookify.js` (SecretBlocker + policy engine con reglas declarativas en `.opencode/policy-rules.json`), `gateguard.js` (detector destructivo cross-platform), `cost-ledger.js` (ledger de costo + snapshot de sesión) y `stack-env.js` (hook `shell.env`: exporta el stack detectado a cada bash). Auto-cargados, zero install
 - Variables de stack en bash: `stack-env.js` inyecta `OPENCODE_STACK_{TYPE,LANGUAGE,FRAMEWORK,RUNTIME,PACKAGE_MANAGER,MONOREPO,TEST_RUNNER,LINTER,FORMATTER}` (solo hechos detectados; nunca `"?"`). Detección compartida con `refresh-project.js` vía `.opencode/bin/lib/stack-detect.js`. Desactivar con `OPENCODE_STACK_ENV=0` (`false`/`off`)
 - **3 ejemplos downstream** en `.opencode/examples/` (node-api, python-data, react-app) — borrar tras grokking el pack

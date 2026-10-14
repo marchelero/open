@@ -623,7 +623,7 @@ function main() {
   console.log('  - ' + pkSkills + ' skills');
   console.log('  - ' + (pkMcpNames.length ? pkMcpNames.length + ' MCPs (' + pkMcpNames.join(', ') + ')' : 'MCPs: sin configurar'));
   console.log('  - ' + pkClis + ' CLI scripts');
-  console.log('  - Plugins (vibeguard, pty, dcp)');
+  console.log('  - Plugin (dcp)');
   console.log('  - Manual completo');
   if (agentsToDrop.length > 0) {
     console.log("  - Filtro de stack '" + detectedStack + "': " + agentsToDrop.length + ' agentes de lenguaje NO se copian');

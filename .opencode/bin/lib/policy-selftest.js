@@ -19,7 +19,7 @@
 
 const path = require("node:path")
 const engine = require("./policy-engine.js")
-const hookifyFactory = require("../../plugins/hookify.js")
+const hookifyPlugin = require("../../plugins/hookify.js")
 
 let passed = 0
 let failed = 0
@@ -152,7 +152,9 @@ async function run() {
     : bad("confinement benign suite: 0 deny", confDenies + " denied")
 
   // ---- runtime hooks ----------------------------------------------------
-  const hooks = await hookifyFactory()
+  const hooks = await (typeof hookifyPlugin.setup === "function"
+    ? hookifyPlugin.setup()
+    : hookifyPlugin())
   const before = hooks["tool.execute.before"]
   const origWarn = console.warn
   let warns = 0

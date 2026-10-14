@@ -205,72 +205,75 @@ function writeSessionSnapshot(acc) {
   }
 }
 
-module.exports = async () => {
-  const sessions = new Map()
+module.exports = {
+  id: "cost-ledger",
+  setup: async () => {
+    const sessions = new Map()
 
-  return {
-    event: async ({ event }) => {
-      try {
-        if (!event || typeof event.type !== "string") return
-        const props = event.properties || {}
+    return {
+      event: async ({ event }) => {
+        try {
+          if (!event || typeof event.type !== "string") return
+          const props = event.properties || {}
 
-        if (event.type === "message.updated") {
-          const info = props.info || {}
-          if (info.role !== "assistant") return
-          const a = ensureSession(sessions, props.sessionID || info.sessionID)
-          if (info.providerID) a.provider = info.providerID
-          if (info.modelID) a.model = info.modelID
-          if (info.agent) a.agent = info.agent
-          else if (info.mode && a.agent === "unknown") a.agent = info.mode
+          if (event.type === "message.updated") {
+            const info = props.info || {}
+            if (info.role !== "assistant") return
+            const a = ensureSession(sessions, props.sessionID || info.sessionID)
+            if (info.providerID) a.provider = info.providerID
+            if (info.modelID) a.model = info.modelID
+            if (info.agent) a.agent = info.agent
+            else if (info.mode && a.agent === "unknown") a.agent = info.mode
 
-          const t = info.tokens
-          const inTok = t && typeof t.input === "number" ? t.input : 0
-          const outTok =
-            t && typeof t === "object"
-              ? (t.output || 0) + (t.reasoning || 0)
-              : 0
-          const hasCost = typeof info.cost === "number"
-          if (typeof info.id === "string") {
-            a.msgs.set(info.id, {
-              in: inTok,
-              out: outTok,
-              cost: hasCost ? info.cost : 0,
-              hasCost,
-            })
+            const t = info.tokens
+            const inTok = t && typeof t.input === "number" ? t.input : 0
+            const outTok =
+              t && typeof t === "object"
+                ? (t.output || 0) + (t.reasoning || 0)
+                : 0
+            const hasCost = typeof info.cost === "number"
+            if (typeof info.id === "string") {
+              a.msgs.set(info.id, {
+                in: inTok,
+                out: outTok,
+                cost: hasCost ? info.cost : 0,
+                hasCost,
+              })
+            }
+            return
           }
-          return
-        }
 
-        if (event.type === "session.idle" || event.type === "session.deleted") {
-          const sid =
-            props.sessionID ||
-            (props.session && props.session.id) ||
-            props.id
-          const acc = sessions.get(sid) || (sid ? { sessionID: sid } : null)
-          writeLedger(acc)
-          if (event.type === "session.idle") writeSessionSnapshot(acc)
-          if (event.type === "session.deleted" && sid) sessions.delete(sid)
+          if (event.type === "session.idle" || event.type === "session.deleted") {
+            const sid =
+              props.sessionID ||
+              (props.session && props.session.id) ||
+              props.id
+            const acc = sessions.get(sid) || (sid ? { sessionID: sid } : null)
+            writeLedger(acc)
+            if (event.type === "session.idle") writeSessionSnapshot(acc)
+            if (event.type === "session.deleted" && sid) sessions.delete(sid)
+          }
+        } catch {
+          // Defensive: ignore any malformed event.
         }
-      } catch {
-        // Defensive: ignore any malformed event.
-      }
-    },
+      },
 
-    // C5 — continuity at compaction. Appends a short instruction to the
-    // compaction prompt so a handoff artifact survives context loss.
-    "experimental.session.compacting": async (input, output) => {
-      try {
-        if (output && Array.isArray(output.context)) {
-          output.context.push(
-            "Continuity: this session is being compacted. Before the context is lost, " +
-              "make sure a handoff exists — if real work happened, write or refresh a factual " +
-              "snapshot under docs/sessions/ (branch, changed files, what was done, next steps) " +
-              "and keep docs/sessions/LATEST.md current. Never commit."
-          )
+      // C5 — continuity at compaction. Appends a short instruction to the
+      // compaction prompt so a handoff artifact survives context loss.
+      "experimental.session.compacting": async (input, output) => {
+        try {
+          if (output && Array.isArray(output.context)) {
+            output.context.push(
+              "Continuity: this session is being compacted. Before the context is lost, " +
+                "make sure a handoff exists — if real work happened, write or refresh a factual " +
+                "snapshot under docs/sessions/ (branch, changed files, what was done, next steps) " +
+                "and keep docs/sessions/LATEST.md current. Never commit."
+            )
+          }
+        } catch {
+          // Never crash compaction over a context append.
         }
-      } catch {
-        // Never crash compaction over a context append.
-      }
-    },
-  }
+      },
+    }
+  },
 }

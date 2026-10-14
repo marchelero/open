@@ -8,9 +8,7 @@
   },
   "dependencies": {
     "@opencode-ai/plugin": "1.17.11",
-    "@tarquinen/opencode-dcp": "*",
-    "opencode-pty": "*",
-    "opencode-vibeguard": "*"
+    "@tarquinen/opencode-dcp": "*"
   },
   "engines": {
     "node": ">=18.0.0"

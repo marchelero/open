@@ -4,6 +4,12 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed (2026-10-14) — Compatibilidad con opencode v2 (API de plugins)
+- **Los 4 plugins locales** (`hookify.js`, `gateguard.js`, `cost-ledger.js`, `stack-env.js`) migrados al contrato de plugins de **opencode v2**: ahora exportan `module.exports = { id, setup }` (objeto por defecto) en vez de `module.exports = async () => ({...})`. v2 exige un export por defecto que sea objeto con `id` y `setup`/`effect`; el formato v1 hacía fallar los 4 en cada boot (`Plugin export is not a function`).
+- **`opencode.json`**: clave de config renombrada `plugin` → `plugins` (v2 usa el plural). Verificado contra el esquema embebido del binario v2.
+- **`.opencode/bin/lib/policy-selftest.js`**: consume el nuevo export (`hookifyPlugin.setup()` con fallback a función).
+- **Removed** `opencode-vibeguard` y `opencode-pty` (npm): ninguna versión publicada es compatible con v2 (0.1.0 y 0.4.0 exportan en formato v1 con named export). Se quitan de `opencode.json` y `.opencode/package.json`; queda solo `@tarquinen/opencode-dcp`.
+
 ### Added (2026-10-08) — StackEnv (C8): `shell.env` exporta el stack a cada bash
 - **`.opencode/plugins/stack-env.js`** (nuevo, 4º plugin local) — registra el hook `shell.env` de opencode y escribe `OPENCODE_STACK_*` (`TYPE`, `LANGUAGE`, `FRAMEWORK`, `RUNTIME`, `PACKAGE_MANAGER`, `MONOREPO`, `TEST_RUNNER`, `LINTER`, `FORMATTER`) en el env de cada `bash`, para que el agente use el runner correcto sin adivinar. Solo hechos detectados (nunca `"?"`), no-clobber, sin secretos, cache por `cwd` (TTL 5s) y try/catch global (nunca rompe una sesión). Opt-out `OPENCODE_STACK_ENV=0|false|off`. Self-test: `node .opencode/plugins/stack-env.js --selftest` (22/22).
 - **`.opencode/bin/lib/stack-detect.js`** (nuevo) — detectores de stack compartidos (factory por `baseDir`) reusados por `refresh-project.js` y por el plugin; añade cobertura **.NET** (`*.csproj`/`*.sln`). `bin/lib/` no cuenta como CLI.
@@ -140,7 +146,7 @@ Pack 1.1 polish: bug fixes, drift cleanup, scaffolding. **+1 primary, -11 trivia
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **3** npm plugins + **4** local plugin(s)
+- **1** npm plugins + **4** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->` markers) in any markdown file. `--check` mode exits non-zero if any tracked file is stale. Both `build-agents-index.js` and `build-skills-index.js` now use `counts.compute()` for their footers — no more hardcoded numbers that drift.
 - **`.opencode/AGENTS.md` is now ~1.2KB lighter at boot** — see M2 above.

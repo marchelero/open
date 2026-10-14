@@ -50,7 +50,7 @@ Starter pack portable de opencode. El "producto" son los 68 agentes, 64 slash co
 
 ## Plugins
 
-**npm** (en `.opencode/package.json`): `opencode-vibeguard`, `opencode-pty`, `@tarquinen/opencode-dcp` + `@opencode-ai/plugin` peer.
+**npm** (en `.opencode/package.json`): `@tarquinen/opencode-dcp` + `@opencode-ai/plugin` peer.
 
 **Local** (auto-cargado desde `.opencode/plugins/`), 4 plugins:
 - **hookify.js** — `SecretBlocker` (bloquea writes a `.env`/`*.key`/`*.pem`/`id_rsa*`/etc, allowlist `.env.example`) + `PolicyEngine` (reglas declarativas de `.opencode/policy-rules.json`, severidades warn/ask/deny) + `PermissionAsk`.

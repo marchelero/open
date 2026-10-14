@@ -350,18 +350,21 @@ async function gateGuard(input, output) {
   )
 }
 
-module.exports = async () => {
-  return {
-    "tool.execute.before": async (input, output) => {
-      try {
-        await gateGuard(input, output)
-      } catch (err) {
-        // A deny in block mode must propagate (that is the whole point);
-        // any other error must never crash the session.
-        if (err && /^\[gateguard:/.test(err.message || "")) throw err
-      }
-    },
-  }
+module.exports = {
+  id: "gateguard",
+  setup: async () => {
+    return {
+      "tool.execute.before": async (input, output) => {
+        try {
+          await gateGuard(input, output)
+        } catch (err) {
+          // A deny in block mode must propagate (that is the whole point);
+          // any other error must never crash the session.
+          if (err && /^\[gateguard:/.test(err.message || "")) throw err
+        }
+      },
+    }
+  },
 }
 
 // ────────────────────────────────────────────────────────────────────────────
