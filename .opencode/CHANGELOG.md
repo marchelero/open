@@ -4,11 +4,13 @@ All notable changes to this starter pack are documented here. The format follows
 
 ## [Unreleased]
 
-### Changed (2026-10-14) — Compatibilidad con opencode v2 (API de plugins)
-- **Los 4 plugins locales** (`hookify.js`, `gateguard.js`, `cost-ledger.js`, `stack-env.js`) migrados al contrato de plugins de **opencode v2**: ahora exportan `module.exports = { id, setup }` (objeto por defecto) en vez de `module.exports = async () => ({...})`. v2 exige un export por defecto que sea objeto con `id` y `setup`/`effect`; el formato v1 hacía fallar los 4 en cada boot (`Plugin export is not a function`).
-- **`opencode.json`**: clave de config renombrada `plugin` → `plugins` (v2 usa el plural). Verificado contra el esquema embebido del binario v2.
+### Changed (2026-10-14) — Compatibilidad opencode v1 (desktop) + v2 (CLI) y guard de dependencias
+- **Los 4 plugins locales** (`hookify.js`, `gateguard.js`, `cost-ledger.js`, `stack-env.js`) migrados a un **export dual** `module.exports = { id, setup, server }` (con `server === setup`): `server()` satisface opencode **v1** (desktop 1.19.0) y `setup()` satisface opencode **v2** (CLI 2.0.29). El objeto por defecto con `id` es requisito de v2; en v1 el formato nativo es el objeto `{ id, server() }`.
+- **`opencode.json`**: la clave de config vuelve a `plugin` (singular). Es la única que ambas versiones honran **una sola vez**: v1 la lee como clave nativa y v2 la acepta como alias de `plugins`. Usar `plugins` dejaría al desktop sin plugins (v1 la descarta con "cannot be represented in V1") y usar **ambas** cargaría todo dos veces en v2.
+- **`.opencode/plugins/deps-guard.js`** (nuevo, 5º plugin local) — guard de arranque sin dependencias externas: si falta `.opencode/node_modules`, lo registra con `[deps-guard] ...` y lanza `bin/install-plugins.js` **en segundo plano** (no bloquea el arranque). Resuelve el fallo silencioso del desktop.
+- **`init-opencode.js`** — la fase de instalación ya no confía en el código de salida de `npm`: verifica cada dependencia con `install-plugins.js --check` y falla de forma ruidosa si quedan ausentes (antes solo `[WARN]`).
 - **`.opencode/bin/lib/policy-selftest.js`**: consume el nuevo export (`hookifyPlugin.setup()` con fallback a función).
-- **Removed** `opencode-vibeguard` y `opencode-pty` (npm): ninguna versión publicada es compatible con v2 (0.1.0 y 0.4.0 exportan en formato v1 con named export). Se quitan de `opencode.json` y `.opencode/package.json`; queda solo `@tarquinen/opencode-dcp`.
+- **Removed** `opencode-vibeguard` y `opencode-pty` (npm): ninguna versión publicada exporta un objeto por defecto compatible con v2 (0.1.0 y 0.4.0 usan named export). Quedan fuera de `opencode.json` y `.opencode/package.json`; solo permanece `@tarquinen/opencode-dcp`.
 
 ### Added (2026-10-08) — StackEnv (C8): `shell.env` exporta el stack a cada bash
 - **`.opencode/plugins/stack-env.js`** (nuevo, 4º plugin local) — registra el hook `shell.env` de opencode y escribe `OPENCODE_STACK_*` (`TYPE`, `LANGUAGE`, `FRAMEWORK`, `RUNTIME`, `PACKAGE_MANAGER`, `MONOREPO`, `TEST_RUNNER`, `LINTER`, `FORMATTER`) en el env de cada `bash`, para que el agente use el runner correcto sin adivinar. Solo hechos detectados (nunca `"?"`), no-clobber, sin secretos, cache por `cwd` (TTL 5s) y try/catch global (nunca rompe una sesión). Opt-out `OPENCODE_STACK_ENV=0|false|off`. Self-test: `node .opencode/plugins/stack-env.js --selftest` (22/22).
@@ -146,7 +148,7 @@ Pack 1.1 polish: bug fixes, drift cleanup, scaffolding. **+1 primary, -11 trivia
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **1** npm plugins + **4** local plugin(s)
+- **1** npm plugins + **5** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->` markers) in any markdown file. `--check` mode exits non-zero if any tracked file is stale. Both `build-agents-index.js` and `build-skills-index.js` now use `counts.compute()` for their footers — no more hardcoded numbers that drift.
 - **`.opencode/AGENTS.md` is now ~1.2KB lighter at boot** — see M2 above.

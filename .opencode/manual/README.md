@@ -14,7 +14,7 @@
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **1** npm plugins + **4** local plugin(s)
+- **1** npm plugins + **5** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->
 
@@ -25,7 +25,7 @@ Detalles:
 - Slash commands: atajos recurrentes
 - MCPs activos: `context7` (docs) + `anydoc` (document conversion)
 - Plugins npm: `@tarquinen/opencode-dcp` (+ `@opencode-ai/plugin` peer)
-- Plugins locales: `.opencode/plugins/hookify.js` (SecretBlocker + policy engine con reglas declarativas en `.opencode/policy-rules.json`), `gateguard.js` (detector destructivo cross-platform), `cost-ledger.js` (ledger de costo + snapshot de sesión) y `stack-env.js` (hook `shell.env`: exporta el stack detectado a cada bash). Auto-cargados, zero install
+- Plugins locales: `.opencode/plugins/hookify.js` (SecretBlocker + policy engine con reglas declarativas en `.opencode/policy-rules.json`), `gateguard.js` (detector destructivo cross-platform), `cost-ledger.js` (ledger de costo + snapshot de sesión), `stack-env.js` (hook `shell.env`: exporta el stack detectado a cada bash) y `deps-guard.js` (guard de arranque: si falta `.opencode/node_modules`, lo registra y lanza la instalación en segundo plano). Auto-cargados, zero install. Todos exportan `{ id, setup, server }` para ser compatibles con opencode **v1 (desktop)** y **v2 (CLI)**
 - Variables de stack en bash: `stack-env.js` inyecta `OPENCODE_STACK_{TYPE,LANGUAGE,FRAMEWORK,RUNTIME,PACKAGE_MANAGER,MONOREPO,TEST_RUNNER,LINTER,FORMATTER}` (solo hechos detectados; nunca `"?"`). Detección compartida con `refresh-project.js` vía `.opencode/bin/lib/stack-detect.js`. Desactivar con `OPENCODE_STACK_ENV=0` (`false`/`off`)
 - **3 ejemplos downstream** en `.opencode/examples/` (node-api, python-data, react-app) — borrar tras grokking el pack
 - CLIs nativos: cero dependencias, solo Node stdlib (ver `node .opencode/bin/counts.js --json`)
@@ -154,6 +154,34 @@ node .opencode/bin/refresh-project.js --status
 - **[EXAMPLES.md](./EXAMPLES.md)** — 6 flujos completos de proyectos reales
 - **[ARCH.md](./ARCH.md)** — 4 capas, flujo PRD, ciclo de instintos, estructura de archivos
 - **[SURFACES.md](./SURFACES.md)** — cuándo usar regla vs skill vs MCP vs agente vs CLI
+
+## Solución de problemas
+
+### La UI no responde / el chat se queda mudo (sin error en pantalla)
+
+Causa más común: falta `.opencode/node_modules`. Es **gitignored**, así que **no viaja** con un `git clone` ni con una copia. Los tools nativos (`.opencode/tools/*.ts`) hacen `import ... from "@opencode-ai/plugin"`; sin dependencias, algunos builds —p.ej. el **desktop**, que embebe opencode 1.19.0— fallan en `prompt_async` con `ERR_MODULE_NOT_FOUND` **y no muestran nada** en la UI.
+
+Repara:
+
+```bash
+cd .opencode && npm install
+```
+
+Verificación rápida:
+
+```bash
+node .opencode/bin/install-plugins.js --check   # exit 1 si faltan dependencias
+```
+
+Red de seguridad: el plugin `.opencode/plugins/deps-guard.js` detecta dependencias faltantes al arrancar, lo registra con `[deps-guard] ...` y lanza la instalación **en segundo plano** (no bloquea el arranque). El instalador `init-opencode.js` además verifica las dependencias una a una y falla de forma ruidosa si quedan ausentes.
+
+### ¿Dónde está el log?
+
+```bash
+~/.local/share/opencode/log/opencode.log
+```
+
+Ahí aparecen `msg="loading plugin"` (correcto) y `failed to load plugin` (rotura). Si el desktop no muestra error, el log sí lo tiene.
 
 ## Reinicio tras cambios
 

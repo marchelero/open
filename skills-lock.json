@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated": "2026-10-14T15:16:14.083Z",
+  "generated": "2026-10-14T16:05:48.674Z",
   "skills": {
     "accessibility": {
       "path": ".agents/skills/accessibility/SKILL.md",
@@ -302,7 +302,7 @@
     },
     "pack-reference": {
       "path": ".agents/skills/pack-reference/SKILL.md",
-      "sha256": "847496b01ff7447a0c665e1cc576d240c9c59a0056b5b18bf25faed45e22bc60"
+      "sha256": "6f768157469b12b930d533a1c48a73a3ba27f1402c2167fcbfa3b4129a8700fd"
     },
     "pdf": {
       "path": ".agents/skills/pdf/SKILL.md",

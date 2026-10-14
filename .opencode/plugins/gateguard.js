@@ -350,7 +350,7 @@ async function gateGuard(input, output) {
   )
 }
 
-module.exports = {
+const plugin = {
   id: "gateguard",
   setup: async () => {
     return {
@@ -366,6 +366,9 @@ module.exports = {
     }
   },
 }
+
+plugin.server = plugin.setup
+module.exports = plugin
 
 // ────────────────────────────────────────────────────────────────────────────
 // Self-test — `node .opencode/plugins/gateguard.js --selftest`

@@ -286,7 +286,7 @@ async function permissionAsk(input, output) {
   }
 }
 
-module.exports = {
+const plugin = {
   id: "hookify",
   setup: async () => {
     return {
@@ -298,3 +298,6 @@ module.exports = {
     }
   },
 }
+
+plugin.server = plugin.setup
+module.exports = plugin

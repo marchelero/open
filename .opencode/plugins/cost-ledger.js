@@ -205,7 +205,7 @@ function writeSessionSnapshot(acc) {
   }
 }
 
-module.exports = {
+const plugin = {
   id: "cost-ledger",
   setup: async () => {
     const sessions = new Map()
@@ -277,3 +277,6 @@ module.exports = {
     }
   },
 }
+
+plugin.server = plugin.setup
+module.exports = plugin

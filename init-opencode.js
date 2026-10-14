@@ -351,7 +351,7 @@ const PACK_MANIFEST = '.opencode/.pack-manifest.json';
 // pack no longer ships are removed. These paths are never pruned (runtime /
 // upgrade state / deps). NOTE: --prune also removes project-local agents/commands
 // that are not in the pack, so it is opt-in and prints every deletion.
-const PRUNE_KEEP = new Set(['.opencode/.stack', '.opencode/.pack-manifest.json']);
+const PRUNE_KEEP = new Set(['.opencode/.stack', '.opencode/.pack-manifest.json', '.opencode/.deps-guard.lock']);
 const PRUNE_KEEP_PREFIXES = ['.opencode/node_modules/', '.opencode/logs/', '.opencode/state/'];
 
 /** Sorted posix-relative paths of every file under root (skips node_modules/.git,
@@ -1011,12 +1011,27 @@ function main() {
         stdio: 'ignore',
         shell: process.platform === 'win32',
       });
+      // Verificacion dura: sin node_modules, los tools (.opencode/tools/*.ts)
+      // no resuelven @opencode-ai/plugin y el chat del desktop MUERE EN
+      // SILENCIO (ERR_MODULE_NOT_FOUND en prompt_async, sin error en la UI).
+      // No basta con confiar en el codigo de salida de npm: comprobamos las
+      // dependencias declaradas una por una con el mismo script del pack.
+      const installScript = path.join(opencodeDir, 'bin', 'install-plugins.js');
+      const depsOk = fs.existsSync(installScript) &&
+        runNodeStatus([installScript, '--check'], opencodeDir) === 0;
       if (r.error) {
         console.log('  [ERROR] Fallo npm install: ' + firstLine(r.error.message));
+        console.log('          Repara con: cd "' + opencodeDir + '" && npm install');
         errors++;
-      } else if (r.status === 0) {
+      } else if (r.status === 0 && depsOk) {
         console.log('  [OK] Plugins instalados correctamente');
         copied++;
+      } else if (!depsOk) {
+        console.log('  [ERROR] Dependencias de .opencode/node_modules AUSENTES o incompletas.');
+        console.log('          Sin ellas, el chat puede NO responder (los tools importan');
+        console.log('          @opencode-ai/plugin) y el desktop no muestra el error.');
+        console.log('          Repara con: cd "' + opencodeDir + '" && npm install');
+        errors++;
       } else {
         console.log('  [WARN] npm termino con codigo: ' + r.status);
       }
@@ -1118,7 +1133,7 @@ function main() {
     console.log('    - ' + finMcpNames.length + ' MCPs' + (finMcpNames.length ? ' (' + finMcpNames.join(', ') + ')' : '') +
       '  | anydoc y el resto: opt-in via /setup-mcp');
     console.log('    - CLI scripts de validacion y utilidades');
-    console.log('    - Plugins (vibeguard, pty, dcp)');
+    console.log('    - Plugins (dcp)');
     console.log('    - Manual completo');
     console.log('    - Templates y estructura docs');
     if (customSkills.length > 0) {

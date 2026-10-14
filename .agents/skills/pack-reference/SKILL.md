@@ -21,7 +21,7 @@ Starter pack portable de opencode. El "producto" son los 68 agentes, 64 slash co
 ├── .opencode/             PACK template (portable)
 │   ├── agents/            68 subagentes (description + mode + permission)
 │   ├── commands/          64 slash commands
-│   ├── plugins/           Local plugins (hookify.js, gateguard.js, cost-ledger.js, stack-env.js)
+│   ├── plugins/           Local plugins (hookify.js, gateguard.js, cost-ledger.js, stack-env.js, deps-guard.js)
 │   ├── bin/               22 CLIs nativos
 │   ├── examples/          3 downstream demos (node-api, python-data, react-app)
 │   ├── manual/            PACK docs (info del pack, NO del proyecto)
@@ -52,11 +52,14 @@ Starter pack portable de opencode. El "producto" son los 68 agentes, 64 slash co
 
 **npm** (en `.opencode/package.json`): `@tarquinen/opencode-dcp` + `@opencode-ai/plugin` peer.
 
-**Local** (auto-cargado desde `.opencode/plugins/`), 4 plugins:
+**Local** (auto-cargado desde `.opencode/plugins/`), 5 plugins. Todos exportan `{ id, setup, server }` — dual: `server()` para opencode **v1** (desktop) y `setup()` para **v2** (CLI):
 - **hookify.js** — `SecretBlocker` (bloquea writes a `.env`/`*.key`/`*.pem`/`id_rsa*`/etc, allowlist `.env.example`) + `PolicyEngine` (reglas declarativas de `.opencode/policy-rules.json`, severidades warn/ask/deny) + `PermissionAsk`.
 - **gateguard.js** — clasificador destructivo cross-platform (POSIX + Windows) *shell-aware*; perfiles `GATEGUARD_MODE` (warn por defecto / block / off).
 - **cost-ledger.js** — escribe `docs/state/cost-*.json` en session idle + snapshot factual en `docs/sessions/` + instruccion de continuidad en compaction.
 - **stack-env.js** — hook `shell.env`: inyecta `OPENCODE_STACK_*` (lenguaje, framework, runtime, package manager, monorepo, test runner, linter, formatter) en cada bash; detección compartida con `refresh-project.js` vía `bin/lib/stack-detect.js`. Opt-out `OPENCODE_STACK_ENV=0|false|off`. Self-test: `node .opencode/plugins/stack-env.js --selftest`.
+- **deps-guard.js** — guard de arranque (solo builtins): si falta `.opencode/node_modules`, lo registra (`[deps-guard] ...`) y lanza `bin/install-plugins.js` en segundo plano; no bloquea el arranque.
+
+La clave de config en `opencode.json` es `plugin` (**singular**): v1 y v2 la honran una sola vez. `plugins` (plural) es solo-v2 y v1 la descarta ("cannot be represented in V1"); declarar **ambas** carga todo dos veces en v2.
 
 Los logs de auditoría van a `.opencode/logs/policy.log` y `.opencode/logs/gateguard.log` (gitignored).
 

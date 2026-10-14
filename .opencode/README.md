@@ -12,7 +12,7 @@ Pack portable de opencode. Cópialo a cualquier proyecto, reinicia opencode y em
 - **64** commands (.opencode/commands)
 - **108** skills (.agents/skills)
 - **22** native CLIs (.opencode/bin)
-- **1** npm plugins + **4** local plugin(s)
+- **1** npm plugins + **5** local plugin(s)
 - **1** active MCPs + **13** optional MCP(s)
 <!-- COUNTS-END -->
 
@@ -40,11 +40,11 @@ Después de copiar el pack, **corré esto una vez** en el proyecto destino:
 cd .opencode && npm install
 ```
 
-Baja el plugin (dcp) + `@opencode-ai/plugin` peer. Sin esto opencode puede colgarse al boot porque el plugin no carga. El script `install-plugins.js` es idempotente **y auto-reparable**: verifica cada dependencia declarada y reinstala si falta (no salta solo porque `node_modules/` exista).
+Baja el plugin (dcp) + `@opencode-ai/plugin` peer. Sin esto opencode puede colgarse al boot porque el plugin no carga. El script `install-plugins.js` es idempotente **y auto-reparable**: verifica cada dependencia declarada y reinstala si falta (no salta solo porque `node_modules/` exista). Además, el plugin `deps-guard.js` detecta deps faltantes al arrancar, lo registra (`[deps-guard] ...`) y lanza la instalación **en segundo plano**.
 
-### Si opencode se cuelga al boot
+### Si opencode se cuelga al boot o la UI no responde
 
-1. `cd .opencode && npm install` — ¿lo corriste? Sin esto, sin plugins.
+1. `cd .opencode && npm install` — ¿lo corriste? Sin esto, sin plugins. **El desktop (opencode 1.19.0 embebido) falla en silencio sin error visible**; el log sí lo dice: `~/.local/share/opencode/log/opencode.log`.
 2. `opencode debug config` — verifica config mergeada (plugins, MCPs, instructions)
 3. `opencode debug skill` — verifica skill discovery
 4. Node 20+ recomendado (Node 18 funciona con warnings `EBADENGINE`)

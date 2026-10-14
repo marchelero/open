@@ -105,7 +105,7 @@ async function shellEnv(input, output) {
   }
 }
 
-module.exports = {
+const plugin = {
   id: "stack-env",
   setup: async () => {
     return {
@@ -113,6 +113,9 @@ module.exports = {
     }
   },
 }
+
+plugin.server = plugin.setup
+module.exports = plugin
 
 // ────────────────────────────────────────────────────────────────────────────
 // Self-test — `node .opencode/plugins/stack-env.js --selftest`
